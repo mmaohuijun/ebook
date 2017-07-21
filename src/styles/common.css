@@ -1,0 +1,107 @@
+html,
+body
+ {
+    height: 100%;
+    overflow: hidden;
+}
+.layout{
+    position: relative;
+    height: 100%;
+    background: #f5f7f9;
+}
+.layout-breadcrumb{
+    padding: 15px 15px 0;
+}
+.layout-content{
+    min-height: 200px;
+    padding: 24px;
+    margin: 15px;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 4px;
+}
+.layout-copy{
+    text-align: center;
+    padding: 10px 0 20px;
+    color: #9ea7b4;
+}
+.layout-menu{
+    float: left;
+    min-height: 100%;
+    width: 260px;
+    background: #464c5b;
+}
+.layout-main {
+    height: 100%;
+    margin-left: 260px;
+    overflow-y: scroll;
+}
+.layout-header{
+    height: 60px;
+    padding: 14px 16px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+}
+.layout-logo-left{
+    width: 90%;
+    height: 30px;
+    background: #5b6270;
+    border-radius: 3px;
+    margin: 15px auto;
+}
+
+.input-circle .ivu-input {
+    border-radius: 32px;
+}
+
+.float-left {
+    float: left;
+}
+.float-right {
+    float: right;
+}
+.clearfix:before,
+.clearfix:after {
+    content: '';
+    display: table;
+}
+.clearfix:after {
+    clear: both;
+}
+.user-avatar {
+    display:inline-block;
+    width: 32px;
+    height: 32px;
+    margin-right: 4px;
+    border-radius: 50%;
+    background: #ccc;
+    overflow: hidden;
+    vertical-align: middle;
+}
+.user-avatar img {
+    width: 32px;
+    height: 32px;
+}
+.user-name {
+    display:inline-block;
+    vertical-align: middle;
+    color: #999 !important;
+}
+.user-name + .ivu-icon {
+    vertical-align: middle;
+    color: #999 !important;
+}
+.user-dropdown-list {
+    padding: 8px 16px;
+}
+.user-dropdown-list li {
+    padding: 4px 0;
+}
+.edit-button {
+    display: inline-block;
+    margin-left: 8px;
+    cursor: pointer;
+}
+.edit-button > i {
+    text-decoration: underline;
+}
