@@ -1,25 +1,19 @@
 <style lang="less">
     .field_avatar_row .ivu-form-item-label {
-        height: 80px !important;
-        line-height: 80px !important;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
+        // height: 80px !important;
+        // line-height: 80px !important;
+        // padding-top: 0 !important;
+        // padding-bottom: 0 !important;
     }
-    .field_avatar {
+    .field_upload_img {
+        display: inline-block;
         position: relative;
-        width: 80px;
-        height: 80px;
-        line-height: 80px;
+        border: 1px solid #dddee1;
         border-radius: 50%;
         overflow: hidden;
         background: #eee;
 
-        img {
-            width: 80px;
-            height: 80px;
-        }
-
-        .field_avatar_tool {
+        .field_upload_tool {
             position: absolute;
             top: 0;
             right: 0;
@@ -41,14 +35,14 @@
         }
 
         &:hover {
-            .field_avatar_tool {
+            .field_upload_tool {
                 opacity: 1;
             }
         }
     }
 
     .field_location_map {
-        background: #ddd;
+        background: #eee;
         width: 100%;
         height: 327px;
     }
@@ -114,24 +108,30 @@
     <div class="layout-content">
         <Tabs value="name1">
             <Tab-pane label="案场信息" icon="map" name="name1">
-                <Form :model="formItem" :label-width="100" style="padding-top: 8px;">
+                <Form :model="formItem" :label-width="120" style="padding-top: 8px;">
                     <Row>
                         <Col :md="24" :lg="12">
-                            <Form-item label="案场logo：" class="field_avatar_row">
-                                <div class="field_avatar">
-                                    <img src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png">
-                                    <div class="field_avatar_tool">
+                            <Form-item label="案场logo：">
+                                <div class="field_upload_img" style="width: 80px; height:80px; line-height: 80px;">
+                                    <img width="80" height="80" src="../images/field_logo.jpg">
+                                    <div class="field_upload_tool">
                                         <Icon type="ios-upload-outline"></Icon>
                                         <Icon type="ios-trash-outline"></Icon>
                                     </div>
                                 </div>
+                                <p style="color: #999; line-height: 1;">建议：图片尺寸为160*160px</p>
                             </Form-item>
                         </Col>
                         <Col :md="24" :lg="24">
                             <Form-item label="案场背景图：">
-                                <Upload action="//jsonplaceholder.typicode.com/posts/">
-                                    <Button type="ghost" icon="ios-cloud-upload-outline" long>上传文件</Button>
-                                </Upload>
+                                <div class="field_upload_img" style="width: 435px; height: 200px; line-height: 200px; border-radius:0;">
+                                    <img width="435" height="200" src="../images/field_bg.jpg">
+                                    <div class="field_upload_tool" style="border-radius:0 !important;">
+                                        <Icon type="ios-upload-outline"></Icon>
+                                        <Icon type="ios-trash-outline"></Icon>
+                                    </div>
+                                </div>
+                                <p style="color: #999; line-height: 1;">建议：图片尺寸为160*160px</p>
                             </Form-item>
                         </Col>
                         <Col :md="24" :lg="12">
@@ -192,35 +192,14 @@
                 <!-- 敬请期待 -->
                 <Row :gutter="16">
                     <Col :md="24" :lg="8" style="margin-bottom: 16px;">
-                        <Card>
-                            <p class="field_name">金地意境一期</p>
-                            <p class="house_type">别墅、公寓、洋房</p>
-                            <p class="field_tool">
-                                <a href="#" @click="custom">
-                                    <Tooltip placement="top" content="修改">
-                                        <Icon type="ios-compose-outline"></Icon>
-                                    </Tooltip>
-                                </a>
-                                <a href="#">
-                                    <Tooltip placement="top" content="删除">
-                                        <Icon type="ios-trash-outline"></Icon>
-                                    </Tooltip>
-                                </a>
-                            </p>
-                            <ul>
-                                <li v-for="item in houseTypeList">
-                                    <Tag>{{ item.type + ' '}}</Tag>
-                                    {{item.name + ' ' + item.area }}
-                                </li>
-                            </ul>
-                        </Card>
+                        <Button type="dashed" icon="plus-round" long style="height: 230px; font-size: 30px;">添加项目</Button>
                     </Col>
                     <Col :md="24" :lg="8" style="margin-bottom: 16px;">
                         <Card>
                             <p class="field_name">金地意境一期</p>
                             <p class="house_type">别墅、公寓、洋房</p>
                             <p class="field_tool">
-                                <a href="#">
+                                <a href="#" @click="custom">
                                     <Tooltip placement="top" content="修改">
                                         <Icon type="ios-compose-outline"></Icon>
                                     </Tooltip>
@@ -450,18 +429,18 @@
                                 <div v-for="item in houseTypeList" class="house_type_list_2">
                                     <Tag>{{ item.type + ' '}}</Tag>
                                     {{item.name + ' ' + item.area }}
-                                    <Button-group size="small">
+                                    <Button-group>
                                         <Tooltip placement="top" content="向上移动">
-                                            <Button type="text" icon="arrow-up-c"></Button>
+                                            <Button type="text" icon="arrow-up-c" size="small"></Button>
                                         </Tooltip>
                                         <Tooltip placement="top" content="向下移动">
-                                            <Button type="text" icon="arrow-down-c"></Button>
+                                            <Button type="text" icon="arrow-down-c" size="small"></Button>
                                         </Tooltip>
                                         <Tooltip placement="top" content="修改">
-                                            <Button type="text" icon="edit"></Button>
+                                            <Button type="text" icon="edit" size="small"></Button>
                                         </Tooltip>
                                         <Tooltip placement="top" content="删除">
-                                            <Button type="text" icon="trash-b"></Button>
+                                            <Button type="text" icon="trash-b" size="small"></Button>
                                         </Tooltip>
                                     </Button-group>
                                 </div>
