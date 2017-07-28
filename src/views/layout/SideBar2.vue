@@ -1,7 +1,7 @@
 <template>
 <aside class="layout__aside">
   <div class="layout__aside-header">
-    <div class="layout__aside-avatar"></div>
+    <div class="layout__aside-avatar"><img src="../../assets/logo.png" alt=""></div>
     <p class="layout__aside-name">王某某</p>
     <ul class="layout__aside-info">
       <li><p>账号：2736273</p><a href="#">修改密码</a></li>
@@ -49,6 +49,7 @@ export default {
 </script>
 <style lang="less" scoped>
   .layout__aside{
+    float: left;
     width: 260px;
     height: 100%;
     background:#4e546c;
@@ -69,6 +70,12 @@ export default {
       margin: 0 auto;
       border-radius: 50%;
       background: #fff;
+      overflow: hidden;
+
+      img {
+        width: 116px;
+        height: 116px;
+      }
     }
 
     &-name {

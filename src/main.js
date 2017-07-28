@@ -8,9 +8,7 @@ import 'iview/dist/styles/iview.css'
 
 import $axios from './api/api' // 后台接口api
 
-Vue.use(iView)
-Vue.use($)
-Vue.use(_)
+Vue.use(iView, $, _)
 Object.defineProperty(Vue.prototype, '$axios', { value: $axios })
 
 Vue.config.productionTip = false
