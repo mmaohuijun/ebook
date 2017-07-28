@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="less" scoped>
  .full-height {
   min-height: 100%
 }
