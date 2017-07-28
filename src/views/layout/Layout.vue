@@ -1,5 +1,10 @@
 <template>
   <div class="layout">
+    <side-bar></side-bar>
+    <case-manage></case-manage>
+    <router-view></router-view>
+  </div>
+  <!-- <div class="layout">
     <Row type="flex" class-name="full-height">
       <i-col span="5" class="layout-menu-left">
         <side-bar></side-bar>
@@ -18,7 +23,7 @@
         </div>
       </i-col>
     </Row>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -26,6 +31,7 @@
 import SideBar from './SideBar2'
 import HeadBar from './HeadBar'
 import Breadcrumb from './Breadcrumb'
+import CaseManage from '../case/CaseManage'
 
 export default {
   name: 'layout',
@@ -39,53 +45,39 @@ export default {
   components: {
     SideBar,
     HeadBar,
-    Breadcrumb
+    Breadcrumb,
+    CaseManage
   }
 }
 </script>
 
-<style lang="less" scoped>
- .full-height {
-  min-height: 100%
-}
+<style lang="less">
+  .float-left {float: left;}
+  .float-right {float: right;}
+  .clearfix {
+    &:before,
+    &:after {
+      content: '';
+      display: table;
+    }
 
-.layout{
-  height: 100%;
-  background: #f5f7f9;
-  position: relative;
-}
-.layout-breadcrumb{
-  padding: 10px 15px 0;
-}
-.layout-content{
-  min-height: 200px; 
-  margin: 15px;
-  padding: 24px;
-  overflow: hidden;
-  background: #fff;
-  border-radius: 4px;
-}
-.layout-content-main{
-  padding: 10px;
-}
-.layout-copy{
-  text-align: center;
-  padding: 10px 0 20px;
-  color: #9ea7b4;
-}
-.layout-menu-left{
-  background: #464c5b;
-}
-.layout-header{
-  height: 60px;
-  background: #fff;
-  box-shadow: 0 1px 1px rgba(0,0,0,.1);
-}
-.layout-logo-left{
-  width: 90%;
-  height: 30px;
-  background: #5b6270;
-  border-radius: 3px;
-  margin: 15px auto;
-} 
+    &:after {
+      clear: both;
+    }
+  }
+
+  html,
+  body {
+    height: 100%;
+    background: #f3f3f3;
+  }
+
+  .layout {
+    height: 100%;
+  }
+
+  .layout-header {
+    height: 60px;
+    background:#8189bb;
+  }
 </style>
