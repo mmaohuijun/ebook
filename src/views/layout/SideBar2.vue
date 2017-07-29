@@ -19,8 +19,8 @@
       </div>
       <div class="menu__item">
         <div class="menu__link">用户</div>
-        <p class="menu__child"><a href="#" class="menu__link">内部用户</a></p>
-        <p class="menu__child"><a href="#" class="menu__link">外部用户</a></p>
+        <p class="menu__child"><a href="/user" class="menu__link">内部用户</a></p>
+        <p class="menu__child"><a href="/user" class="menu__link">外部用户</a></p>
       </div>
       <div class="menu__item">
         <a href="#" class="menu__link">权限</a>

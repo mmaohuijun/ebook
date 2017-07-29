@@ -1,3 +1,86 @@
+<style lang="less">
+  .field-box {
+    border:1px solid #979797;
+    background: #fff;
+    padding: 16px 33px;
+  }
+  .field-logo {
+    float: left;
+    width: 156px;
+    height: 156px;
+    background: #eee;
+    border-radius: 4px;
+    text-align: center;
+
+    img {
+      display: block;
+      width: 156px;
+      height: 156px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+  }
+
+  .field-bottom-btn {
+    text-align: right;
+    padding: 30px 24px 0 0;
+  }
+
+  .field-bg {
+    position: relative;
+    float: right;
+    width:450px;
+    height:228px;
+    background: #eee;
+
+    .btn-upload-field-bg {
+      position: absolute;
+      top: 16px;
+      right: 19px;
+      opacity:0.3;
+      background:#000000;
+      border-radius:4px;
+      width:100px;
+      height:32px;
+      text-align: center;
+      font-size:18px;
+      color:#ffffff;
+      border: none;
+      padding: 0;
+
+      span {
+        line-height:32px;
+      }
+    }
+  }
+
+  .field-map {
+    width: 100%;
+    height: 430px;
+  }
+
+  .custom-tabs {
+    &.ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-nav-container {
+      height: 50px;
+    }
+    &.ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-tab {
+      font-size: 20px !important;
+      height: 49px;
+      line-height: 50px;
+      padding: 0 28px;
+      background-color: #fff;
+      border-color: #fff;
+    }
+
+    &.ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-tab-active {
+      font-size: 20px !important;
+      height: 50px;
+      line-height: 50px;
+      border-color: #ddd;
+      color: #111;
+    }
+  }
+</style>
 <template>
 <div class="layout__content">
   <div class="layout__header">
@@ -9,86 +92,54 @@
     </div>
   </div>
   <div class="layout__body">
-    <Tabs value="name1" type="card">
+    <div class="field-box">
+    <Tabs value="name1" type="card" class="custom-tabs">
         <Tab-pane label="案场信息" name="name1">
-            <Form :model="formItem" :label-width="120" style="padding-top: 8px;">
-                <Row>
-                    <Col :md="24" :lg="12">
-                        <Form-item label="案场logo：">
-                            <div class="field_upload_img" style="width: 80px; height:80px; line-height: 80px;">
-                                <!-- <img width="80" height="80" src="../images/field_logo.jpg"> -->
-                                <div class="field_upload_tool">
-                                    <Icon type="ios-upload-outline"></Icon>
-                                    <Icon type="ios-trash-outline"></Icon>
-                                </div>
-                            </div>
-                            <p style="color: #999; line-height: 1;">建议：图片尺寸为160*160px</p>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="24">
-                        <Form-item label="案场背景图：">
-                            <div class="field_upload_img" style="width: 435px; height: 200px; line-height: 200px; border-radius:0;">
-                                <!-- <img width="435" height="200" src="../images/field_bg.jpg"> -->
-                                <div class="field_upload_tool" style="border-radius:0 !important;">
-                                    <Icon type="ios-upload-outline"></Icon>
-                                    <Icon type="ios-trash-outline"></Icon>
-                                </div>
-                            </div>
-                            <p style="color: #999; line-height: 1;">建议：图片尺寸为160*160px</p>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="12">
-                        <Form-item label="案场名称：">
-                            <Input placeholder="请输入"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="12">
-                        <Form-item label="案场位置：">
-                            <Input placeholder="请输入"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="12">
-                        <Form-item label="所属组织：">
-                            <Input placeholder="请输入"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="12">
-                        <Form-item label="公众号名称：">
-                            <Input placeholder="请输入"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="12">
-                        <Form-item label="公众号ID：">
-                            <Input placeholder="请输入"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="12">
-                        <Form-item label="Selectkey：">
-                            <Input placeholder="请输入"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="12">
-                        <Form-item label="短信验证：">
-                            <i-switch>
-                                <span slot="open">开</span>
-                                <span slot="close">关</span>
-                            </i-switch>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="24">
-                        <Form-item label="地图坐标：">
-                            <div class="field_location_map" style="margin-bottom: 16px;">
-
-                            </div>
-                        </Form-item>
-                    </Col>
-                    <Col :md="24" :lg="24">
-                        <Form-item>
-                            <Button type="primary">确定</Button>
-                            <Button type="ghost" style="margin-left: 8px">取消</Button>
-                        </Form-item>
-                    </Col>
-                </Row>
+            <Form :model="formItem" :label-width="120" label-position="left">
+                <div style="overflow: hidden; margin-bottom: 30px;">
+                  <div class="field-logo">
+                      <img src="../../assets/logo.png">
+                      <Button type="primary" class="custom-btn">更换logo</Button>
+                  </div>
+                  <div style="float: left; padding-left: 21px;">
+                    <Form-item label="案场名称：">
+                      <Input placeholder="请输入"></Input>
+                    </Form-item>
+                    <Form-item label="所属组织：">
+                      <Input placeholder="请输入"></Input>
+                    </Form-item>
+                    <Form-item label="公众号名称：">
+                      <Input placeholder="请输入"></Input>
+                    </Form-item>
+                    <Form-item label="公众号ID：">
+                      <Input placeholder="请输入"></Input>
+                    </Form-item>
+                    <Form-item label="Selectkey：">
+                      <Input placeholder="请输入"></Input>
+                    </Form-item>
+                    <Form-item label="短信验证：">
+                      <i-switch>
+                        <span slot="open"></span>
+                        <span slot="close"></span>
+                      </i-switch>
+                    </Form-item>
+                  </div>
+                  <div class="field-bg">
+                    <Button type="file" class="btn-upload-field-bg">上传图片</Button>
+                  </div>
+                </div>
+                <div style="width: 540px; height: 43px;">
+                  <Form-item label="案场位置：" style="width: 440px; float: left;">
+                    <Input placeholder="请输入"></Input>
+                  </Form-item>
+                  <Button type="primary" class="custom-btn" style="float: right; margin-top: -2px;">确定</Button>
+                </div>
+                <div class="field-map">
+                  <img src="../../assets/map.jpg" style="width: 100%; height:430px;">
+                </div>
+                <div class="field-bottom-btn">
+                  <Button type="primary" class="custom-btn">保存</Button>
+                </div>
             </Form>
         </Tab-pane>
         <Tab-pane label="项目信息" name="name2">
@@ -354,6 +405,7 @@
         </Tab-pane>
         <Tab-pane label="维度信息" name="name3">敬请期待</Tab-pane>
     </Tabs>
+    </div>
   </div>
 </div>
 </template>
@@ -486,5 +538,3 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-</style>

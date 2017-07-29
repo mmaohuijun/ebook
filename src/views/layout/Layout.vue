@@ -262,4 +262,50 @@ export default {
       }
     }
   }
+
+  .custom-btn {
+    height: 32px;
+    font-size: 18px;
+    padding: 0 22px;
+    background: #1c93ea;
+
+    &:hover,
+    &:focus {
+      background: #1c93ea;
+    }
+  }
+
+  .ivu-form .ivu-form-item-label {
+    font-size: 18px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .ivu-form-item {
+    margin-bottom: 14px;
+  }
+
+  .ivu-form-item-content {
+    line-height: 28px;
+  }
+
+  .ivu-input {
+    height: 28px;
+    font-size: 16px;
+    border-color: #979797;
+
+    &:focus {
+      box-shadow: none;
+      border-color: #979797;
+    }
+
+    &:hover {
+      border-color: #979797;
+    }
+  }
+
+  .ivu-switch-checked {
+    background-color: #1cea35;
+    border-color: #1cea35;
+  }
 </style>
