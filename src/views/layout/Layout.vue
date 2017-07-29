@@ -159,7 +159,8 @@ export default {
       height: 60px;
       background: #fff;
       font-size: 18px;
-      font-weight: 400;
+      font-weight: 700;
+      color: #4f546d;
     }
 
     .ivu-table-body {
@@ -167,6 +168,7 @@ export default {
         td {
           height: 50px;
           font-size: 16px;
+          color: #555;
         }
 
         &:nth-child(2n+1) td {
@@ -210,9 +212,7 @@ export default {
       color: #999;
     }
     .ivu-page-item-jump-prev,
-    .ivu-page-item-jump-next {
-      display: none;
-    }
+    .ivu-page-item-jump-next,
     .ivu-page-item,
     .ivu-page-next,
     .ivu-page-prev {
