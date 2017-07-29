@@ -1,7 +1,6 @@
 <template>
   <div class="layout">
     <side-bar></side-bar>
-    <case-manage></case-manage>
     <router-view></router-view>
   </div>
   <!-- <div class="layout">
@@ -31,7 +30,6 @@
 import SideBar from './SideBar2'
 import HeadBar from './HeadBar'
 import Breadcrumb from './Breadcrumb'
-import CaseManage from '../case/CaseManage'
 
 export default {
   name: 'layout',
@@ -45,8 +43,7 @@ export default {
   components: {
     SideBar,
     HeadBar,
-    Breadcrumb,
-    CaseManage
+    Breadcrumb
   }
 }
 </script>
