@@ -4,7 +4,6 @@
     <h2 class="layout__header-title">案场管理</h2>
     <div class="layout__header-tool">
       <Input class="custom__search" icon="search" placeholder="案场／组织"></Input>
-      <a href="/caseInfo">13424</a>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus"></Button>
     </div>

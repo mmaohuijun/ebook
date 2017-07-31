@@ -12,7 +12,7 @@
     <div class="laylout__aside-menu">
       <div class="menu__item">
         <div class="menu__link">案场</div>
-        <p class="menu__child"><a href="#" class="menu__link menu__link--current">案场管理</a></p>
+        <p class="menu__child"><a href="/#" class="menu__link menu__link--current">案场管理</a></p>
       </div>
       <div class="menu__item">
         <a href="#" class="menu__link">组织</a>

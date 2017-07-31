@@ -29,9 +29,13 @@
   .field-bg {
     position: relative;
     float: right;
-    width:450px;
-    height:228px;
     background: #eee;
+
+    img {
+      display: block;
+      width:450px;
+      height:228px;
+    }
 
     .btn-upload-field-bg {
       position: absolute;
@@ -98,7 +102,7 @@
             <Form :model="formItem" :label-width="120" label-position="left">
                 <div style="overflow: hidden; margin-bottom: 30px;">
                   <div class="field-logo">
-                      <img src="../../assets/logo.png">
+                      <img src="../../assets/field_logo.jpg">
                       <Button type="primary" class="custom-btn">更换logo</Button>
                   </div>
                   <div style="float: left; padding-left: 21px;">
@@ -125,6 +129,7 @@
                     </Form-item>
                   </div>
                   <div class="field-bg">
+                    <img src="../../assets/field_bg.jpg" alt="">
                     <Button type="file" class="btn-upload-field-bg">上传图片</Button>
                   </div>
                 </div>

@@ -63,12 +63,6 @@ export default {
     }
   }
 
-  html,
-  body {
-    height: 100%;
-    background: #f3f3f3;
-  }
-
   .layout {
     height: 100%;
   }
@@ -110,6 +104,28 @@ export default {
       height: 28px;
       border-color: transparent;
       border-radius: 14px;
+      font-size: 14px;
+      &:hover {
+        border-color: transparent;
+      }
+      &:focus {
+        border-color: transparent;
+        outline: 0;
+        box-shadow: none;
+      }
+    }
+
+    .ivu-icon {
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+    }
+  }
+
+  .custom__input--white {
+    .ivu-input {
+      height: 28px;
+      border-color: transparent;
       font-size: 14px;
       &:hover {
         border-color: transparent;
