@@ -96,6 +96,7 @@ export default {
     padding: 20px 31px 20px 20px;
     height: ~'calc(100% - 60px)';
     overflow-y: auto;
+    background: #f3f3f3;
   }
 
   .custom__search {
@@ -215,8 +216,8 @@ export default {
 
   .custom__page {
     display: inline-block;
-
-    margin-left: 50%;
+    position: relative;
+    left: 50%;
     transform: translateX(-50%);
 
     &,
@@ -323,5 +324,86 @@ export default {
   .ivu-switch-checked {
     background-color: #1cea35;
     border-color: #1cea35;
+  }
+
+  .ivu-modal-header {
+    p {
+      text-align: center;
+      font-size:20px;
+      color:#4e546c;
+      font-weight: 400;
+    }
+  }
+
+  .ivu-modal-footer {
+    padding: 30px 0;
+    border-top: none;
+    text-align: center;
+
+    > .ivu-btn {
+      height: 32px;
+      line-height: 32px;
+      padding: 0 22px;
+      font-size: 18px;
+
+      &.ivu-btn-primary {
+        background: #1c93ea;
+
+        &:hover,
+        &:active {
+          background: #1c93ea;
+        }
+      }
+    }
+
+    > .ivu-btn:first-child {
+      margin-right: 70px;
+      background: #d8d8d8;
+      color: #555;
+    }
+  }
+
+  .modal-form {
+    .ivu-form-item {
+      margin-bottom: 22px;
+    }
+  }
+
+  .ivu-select-selection {
+    height: 28px;
+    font-size: 16px;
+    border-color: #979797;
+
+    &:hover,
+    &:focus,
+    &:active {
+      box-shadow: none;
+      border-color: #979797;
+    }
+
+    > .ivu-select-placeholder,
+    > .ivu-select-selected-value {
+      font-size: 16px !important;
+    }
+  }
+
+  .ivu-select-item {
+    font-size: 16px !important;
+  }
+
+  .ivu-select-arrow {
+    font-size: 24px;
+    margin-top: -12px;
+  }
+
+  .ivu-select-visible .ivu-select-selection {
+    box-shadow: none;
+    border-color: #979797;
+  }
+
+  .ivu-select-dropdown {
+    margin: -1px 0 0;
+    box-shadow: none;
+    border: 1px solid #979797;
   }
 </style>
