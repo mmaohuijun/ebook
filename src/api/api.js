@@ -1,5 +1,6 @@
 import axios from 'axios'
 // import store from '../vuex/store'
+// import qs from 'qs'
 
 const devURL = 'http://172.18.84.65:9088/marketing/api/'
 
@@ -9,7 +10,10 @@ const ajaxUrl = process.env.NODE_ENV === 'production' ? proURL : devURL
 
 const $axios = axios.create({
   baseURL: ajaxUrl,
-  timeout: 30000
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }
 })
 
 const responseStatus = {

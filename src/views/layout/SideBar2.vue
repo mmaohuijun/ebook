@@ -5,36 +5,36 @@
       <div class="layout__aside-avatar"><img src="../../assets/logo.png" alt=""></div>
       <p class="layout__aside-name">王某某</p>
       <ul class="layout__aside-info">
-        <li><p>账号：2736273</p><a href="#">修改密码</a></li>
-        <li><p>联系方式：1672829763</p><a href="#">修改</a></li>
+        <li><p>账号：2736273</p><router-link to="/">修改密码</router-link></li>
+        <li><p>联系方式：1672829763</p><router-link to="/">修改</router-link></li>
       </ul>
     </div>
     <div class="laylout__aside-menu">
       <div class="menu__item">
         <div class="menu__link">案场</div>
-        <p class="menu__child"><a href="/#" class="menu__link menu__link--current">案场管理</a></p>
+        <p class="menu__child"><router-link to="/" class="menu__link menu__link--current">案场管理</router-link></p>
       </div>
       <div class="menu__item">
         <a href="#" class="menu__link">组织</a>
       </div>
       <div class="menu__item">
         <div class="menu__link">用户</div>
-        <p class="menu__child"><a href="/user" class="menu__link">内部用户</a></p>
-        <p class="menu__child"><a href="/user" class="menu__link">外部用户</a></p>
+        <p class="menu__child"><router-link to="/user" class="menu__link">内部用户</router-link></p>
+        <p class="menu__child"><router-link to="/user" class="menu__link">外部用户</router-link></p>
       </div>
       <div class="menu__item">
         <a href="#" class="menu__link">权限</a>
       </div>
       <div class="menu__item">
         <div class="menu__link">客户数据</div>
-        <p class="menu__child"><a href="#" class="menu__link">来电记录</a></p>
-        <p class="menu__child"><a href="#" class="menu__link">到访记录</a></p>
-        <p class="menu__child"><a href="#" class="menu__link">成交记录</a></p>
-        <p class="menu__child"><a href="#" class="menu__link">未分配客户</a></p>
-        <p class="menu__child"><a href="#" class="menu__link">新建客户</a></p>
+        <p class="menu__child"><router-link to="/" class="menu__link">来电记录</router-link></p>
+        <p class="menu__child"><router-link to="/" class="menu__link">到访记录</router-link></p>
+        <p class="menu__child"><router-link to="/" class="menu__link">成交记录</router-link></p>
+        <p class="menu__child"><router-link to="/" class="menu__link">未分配客户</router-link></p>
+        <p class="menu__child"><router-link to="/" class="menu__link">新建客户</router-link></p>
       </div>
       <div class="menu__item">
-        <a href="#" class="menu__link">硬件列表</a>
+        <router-link to="/" class="menu__link">硬件列表</router-link>
       </div>
     </div>
   </div>

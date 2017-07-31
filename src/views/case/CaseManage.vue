@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="layout__body">
-    <Table class="custom__table" :columns="columns7" :data="data6"></Table>
+    <Table class="custom__table" :columns="columns7" :data="data6" @on-row-click="onClickCaseItem"></Table>
     <Page style="margin-top: 14px;" class="custom__page" :total="100"></Page>
   </div>
 </div>
@@ -18,6 +18,7 @@
 export default {
   data () {
     return {
+      caseId: '',
       columns7: [
         {
           type: 'selection',
@@ -86,99 +87,108 @@ export default {
       ],
       data6: [
         {
-          field: '金地艺境',
+          id: '001',
+          field: '金地艺境1',
           name: '上海东区事业部',
           projectName: '金地艺境一期',
           WXname: '金地艺境'
         },
         {
-          field: '金地艺境',
+          id: '002',
+          field: '金地艺境2',
           name: '上海东区事业部',
           projectName: '金地艺境一期',
           WXname: '金地艺境'
         },
         {
-          field: '金地艺境',
+          id: '003',
+          field: '金地艺境3',
           name: '上海东区事业部',
           projectName: '金地艺境一期',
           WXname: '金地艺境'
         },
         {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          WXname: '金地艺境'
-        },
-        {
-          field: '金地艺境',
+          id: '004',
+          field: '金地艺境4',
           name: '上海东区事业部',
           projectName: '金地艺境一期',
           WXname: '金地艺境'
         }
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // },
+        // {
+        //   field: '金地艺境',
+        //   name: '上海东区事业部',
+        //   projectName: '金地艺境一期',
+        //   WXname: '金地艺境'
+        // }
       ]
     }
   },
   methods: {
+    onClickCaseItem (item) {
+      console.log('onClickCaseItem', item)
+      this.caseId = item.id
+      this.$router.push(`caseInfo/${this.caseId}`)
+    },
     remove (index) {
       this.data6.splice(index, 1)
     }

@@ -26,10 +26,8 @@
 </template>
 
 <script>
-// import SideBar from './SideBar'
 import SideBar from './SideBar2'
 import HeadBar from './HeadBar'
-import Breadcrumb from './Breadcrumb'
 
 export default {
   name: 'layout',
@@ -42,8 +40,7 @@ export default {
   },
   components: {
     SideBar,
-    HeadBar,
-    Breadcrumb
+    HeadBar
   }
 }
 </script>
