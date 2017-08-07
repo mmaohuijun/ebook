@@ -3,17 +3,17 @@
   <div class="login-content">
     <h1>金地电子台账</h1>
     <Form label-position="top" class="login-form">
-        <Form-item label="账号">
-            <div href="#" class="login-link">
-              <Checkbox class="login-checkbox">记住账号</Checkbox>
-            </div>
-            <Input placeholder="请输入您的账号"></Input>
-        </Form-item>
-        <Form-item label="密码">
-            <a href="#" class="login-link" @click="modalForgetPWD = true">忘记密码？</a>
-            <Input placeholder="请输入您的密码"></Input>
-        </Form-item>
-        <Button class="login-btn" long>登录</Button>
+      <Form-item label="账号">
+        <div href="#" class="login-link">
+          <Checkbox class="login-checkbox" v-model="ifRemember">记住账号</Checkbox>
+        </div>
+        <Input placeholder="请输入您的账号" v-model="loginName"></Input>
+      </Form-item>
+      <Form-item label="密码">
+        <a href="#" class="login-link" @click="modalForgetPWD = true">忘记密码？</a>
+        <Input placeholder="请输入您的密码" type="password" v-model="password"></Input>
+      </Form-item>
+      <Button class="login-btn" long @click="goLogin">登录</Button>
     </Form>
   </div>
   <Modal
@@ -28,13 +28,37 @@
 </div>
 </template>
 <script>
+// import _ from 'lodash'
+
 export default {
   data () {
     return {
+      loginName: '', // 账号
+      password: '', // 密码
+      ifRemember: false,
       modalForgetPWD: false
     }
   },
   methods: {
+    goLogin () {
+      console.log('goLogin', this.loginName, this.password, this.ifRemember)
+      // this.$store.commit('showLoading')
+      this.$axios.post('login', {
+        loginName: this.loginName,
+        password: this.password
+      }).then(response => {
+        if (response === null) return
+        console.log('login', response)
+      })
+    }
+  },
+  mounted () {
+    // const msg = this.$Message.loading({
+    //   content: '正在加载中...',
+    //   duration: 0
+    // })
+    // this.$_.delay(msg, 3000)
+    // setTimeout(msg, 3000)
   }
 }
 </script>

@@ -170,7 +170,7 @@
                             </a>
                         </p>
                         <ul>
-                            <li v-for="item in houseTypeList" :key="item">
+                            <li v-for="(item, index) in houseTypeList" :key="index">
                                 <Tag>{{ item.type + ' '}}</Tag>
                                 {{item.name + ' ' + item.area }}
                             </li>
@@ -194,7 +194,7 @@
                             </a>
                         </p>
                         <ul>
-                            <li v-for="item in houseTypeList" :key="item">
+                            <li v-for="(item, index) in houseTypeList" :key="index">
                                 <Tag>{{ item.type + ' '}}</Tag>
                                 {{item.name + ' ' + item.area }}
                             </li>
@@ -215,7 +215,7 @@
 
                         <p class="house_type">别墅、公寓、洋房</p>
                         <ul>
-                            <li v-for="item in houseTypeList" :key="item">
+                            <li v-for="(item, index) in houseTypeList" :key="index">
                                 <Tag>{{ item.type + ' '}}</Tag>
                                 {{item.name + ' ' + item.area }}
                             </li>
@@ -236,7 +236,7 @@
 
                         <p class="house_type">别墅、公寓、洋房</p>
                         <ul>
-                            <li v-for="item in houseTypeList" :key="item">
+                            <li v-for="(item, index) in houseTypeList" :key="index">
                                 <Tag>{{ item.type + ' '}}</Tag>
                                 {{item.name + ' ' + item.area }}
                             </li>
@@ -257,7 +257,7 @@
 
                         <p class="house_type">别墅、公寓、洋房</p>
                         <ul>
-                            <li v-for="item in houseTypeList" :key="item">
+                            <li v-for="(item, index) in houseTypeList" :key="index">
                                 <Tag>{{ item.type + ' '}}</Tag>
                                 {{item.name + ' ' + item.area }}
                             </li>
