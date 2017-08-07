@@ -9,52 +9,50 @@
     <h2 class="layout__header-title">用户 - 外部用户</h2>
     <div class="layout__header-tool">
       <span style="font-size:16px; color:#fff; padding: 0 10px;">时间</span>
-      <Input class="custom__input--white" style="width: 90px;"></Input>
+      <Date-picker class="custom__input--white" type="date" :options="maxData" format="yyyy-MM-dd" @on-change="startDateChange" placeholder="开始日期" style="width: 120px"></Date-picker>
       <span style="font-size:16px; color:#fff; padding: 0 10px;">-</span>
-      <Input class="custom__input--white" style="width: 90px; margin-right: 30px;"></Input>
+      <Date-picker class="custom__input--white" type="date" :option="minData" format="yyyy-MM-dd" @on-change="endDateChange" placeholder="结束日期" style="width: 120px; margin-right: 30px;"></Date-picker>
       <Input class="custom__search" icon="search" placeholder="姓名／手机号"></Input>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a"></Button>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus"></Button>
+      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="trashSelect"></Button>
+      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addModal"></Button>
     </div>
   </div>
   <div class="layout__body">
-    <Table class="custom__table" :columns="columns7" :data="data6"></Table>
-    <Page style="margin-top: 14px;" class="custom__page" :total="100"></Page>
+    <Table class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
+    <Spin size="large" fix v-if="false"></Spin>
+    <Page style="margin-top: 14px;" class="custom__page" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
   </div>
   <Modal
+    title="修改用户"
     v-model="modal"
     :closable="false"
-    width="560"
-  >
-    <p slot="header">
-      修改用户
-    </p>
+    width="560">
     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120" class="modal-form">
-        <Form-item label="姓名：" prop="name">
-            <Input v-model="formValidate.name" placeholder="请您输入..."></Input>
-        </Form-item>
-        <Form-item label="电话号码：" prop="name">
-            <Input v-model="formValidate.name" placeholder="请您输入..."></Input>
-        </Form-item>
-        <Form-item label="密码：" prop="name">
-            <Input v-model="formValidate.name" placeholder="123456（或随机生成）"></Input>
-        </Form-item>
-        <Form-item label="E-mail：" prop="mail">
-            <Input v-model="formValidate.mail" placeholder="请您输入"></Input>
-        </Form-item>
-        <Form-item label="权限：" prop="city">
-            <Select v-model="formValidate.city" placeholder="请您选择...">
-                <Option value="beijing">全选1</Option>
-                <Option value="shanghai">全选2</Option>
-                <Option value="shenzhen">全选3</Option>
-            </Select>
-        </Form-item>
-        <Form-item label="禁用：">
-            <i-switch>
-              <span slot="open"></span>
-              <span slot="close"></span>
-            </i-switch>
-        </Form-item>
+      <Form-item label="姓名：" prop="name">
+        <Input v-model="formValidate.name" placeholder="请您输入..."></Input>
+      </Form-item>
+      <Form-item label="电话号码：" prop="mobile">
+        <Input v-model="formValidate.mobile" placeholder="请您输入..."></Input>
+      </Form-item>
+      <Form-item label="密码：" prop="password">
+        <Input v-model="formValidate.password" placeholder="123456（或随机生成）"></Input>
+      </Form-item>
+      <Form-item label="E-mail：" prop="email">
+        <Input v-model="formValidate.email" placeholder="请您输入"></Input>
+      </Form-item>
+      <!-- <Form-item label="权限：" prop="power">
+        <Select v-model="formValidate.power" placeholder="请您选择...">
+          <Option value="beijing">全选1</Option>
+          <Option value="shanghai">全选2</Option>
+          <Option value="shenzhen">全选3</Option>
+        </Select>
+      </Form-item> -->
+      <Form-item label="禁用：">
+        <i-switch>
+          <span slot="open"></span>
+          <span slot="close"></span>
+        </i-switch>
+      </Form-item>
     </Form>
   </Modal>
 </div>
@@ -63,52 +61,57 @@
 export default {
   data () {
     return {
-      modal: false,
+      maxData: {        // 开始时间的最大时间
+        disabledDate (date) {
+        }
+      },
+      minData: {        // 结束时间的最小时间
+        disabledDate (date) {
+        }
+      },
+      startDate: '',    // 开始时间
+      endDate: '2017-10-21',      // 结束时间
+      name: '',         // 搜索关键字
+      selectedUser: '', // 选中的用户
+      isTrash: false,   // 是否显示删除按钮
+      modal: false,     // 是否显示编辑和查看弹出框
+      pageNo: 1,        // 页码
+      pageSize: 20,     // 每页条数
+      total: 1000,      // 数据总条数
       formValidate: {
-        name: '',
-        mail: '',
-        city: '',
-        gender: '',
-        interest: [],
-        date: '',
-        time: '',
-        desc: ''
+        id: '',           // id
+        name: '',         // 姓名
+        gender: '',       // 性别
+        mobile: '',       // 电话
+        email: '',        // 邮箱
+        password: '',     // 密码
+        no: '',           // 工号
+        // power: '1',    // 权限
+        caseId: '',       // 案场ID
+        adminFlag: false  // 是否案场管理员
       },
       ruleValidate: {
         name: [
           { required: true, message: '姓名不能为空', trigger: 'blur' }
         ],
-        mail: [
-          { required: true, message: '邮箱不能为空', trigger: 'blur' },
-          { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+        mobile: [
+          { required: true, message: '电话号码不能为空', trigger: 'blur' }
         ],
-        city: [
-          { required: true, message: '请选择...', trigger: 'change' }
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
-        gender: [
-          { required: true, message: '请选择性别', trigger: 'change' }
-        ],
-        interest: [
-          { required: true, type: 'array', min: 1, message: '至少选择一个爱好', trigger: 'change' },
-          { type: 'array', max: 2, message: '最多选择两个爱好', trigger: 'change' }
-        ],
-        date: [
-          { required: true, type: 'date', message: '请选择日期', trigger: 'change' }
-        ],
-        time: [
-          { required: true, type: 'date', message: '请选择时间', trigger: 'change' }
-        ],
-        desc: [
-          { required: true, message: '请输入个人介绍', trigger: 'blur' },
-          { type: 'string', min: 20, message: '介绍不能少于20字', trigger: 'blur' }
+        // power: [
+        //   { required: true, message: '权限不能为空', trigger: 'change' }
+        // ],
+        caseId: [
+          { required: true, message: '案场不能为空', trigger: 'change' }
         ]
       },
-      columns7: [
+      userListTitle: [
         {
           type: 'selection',
           width: 60,
-          align: 'center',
-          ellipsis: true
+          align: 'center'
         },
         {
           title: '姓名',
@@ -122,12 +125,12 @@ export default {
         },
         {
           title: '电话号码',
-          key: 'telephone',
+          key: 'mobile',
           ellipsis: true
         },
         {
           title: '生成时间',
-          key: 'time',
+          key: 'createTime',
           ellipsis: true
         },
         {
@@ -136,6 +139,7 @@ export default {
           width: 150,
           align: 'center',
           render: (h, params) => {
+            let that = this
             return h('div', [
               h('Button', {
                 props: {
@@ -149,140 +153,105 @@ export default {
                   fontSize: '22px'
                 },
                 on: {
-                  click: () => {
-                    this.modal = true
+                  click () {
+                    that.editModal(params.index)
                   }
                 }
               }),
-              h('Button', {
+              h('Poptip', {
                 props: {
-                  type: 'text',
-                  icon: 'trash-a',
-                  size: 'small'
-                },
-                style: {
-                  color: '#999',
-                  fontSize: '22px'
+                  confirm: true,
+                  title: '确认删除此用户吗？',
+                  width: 160,
+                  placement: 'top'
                 },
                 on: {
-                  click: () => {
-                    this.remove(params.index)
+                  'on-ok' () {
+                    that.removeUser(params.index, 1)
                   }
                 }
-              })
+              }, [
+                h('Button', {
+                  props: {
+                    type: 'text',
+                    icon: 'trash-a',
+                    size: 'small'
+                  },
+                  style: {
+                    color: '#999',
+                    fontSize: '22px'
+                  }
+                })
+              ])
             ])
           }
         }
       ],
-      data6: [
+      userListData: [
         {
-          name: '张磊',
+          id: 1,
+          name: '张磊1',
+          mobile: '15811110000',
           email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
+          no: 'XXXXX', // 工号
+          createTime: '2017-06-06'
         },
         {
-          name: '张磊',
+          id: 2,
+          name: '张磊2',
+          mobile: '15811110000',
           email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
+          no: 'XXXXX',
+          createTime: '2017-06-06'
         },
         {
-          name: '张磊',
+          id: 3,
+          name: '张磊2',
+          mobile: '15811110000',
           email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
-        },
-        {
-          name: '张磊',
-          email: '213sdga@163.com',
-          telephone: '12345678998',
-          time: '2017-06-06'
+          no: 'XXXXX',
+          createTime: '2017-06-06'
         }
       ]
     }
   },
   methods: {
-    remove (index) {
-      this.data6.splice(index, 1)
+    removeUser (index) {
+      this.userListData.splice(index, 1)
+    },
+    addModal () {
+      this.modal = true
+    },
+    editModal (index) {
+      this.formValidate = this.userListData[index]
+      this.modal = true
+    },
+    onSelect (selection) {
+      const that = this
+      let idList = []
+
+      selection.length > 0 ? this.isTrash = true : this.isTrash = false
+      that.selectedUser = ''
+
+      for (let i = selection.length - 1; i >= 0; i--) {
+        idList.push(selection[i].id)
+      }
+
+      that.selectedUser = idList.join(',')
+    },
+    trashSelect (id) {
+      // let user = ''
+    },
+    startDateChange (data) {
+      this.startDate = data
+      console.log(this.startDate)
+    },
+    endDateChange (data) {
+      this.endDate = data
+      console.log(this.endDate)
+    },
+    pageChange (currentPage) {
+      console.log(currentPage)
     }
   }
 }

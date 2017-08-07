@@ -90,6 +90,7 @@ export default {
   }
 
   .layout__body {
+    position: relative;
     padding: 20px 31px 20px 20px;
     height: ~'calc(100% - 60px)';
     overflow-y: auto;
@@ -324,7 +325,8 @@ export default {
   }
 
   .ivu-modal-header {
-    p {
+    p,
+    .ivu-modal-header-inner {
       text-align: center;
       font-size:20px;
       color:#4e546c;
