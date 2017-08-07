@@ -55,12 +55,12 @@
 <script>
 export default {
   name: 'sideBar',
-  data () {
+  data() {
     return {
     }
   },
   methods: {
-    selectMenu (val) {
+    selectMenu(val) {
       console.log('selectMenu', val)
       this.$router.push('/caseManage')
     }

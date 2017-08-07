@@ -416,7 +416,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       houseTypeModel1: '',
       houseTypeModel2: '',
@@ -532,7 +532,7 @@ export default {
     }
   },
   methods: {
-    custom () {
+    custom() {
       this.$Modal.confirm({
         title: '确认对话框标题',
         content: '<Card>一些对话框内容</p><p>一些对话框内容</Card>',

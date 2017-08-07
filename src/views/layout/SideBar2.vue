@@ -43,7 +43,7 @@
 <script>
 export default {
   name: 'SideBar2',
-  data () {
+  data() {
     return {
     }
   }

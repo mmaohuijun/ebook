@@ -9,21 +9,22 @@ const store = new Vuex.Store({
   // 定义状态
   state: {
     loading: false,
-    ifLogin: false // 账号是否登录
+    ifLogin: true // 账号是否登录
   },
   getters: {
+    getLoginStatus: state => state.ifLogin
   },
   mutations: {
-    showLoading (state) {
+    showLoading(state) {
       state.loading = true
     },
-    hideLoading (state) {
+    hideLoading(state) {
       state.loading = false
     },
-    hasLogin (state) {
+    hasLogin(state) {
       state.ifLogin = true
     },
-    notLogin (state) {
+    notLogin(state) {
       state.ifLogin = false
     }
   },

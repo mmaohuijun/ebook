@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'breadcrumb',
-  data () {
+  data() {
     return {
     }
   }

@@ -19,7 +19,7 @@
 <script>
 export default {
   name: 'headBar',
-  data () {
+  data() {
     return {
     }
   }

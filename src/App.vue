@@ -9,19 +9,18 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'app',
-  data () {
+  data() {
     return {
       msg: null
     }
   },
   computed: {
     ...mapState({
-      ifShowLoading: state => state.loading,
-      ifLogin: state => state.ifLogin
+      ifShowLoading: state => state.loading
     })
   },
   watch: {
-    ifShowLoading (flag) {
+    ifShowLoading(flag) {
       if (flag) {
         this.$Message.loading({
           content: '正在加载中...',
@@ -30,14 +29,10 @@ export default {
       } else {
         this.$Message.destroy()
       }
-    },
-    ifLogin (flag) {
-      if (flag) return
-      this.$router.push({ name: 'Login' })
     }
   },
-  mounted () {
-    console.log('APP mounted', this.ifLogin)
+  mounted() {
+    console.log('APP mounted')
   }
 }
 </script>

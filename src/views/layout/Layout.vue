@@ -31,11 +31,11 @@ import HeadBar from './HeadBar'
 
 export default {
   name: 'layout',
-  data () {
+  data() {
     return {
     }
   },
-  mounted () {
+  mounted() {
     console.log('Layout mounted')
   },
   components: {

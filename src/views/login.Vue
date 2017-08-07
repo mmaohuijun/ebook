@@ -28,10 +28,8 @@
 </div>
 </template>
 <script>
-// import _ from 'lodash'
-
 export default {
-  data () {
+  data() {
     return {
       loginName: '', // 账号
       password: '', // 密码
@@ -40,25 +38,18 @@ export default {
     }
   },
   methods: {
-    goLogin () {
+    goLogin() {
       console.log('goLogin', this.loginName, this.password, this.ifRemember)
-      // this.$store.commit('showLoading')
       this.$axios.post('login', {
         loginName: this.loginName,
         password: this.password
       }).then(response => {
         if (response === null) return
         console.log('login', response)
+        // 登录成功后登记一下login状态
+        this.$store.commit('hasLogin')
       })
     }
-  },
-  mounted () {
-    // const msg = this.$Message.loading({
-    //   content: '正在加载中...',
-    //   duration: 0
-    // })
-    // this.$_.delay(msg, 3000)
-    // setTimeout(msg, 3000)
   }
 }
 </script>

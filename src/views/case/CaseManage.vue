@@ -16,7 +16,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       caseId: '',
       columns7: [
@@ -51,38 +51,36 @@ export default {
           key: 'action',
           width: 150,
           align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'text',
-                  icon: 'trash-a',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px',
-                  color: '#999',
-                  fontSize: '22px'
+          render: (h, params) => h('div', [
+            h('Button', {
+              props: {
+                type: 'text',
+                icon: 'trash-a',
+                size: 'small'
+              },
+              style: {
+                marginRight: '5px',
+                color: '#999',
+                fontSize: '22px'
+              }
+            }),
+            h('Button', {
+              props: {
+                type: 'text',
+                icon: 'trash-a',
+                size: 'small'
+              },
+              style: {
+                color: '#999',
+                fontSize: '22px'
+              },
+              on: {
+                click: () => {
+                  this.remove(params.index)
                 }
-              }),
-              h('Button', {
-                props: {
-                  type: 'text',
-                  icon: 'trash-a',
-                  size: 'small'
-                },
-                style: {
-                  color: '#999',
-                  fontSize: '22px'
-                },
-                on: {
-                  click: () => {
-                    this.remove(params.index)
-                  }
-                }
-              })
-            ])
-          }
+              }
+            })
+          ])
         }
       ],
       data6: [
@@ -184,12 +182,12 @@ export default {
     }
   },
   methods: {
-    onClickCaseItem (item) {
+    onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
       this.caseId = item.id
       this.$router.push(`caseInfo/${this.caseId}`)
     },
-    remove (index) {
+    remove(index) {
       this.data6.splice(index, 1)
     }
   }
