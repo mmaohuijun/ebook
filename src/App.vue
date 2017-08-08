@@ -16,7 +16,9 @@ export default {
   },
   computed: {
     ...mapState({
-      ifShowLoading: state => state.loading
+      ifShowLoading: state => state.loading,
+      ifShowMsg: state => state.ifShowMsg,
+      msgText: state => state.msgText
     })
   },
   watch: {
@@ -29,6 +31,13 @@ export default {
       } else {
         this.$Message.destroy()
       }
+    },
+    ifShowMsg(flag) {
+      if (!flag) return
+      this.$Message.error({
+        content: this.msgText,
+        duration: 3
+      })
     }
   },
   mounted() {

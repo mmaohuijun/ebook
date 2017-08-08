@@ -9,7 +9,9 @@ const store = new Vuex.Store({
   // 定义状态
   state: {
     loading: false,
-    ifLogin: true // 账号是否登录
+    ifLogin: true, // 账号是否登录
+    ifShowMsg: false,
+    msgText: '666'
   },
   getters: {
     getLoginStatus: state => state.ifLogin
@@ -20,6 +22,13 @@ const store = new Vuex.Store({
     },
     hideLoading(state) {
       state.loading = false
+    },
+    showMsg(state, text) {
+      state.ifShowMsg = true
+      state.msgText = text
+      setTimeout(() => {
+        state.ifShowMsg = false
+      }, 3000)
     },
     hasLogin(state) {
       state.ifLogin = true

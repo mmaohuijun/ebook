@@ -13,7 +13,7 @@
         <a href="#" class="login-link" @click="modalForgetPWD = true">忘记密码？</a>
         <Input placeholder="请输入您的密码" type="password" v-model="password"></Input>
       </Form-item>
-      <Button class="login-btn" long @click="goLogin">登录</Button>
+      <Button class="login-btn" long :loading="loading" @click="goLogin">登录</Button>
     </Form>
   </div>
   <Modal
@@ -34,20 +34,27 @@ export default {
       loginName: '', // 账号
       password: '', // 密码
       ifRemember: false,
+      loading: false,
       modalForgetPWD: false
     }
   },
   methods: {
     goLogin() {
       console.log('goLogin', this.loginName, this.password, this.ifRemember)
+      this.loading = true
       this.$axios.post('login', {
         loginName: this.loginName,
         password: this.password
       }).then(response => {
         if (response === null) return
         console.log('login', response)
+        this.loading = false
         // 登录成功后登记一下login状态
         this.$store.commit('hasLogin')
+      }, error => {
+        this.loading = false
+        this.$store.commit('showMsg', error)
+        console.log('登录失败', error)
       })
     }
   }

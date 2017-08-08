@@ -59,14 +59,16 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       maxData: {        // 开始时间的最大时间
-        disabledDate (date) {
+        disabledDate(date) {
+          console.log(date)
         }
       },
       minData: {        // 结束时间的最小时间
-        disabledDate (date) {
+        disabledDate(date) {
+          console.log(date)
         }
       },
       startDate: '',    // 开始时间
@@ -139,7 +141,7 @@ export default {
           width: 150,
           align: 'center',
           render: (h, params) => {
-            let that = this
+            const that = this
             return h('div', [
               h('Button', {
                 props: {
@@ -153,7 +155,7 @@ export default {
                   fontSize: '22px'
                 },
                 on: {
-                  click () {
+                  click() {
                     that.editModal(params.index)
                   }
                 }
@@ -166,7 +168,7 @@ export default {
                   placement: 'top'
                 },
                 on: {
-                  'on-ok' () {
+                  'on-ok'() {
                     that.removeUser(params.index, 1)
                   }
                 }
@@ -216,21 +218,21 @@ export default {
     }
   },
   methods: {
-    removeUser (index) {
+    removeUser(index) {
       this.userListData.splice(index, 1)
     },
-    addModal () {
+    addModal() {
       this.modal = true
     },
-    editModal (index) {
+    editModal(index) {
       this.formValidate = this.userListData[index]
       this.modal = true
     },
-    onSelect (selection) {
+    onSelect(selection) {
       const that = this
-      let idList = []
+      const idList = []
 
-      selection.length > 0 ? this.isTrash = true : this.isTrash = false
+      this.isTrash = selection.length > 0
       that.selectedUser = ''
 
       for (let i = selection.length - 1; i >= 0; i--) {
@@ -239,18 +241,18 @@ export default {
 
       that.selectedUser = idList.join(',')
     },
-    trashSelect (id) {
+    trashSelect(id) {
       // let user = ''
     },
-    startDateChange (data) {
+    startDateChange(data) {
       this.startDate = data
       console.log(this.startDate)
     },
-    endDateChange (data) {
+    endDateChange(data) {
       this.endDate = data
       console.log(this.endDate)
     },
-    pageChange (currentPage) {
+    pageChange(currentPage) {
       console.log(currentPage)
     }
   }
