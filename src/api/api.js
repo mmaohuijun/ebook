@@ -32,7 +32,7 @@ const responseStatus = {
 $axios.interceptors.request.use(config => {
   store.commit('showLoading')
   // 在发送请求之前做些什么
-  console.log('config', config)
+  console.log('axios Config', config)
   return config
 }, error => {
   // 对请求错误做些什么

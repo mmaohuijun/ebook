@@ -8,15 +8,20 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   // 定义状态
   state: {
+    CASE_ID: '', // 案场id
     loading: false,
     ifLogin: true, // 账号是否登录
     ifShowMsg: false,
     msgText: '666'
   },
   getters: {
-    getLoginStatus: state => state.ifLogin
+    getLoginStatus: state => state.ifLogin,
+    getCaseId: state => state.CASE_ID
   },
   mutations: {
+    initCaseId(state, id) {
+      state.CASE_ID = id
+    },
     showLoading(state) {
       state.loading = true
     },

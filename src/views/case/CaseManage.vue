@@ -3,9 +3,9 @@
   <div class="layout__header">
     <h2 class="layout__header-title">案场管理</h2>
     <div class="layout__header-tool">
-      <Input class="custom__search" icon="search" placeholder="案场／组织"></Input>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a"></Button>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus"></Button>
+      <Input class="custom__search" icon="search" placeholder="案场／组织" v-model="searchText" @on-click="goSearch"></Input>
+      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-show="selectId.length !== 0" @click="deleteItem"></Button>
+      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addCase"></Button>
     </div>
   </div>
   <div class="layout__body">
@@ -13,19 +13,6 @@
     <Page style="margin-top: 14px;" class="custom__page" :total="total" @on-change="changePage"></Page>
   </div>
 
-  <Modal v-model="ifShowDeleteComfirm" width="280">
-    <p slot="header" style="color:#f60;text-align:center">
-      <Icon type="information-circled"></Icon>
-      <span>删除确认</span>
-    </p>
-     <div style="text-align:center">
-      <p>此案场删除后，将无法恢复。</p>
-      <p>是否继续删除？</p>
-    </div> 
-    <div slot="footer">
-      <Button type="error" size="large" long :loading="delete_loading" @click="confirmDelete">删除</Button>
-    </div>
-  </Modal>
 </div>
 </template>
 <script>
@@ -33,13 +20,11 @@ export default {
   data() {
     return {
       caseId: '',
-      name: '', // 案场名
       pageNo: 1, // 页码
       pageSize: 20, // 页面大小
       total: 100,
-      selectId: '', // 已选择项
-      ifShowDeleteComfirm: false,
-      delete_loading: false,
+      selectId: [], // 已选择项
+      searchText: '', // 案场名(查询)
       caseTable: [
         {
           type: 'selection',
@@ -73,18 +58,18 @@ export default {
           width: 150,
           align: 'center',
           render: (h, params) => h('div', [
-            h('Button', {
-              props: {
-                type: 'text',
-                icon: 'trash-a',
-                size: 'small'
-              },
-              style: {
-                marginRight: '5px',
-                color: '#999',
-                fontSize: '22px'
-              }
-            }),
+            // h('Button', {
+            //   props: {
+            //     type: 'text',
+            //     icon: 'edit',
+            //     size: 'small'
+            //   },
+            //   style: {
+            //     marginRight: '5px',
+            //     color: '#999',
+            //     fontSize: '22px'
+            //   }
+            // }),
             h('Button', {
               props: {
                 type: 'text',
@@ -143,14 +128,33 @@ export default {
     initCaseList() {
       // 每次获取caseList要先清空
       // this.caseList = []
-      this.$axios.post('case/list', {
-        name: this.name,
+      const data = {
         pageNo: this.pageNo,
         pageSize: this.pageSize
-      }).then(response => {
+      }
+      if (!this.$_.isEmpty(this.searchText.trim())) {
+        console.log('notEmpty', this.searchText)
+        data.name = this.searchText
+      }
+      this.$axios.post('case/list', data).then(response => {
         if (response === null) return
         console.log('案场列表', response)
       })
+    },
+    // 查询
+    goSearch() {
+      console.log('goSearch', this.searchText)
+      if (this.$_.isEmpty(this.searchText.trim())) {
+        this.$Message.error('请输入案场名!')
+        this.searchText = ''
+        return
+      }
+      this.initCaseList()
+    },
+    // 新建案场
+    addCase() {
+      console.log('addCase')
+      this.$router.push('caseInfo/0')
     },
     // 点击分页
     changePage(pageNo) {
@@ -164,40 +168,45 @@ export default {
       this.caseId = item.id
       this.$router.push(`caseInfo/${this.caseId}`)
     },
+    // 选中列表
     onSelectCaseItem(item) {
       console.log('onSelectCaseItem', item)
+      const select = []
+      for (const ele of item) {
+        select.push(ele.id)
+      }
+      this.selectId = select.toString()
+      console.log(this.selectId)
     },
     deleteItem(item) {
       console.log('deleteItem', item)
-      this.ifShowDeleteComfirm = true
       this.caseId = item.id
+      this.$Modal.confirm({
+        title: '温馨提示',
+        content: '此操作不可恢复，确认删除？',
+        loading: true,
+        onOk: this.confirmDelete
+      })
     },
     confirmDelete() {
       console.log('confirmDelete', this.caseId)
-      this.delete_loading = true
-
-      let id = ''
-      if (this.$_.isArray(this.caseId)) {
-        id = this.caseId.toString()
-      } else {
-        id = this.caseId
-      }
-      console.log('del ID', id)
+      this.sendDeleteRequest(this.caseId)
+    },
+    // 发送删除请求
+    sendDeleteRequest(id) {
       this.$axios.post('case/del', { id }).then(response => {
         if (response === null) return
         console.log('案场列表', response)
       })
-
       setTimeout(() => {
-        this.ifShowDeleteComfirm = false
-        this.delete_loading = false
+        this.$Modal.remove()
         this.$Message.success('删除成功')
       }, 3000)
     }
   },
   mounted() {
     console.log('案场管理 mounted')
-    // this.initCaseList()
+    this.initCaseList()
   }
 }
 </script>

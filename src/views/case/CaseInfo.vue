@@ -88,41 +88,36 @@
 <template>
 <div class="layout__content">
   <div class="layout__header">
-    <h2 class="layout__header-title">案场管理Info</h2>
-    <div class="layout__header-tool">
-      <Input class="custom__search" icon="search" placeholder="案场／组织"></Input>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a"></Button>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus"></Button>
-    </div>
+    <h2 class="layout__header-title">案场管理 - {{this.caseId === '0' ? '新建客户' : caseDataSource.name}}</h2>
   </div>
   <div class="layout__body">
     <div class="field-box">
-    <Tabs value="name1" type="card" class="custom-tabs">
-      <Tab-pane label="案场信息" name="name1">
+    <Tabs :value="displayPane" type="card" class="custom-tabs">
+      <Tab-pane label="案场信息" name="caseInfo">
           <Form :model="formItem" :label-width="120" label-position="left">
               <div style="overflow: hidden; margin-bottom: 30px;">
                 <div class="field-logo">
                     <img src="../../assets/field_logo.jpg">
-                    <Button type="primary" class="custom-btn">更换logo</Button>
+                    <!-- <Button type="primary" class="custom-btn">更换logo</Button> -->
                 </div>
                 <div style="float: left; padding-left: 21px;">
                   <Form-item label="案场名称：">
-                    <Input placeholder="请输入"></Input>
+                    <Input placeholder="请输入" v-model="name"></Input>
                   </Form-item>
                   <Form-item label="所属组织：">
                     <Input placeholder="请输入"></Input>
                   </Form-item>
                   <Form-item label="公众号名称：">
-                    <Input placeholder="请输入"></Input>
+                    <Input placeholder="请输入" v-model="appName"></Input>
                   </Form-item>
                   <Form-item label="公众号ID：">
-                    <Input placeholder="请输入"></Input>
+                    <Input placeholder="请输入" v-model="appID"></Input>
                   </Form-item>
-                  <Form-item label="Selectkey：">
-                    <Input placeholder="请输入"></Input>
+                  <Form-item label="Secretkey：">
+                    <Input placeholder="请输入" v-model="appSecret"></Input>
                   </Form-item>
                   <Form-item label="短信验证：">
-                    <i-switch>
+                    <i-switch v-model="checkCust">
                       <span slot="open"></span>
                       <span slot="close"></span>
                     </i-switch>
@@ -130,24 +125,24 @@
                 </div>
                 <div class="field-bg">
                   <img src="../../assets/field_bg.jpg" alt="">
-                  <Button type="ghost" class="btn-upload-field-bg">上传图片</Button>
+                  <!-- <Button type="ghost" class="btn-upload-field-bg">上传图片</Button> -->
                 </div>
               </div>
               <div style="width: 540px; height: 43px;">
                 <Form-item label="案场位置：" style="width: 440px; float: left;">
-                  <Input placeholder="请输入"></Input>
+                  <Input placeholder="请输入" v-model="address"></Input>
                 </Form-item>
-                <Button type="primary" class="custom-btn" style="float: right; margin-top: -2px;">确定</Button>
+                <!-- <Button type="primary" class="custom-btn" style="float: right; margin-top: -2px;">确定</Button> -->
               </div>
-              <div class="field-map">
-                <img src="../../assets/map.jpg" style="width: 100%; height:430px;">
+              <div class="field-map" style="width: 100%; height:430px;">
+                <case-map :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
               </div>
               <div class="field-bottom-btn">
-                <Button type="primary" class="custom-btn">保存</Button>
+                <Button type="primary" class="custom-btn" @click="saveCaseInfo">保存</Button>
               </div>
           </Form>
       </Tab-pane>
-      <Tab-pane label="项目信息" name="name2">
+      <Tab-pane label="项目信息" name="projectInfo" disabled>
           <!-- 敬请期待 -->
           <Row :gutter="16">
               <Col :md="24" :lg="8" style="margin-bottom: 16px;">
@@ -342,16 +337,31 @@
               </Col>
           </Row>
       </Tab-pane>
-      <Tab-pane label="维度信息" name="name3">敬请期待</Tab-pane>
+      <Tab-pane label="维度信息" name="attrsInfo" disabled>敬请期待</Tab-pane>
     </Tabs>
     </div>
   </div>
 </div>
 </template>
 <script>
+import CaseMap from 'components/CaseMap'
+
 export default {
   data() {
     return {
+      caseDataSource: [],
+      name: '金地艺境', // 案场名
+      address: '青浦区大街1号', // 案场地址
+      location: { lng: 121.480652, lat: 31.2408 }, // 案场的经纬度
+      logoUrl: '', // 案场logo
+      bgImgUrl: '', // 案场背景图
+      checkCust: false, // 是否开启短信验证
+      remark: '', // 描述
+      appName: '金地艺境', // 公众号名称
+      appID: 'JDYJ2016', // 公众号id
+      appSecret: '8347GJSD', // 公众号密码
+      initialized: 0,
+      displayPane: 'caseInfo', // 选项栏显示栏
       houseTypeModel1: '',
       houseTypeModel2: '',
       houseTypeModel3: '',
@@ -465,15 +475,80 @@ export default {
       ]
     }
   },
-  methods: {
-    custom() {
-      this.$Modal.confirm({
-        title: '确认对话框标题',
-        content: '<Card>一些对话框内容</p><p>一些对话框内容</Card>',
-        okText: 'OK',
-        cancelText: 'Cancel'
-      })
+  computed: {
+    caseHeaderTitle() {
+      if (this.caseId === '0') {
+        return '新建客户'
+      } else {
+        return this.name
+      }
+    },
+    caseId() {
+      return this.$store.state.CASE_ID
     }
+  },
+  methods: {
+    initCaseInfo() {
+      this.$axios.get(`case/detail/${this.caseId}`).then(response => {
+        if (response === null) return
+        console.log('案场详情 response', response)
+      })
+    },
+    // 改变地图坐标点
+    changeCaseLocation(point) {
+      console.log('changeCaseLocation', point)
+      this.location = point
+    },
+    getCaseInfoData() {
+      const data = {
+        id: this.caseId,
+        name: this.name,
+        address: this.address,
+        logoUrl: this.logoUrl,
+        bgImgUrl: this.bgImgUrl,
+        checkCust: this.checkCust,
+        remark: this.remark,
+        appName: this.appName,
+        appID: this.appID,
+        appSecret: this.appSecret,
+        'location.lng': this.location.lng,
+        'location.lat': this.location.lat
+      }
+      return data
+    },
+    // 案场信息 - 点击保存
+    saveCaseInfo() {
+      const data = this.getCaseInfoData()
+      console.log('saveCaseInfo', data)
+      this.$axios.get('case/save', data).then(response => {
+        if (response === null) return
+        console.log('案场详情保存 response', response)
+      })
+    },
+    clearAllData() {
+      this.name = ''
+      this.address = ''
+      this.logoUrl = ''
+      this.bgImgUrl = ''
+      this.checkCust = false
+      this.remark = ''
+      this.appName = ''
+      this.appID = ''
+      this.appSecret = ''
+      this.location = {}
+    }
+  },
+  mounted() {
+    console.log('案场详情 mounted', this.caseId)
+    if (this.caseId === '0') {
+      console.log('clearAllData')
+      this.clearAllData()
+      return
+    }
+    this.initCaseInfo()
+  },
+  components: {
+    CaseMap
   }
 }
 </script>

@@ -24,7 +24,7 @@ const router = new Router({
       component: Layout,
       children: [
         { path: '', name: 'CaseManage', component: CaseManage },
-        { path: 'caseInfo/:id', name: 'CaseInfo', component: CaseInfo },
+        { path: 'caseInfo/:caseId', name: 'CaseInfo', component: CaseInfo },
         { path: 'user', name: 'User', component: User }
       ],
       meta: { requiresLogin: true }
@@ -40,6 +40,13 @@ router.beforeEach((to, from, next) => {
     if (!store.getters.getLoginStatus) {
       next({ path: '/login' })
     } else {
+      // 判断url后面是否带有参数
+      if (!_.isEmpty(to.params)) {
+        if (to.name === 'CaseInfo') {
+          const caseId = to.params.caseId
+          store.commit('initCaseId', caseId)
+        }
+      }
       next()
     }
   } else {
