@@ -9,9 +9,9 @@
     <h2 class="layout__header-title">用户 - 外部用户</h2>
     <div class="layout__header-tool">
       <span style="font-size:16px; color:#fff; padding: 0 10px;">时间</span>
-      <Date-picker class="custom__input--white" type="date" :options="maxData" format="yyyy-MM-dd" @on-change="startDateChange" placeholder="开始日期" style="width: 120px"></Date-picker>
+      <Date-picker confirm :editable="false" class="custom__input--white" type="date" :options="maxData" format="yyyy-MM-dd" @on-ok="startDateOk" @on-change="startDateChange" placeholder="开始日期" style="width: 120px"></Date-picker>
       <span style="font-size:16px; color:#fff; padding: 0 10px;">-</span>
-      <Date-picker class="custom__input--white" type="date" :option="minData" format="yyyy-MM-dd" @on-change="endDateChange" placeholder="结束日期" style="width: 120px; margin-right: 30px;"></Date-picker>
+      <Date-picker confirm :editable="false" class="custom__input--white" type="date" :option="minData" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="endDateChange" placeholder="结束日期" style="width: 120px; margin-right: 30px;"></Date-picker>
       <Input class="custom__search" icon="search" placeholder="姓名／手机号"></Input>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="trashSelect"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addModal"></Button>
@@ -63,18 +63,18 @@ export default {
     return {
       maxData: {        // 开始时间的最大时间
         disabledDate(date) {
-          console.log(date)
+          // console.log(date)
         }
       },
       minData: {        // 结束时间的最小时间
         disabledDate(date) {
-          console.log(date)
+          // console.log(date)
         }
       },
       startDate: '',    // 开始时间
-      endDate: '2017-10-21',      // 结束时间
+      endDate: '',      // 结束时间
       name: '',         // 搜索关键字
-      selectedUser: '', // 选中的用户
+      selectedId: '',   // 选中的用户Id
       isTrash: false,   // 是否显示删除按钮
       modal: false,     // 是否显示编辑和查看弹出框
       pageNo: 1,        // 页码
@@ -208,7 +208,7 @@ export default {
         },
         {
           id: 3,
-          name: '张磊2',
+          name: '张磊3',
           mobile: '15811110000',
           email: '213sdga@163.com',
           no: 'XXXXX',
@@ -222,10 +222,16 @@ export default {
       this.userListData.splice(index, 1)
     },
     addModal() {
+      for (const item in this.formValidate) {
+        this.formValidate[item] = ''
+      }
       this.modal = true
     },
     editModal(index) {
-      this.formValidate = this.userListData[index]
+      // this.formValidate = this.userListData[index]
+      for (const k in this.userListData[index]) {
+        this.formValidate[k] = this.userListData[index][k]
+      }
       this.modal = true
     },
     onSelect(selection) {
@@ -233,28 +239,85 @@ export default {
       const idList = []
 
       this.isTrash = selection.length > 0
-      that.selectedUser = ''
+      that.selectedId = ''
 
       for (let i = selection.length - 1; i >= 0; i--) {
         idList.push(selection[i].id)
       }
 
-      that.selectedUser = idList.join(',')
+      that.selectedId = idList.join(',')
     },
     trashSelect(id) {
-      // let user = ''
+      console.log(this.selectedId)
+      this.$Modal.confirm({
+        content: '此操作不可恢复，确认删除用户？',
+        onOk: () => {
+          this.$Message.success('删除成功')
+        }
+      })
     },
-    startDateChange(data) {
-      this.startDate = data
-      console.log(this.startDate)
+    startDateChange(date) {
+      this.startDate = date
     },
-    endDateChange(data) {
-      this.endDate = data
-      console.log(this.endDate)
+    endDateChange(date) {
+      this.endDate = date
+    },
+    startDateOk(data) {
+      if (this.endDate) {
+        console.log('startDate:' + this.startDate)
+      }
+    },
+    endDateOk(data) {
+      if (this.startDate) {
+        console.log('endDate:' + this.endDate)
+      }
     },
     pageChange(currentPage) {
       console.log(currentPage)
+    },
+    getData() {
+      const that = this
+      this.$axios.post('/int-user/list', {
+        name: '',
+        startDate: '',
+        endDate: '',
+        pageNo: '',
+        pageSize: ''
+      }).then(response => {
+        console.log(response)
+        if (response === null) return
+        const data = [
+          {
+            id: 4,
+            name: '张磊4',
+            mobile: '15811110000',
+            email: '213sdga@163.com',
+            no: 'XXXXX', // 工号
+            createTime: '2017-06-06'
+          },
+          {
+            id: 5,
+            name: '张磊5',
+            mobile: '15811110000',
+            email: '213sdga@163.com',
+            no: 'XXXXX',
+            createTime: '2017-06-06'
+          },
+          {
+            id: 6,
+            name: '张磊6',
+            mobile: '15811110000',
+            email: '213sdga@163.com',
+            no: 'XXXXX',
+            createTime: '2017-06-06'
+          }
+        ]
+        that.userListData.push(data)
+      })
     }
+  },
+  mounted() {
+    this.getData()
   }
 }
 </script>
