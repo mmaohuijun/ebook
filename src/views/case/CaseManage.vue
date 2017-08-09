@@ -4,7 +4,7 @@
     <h2 class="layout__header-title">案场管理</h2>
     <div class="layout__header-tool">
       <Input class="custom__search" icon="search" placeholder="案场" v-model="searchText" @on-click="goSearch"></Input>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-show="selectId.length !== 0" @click="deleteItem"></Button>
+      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-show="selectId.length !== 0" @click="deleteItem('select')"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addCase"></Button>
     </div>
   </div>
@@ -44,7 +44,7 @@ export default {
         // },
         {
           title: '项目名称',
-          key: 'address',
+          key: 'projectName',
           ellipsis: true
         },
         {
@@ -146,7 +146,6 @@ export default {
         select.push(ele.id)
       }
       this.selectId = select.toString()
-      console.log(this.selectId)
     },
     deleteItem(item) {
       console.log('deleteItem', item)
@@ -178,7 +177,6 @@ export default {
     }
   },
   mounted() {
-    console.log('案场管理 mounted')
     this.initCaseList()
   }
 }

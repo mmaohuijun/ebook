@@ -547,9 +547,7 @@ export default {
     }
   },
   mounted() {
-    console.log('案场详情 mounted', this.caseId)
     if (this.caseId === '0') {
-      console.log('clearAllData')
       this.clearAllData()
       return
     }

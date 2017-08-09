@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from '../vuex/store'
 import qs from 'qs'
 
-const devURL = 'http://172.18.84.75:8800/admin/'
+const devURL = 'http://172.18.84.75:88/admin/'
 const proURL = ''
 
 const ajaxUrl = process.env.NODE_ENV === 'production' ? proURL : devURL
