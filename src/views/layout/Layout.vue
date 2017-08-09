@@ -339,7 +339,7 @@ export default {
     border-top: none;
     text-align: center;
 
-    > .ivu-btn {
+    .ivu-btn {
       height: 32px;
       line-height: 32px;
       padding: 0 22px;
@@ -355,7 +355,7 @@ export default {
       }
     }
 
-    > .ivu-btn:first-child {
+    .ivu-btn:first-child {
       margin-right: 70px;
       background: #d8d8d8;
       color: #555;
