@@ -3,14 +3,14 @@
   <div class="layout__header">
     <h2 class="layout__header-title">案场管理</h2>
     <div class="layout__header-tool">
-      <Input class="custom__search" icon="search" placeholder="案场／组织" v-model="searchText" @on-click="goSearch"></Input>
+      <Input class="custom__search" icon="search" placeholder="案场" v-model="searchText" @on-click="goSearch"></Input>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-show="selectId.length !== 0" @click="deleteItem"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addCase"></Button>
     </div>
   </div>
   <div class="layout__body">
     <Table class="custom__table" :columns="caseTable" :data="caseList" @on-row-click="onClickCaseItem" @on-selection-change="onSelectCaseItem"></Table>
-    <Page style="margin-top: 14px;" class="custom__page" :total="total" @on-change="changePage"></Page>
+    <Page style="margin-top: 14px;" class="custom__page" :total="total" :page-size="pageSize" @on-change="changePage"></Page>
   </div>
 
 </div>
@@ -22,7 +22,7 @@ export default {
       caseId: '',
       pageNo: 1, // 页码
       pageSize: 20, // 页面大小
-      total: 100,
+      total: 0,
       selectId: [], // 已选择项
       searchText: '', // 案场名(查询)
       caseTable: [
@@ -34,17 +34,17 @@ export default {
         },
         {
           title: '案场',
-          key: 'field',
-          ellipsis: true
-        },
-        {
-          title: '所属组织',
           key: 'name',
           ellipsis: true
         },
+        // {
+        //   title: '所属组织',
+        //   key: 'name',
+        //   ellipsis: true
+        // },
         {
           title: '项目名称',
-          key: 'projectName',
+          key: 'address',
           ellipsis: true
         },
         {
@@ -90,44 +90,11 @@ export default {
           ])
         }
       ],
-      caseList: [
-        // {
-        //   id: 2017,
-        //   name: '中南售楼处',
-        //   address: '青浦区大街1号',
-        //   officeId: 2352,
-        //   officeName: 'XXXXXXXX',
-        //   remark: '描述',
-        //   appName: '中南招商世城' // 公众号名称
-        // },
-        {
-          id: '002',
-          field: '金地艺境2',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          appName: '金地艺境'
-        },
-        {
-          id: '003',
-          field: '金地艺境3',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          appName: '金地艺境'
-        },
-        {
-          id: '004',
-          field: '金地艺境4',
-          name: '上海东区事业部',
-          projectName: '金地艺境一期',
-          appName: '金地艺境'
-        }
-      ]
+      caseList: []
     }
   },
   methods: {
     initCaseList() {
-      // 每次获取caseList要先清空
-      // this.caseList = []
       const data = {
         pageNo: this.pageNo,
         pageSize: this.pageSize
@@ -139,6 +106,9 @@ export default {
       this.$axios.get('case/list', { params: data }).then(response => {
         if (response === null) return
         console.log('案场列表', response)
+        const reData = response.data
+        this.caseList = reData.list
+        this.total = reData.total
       })
     },
     // 查询
@@ -190,18 +160,21 @@ export default {
     },
     confirmDelete() {
       console.log('confirmDelete', this.caseId)
-      this.sendDeleteRequest(this.caseId)
+      if (!_.isEmpty(this.selectId)) {
+        this.sendDeleteRequest(this.selectId)
+      } else {
+        this.sendDeleteRequest(this.caseId)
+      }
     },
     // 发送删除请求
     sendDeleteRequest(id) {
-      this.$axios.post('case/del', { id }).then(response => {
+      this.$axios.get('case/del', { params: { id } }).then(response => {
         if (response === null) return
         console.log('案场列表', response)
-      })
-      setTimeout(() => {
         this.$Modal.remove()
         this.$Message.success('删除成功')
-      }, 3000)
+        this.initCaseList()
+      })
     }
   },
   mounted() {

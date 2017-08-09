@@ -8,10 +8,14 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   // 定义状态
   state: {
+    LOGIN_NAME: '',
+    NAME: '',
+    MOBILE: '',
+    NUMBER: '',
     CASE_ID: '', // 案场id
     loading: false,
-    ifLogin: false, // 账号是否登录
-    ifShowMsg: false,
+    ifLogin: true, // 账号是否登录
+    ifShowErrorMsg: false,
     msgText: '666'
   },
   getters: {
@@ -19,6 +23,12 @@ const store = new Vuex.Store({
     getCaseId: state => state.CASE_ID
   },
   mutations: {
+    initInfo(state, json) {
+      state.NAME = json.name
+      state.LOGIN_NAME = json.loginName
+      state.MOBILE = json.mobile
+      state.NUMBER = json.no
+    },
     initCaseId(state, id) {
       state.CASE_ID = id
     },
@@ -28,11 +38,11 @@ const store = new Vuex.Store({
     hideLoading(state) {
       state.loading = false
     },
-    showMsg(state, text) {
-      state.ifShowMsg = true
+    showErrorMsg(state, text) {
+      state.ifShowErrorMsg = true
       state.msgText = text
       setTimeout(() => {
-        state.ifShowMsg = false
+        state.ifShowErrorMsg = false
       }, 3000)
     },
     hasLogin(state) {

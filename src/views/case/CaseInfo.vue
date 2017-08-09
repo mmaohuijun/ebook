@@ -350,16 +350,16 @@ export default {
   data() {
     return {
       caseDataSource: [],
-      name: '金地艺境', // 案场名
-      address: '青浦区大街1号', // 案场地址
-      location: { lng: 121.480652, lat: 31.2408 }, // 案场的经纬度
+      name: '', // 案场名
+      address: '', // 案场地址
+      location: {}, // 案场的经纬度
       logoUrl: '', // 案场logo
       bgImgUrl: '', // 案场背景图
       checkCust: false, // 是否开启短信验证
       remark: '', // 描述
-      appName: '金地艺境', // 公众号名称
-      appID: 'JDYJ2016', // 公众号id
-      appSecret: '8347GJSD', // 公众号密码
+      appName: '', // 公众号名称
+      appID: '', // 公众号id
+      appSecret: '', // 公众号密码
       initialized: 0,
       displayPane: 'caseInfo', // 选项栏显示栏
       houseTypeModel1: '',
@@ -489,9 +489,13 @@ export default {
   },
   methods: {
     initCaseInfo() {
-      this.$axios.get(`case/detail/${this.caseId}`).then(response => {
+      this.$axios.get('case/detail', { params: { id: this.caseId } }).then(response => {
         if (response === null) return
         console.log('案场详情 response', response)
+        const reData = response.data
+        for (const key in reData) {
+          this[key] = reData[key]
+        }
       })
     },
     // 改变地图坐标点
@@ -520,9 +524,13 @@ export default {
     saveCaseInfo() {
       const data = this.getCaseInfoData()
       console.log('saveCaseInfo', data)
-      this.$axios.get('case/save', data).then(response => {
+      this.$axios.get('case/save', { params: data }).then(response => {
         if (response === null) return
         console.log('案场详情保存 response', response)
+        this.$Message.success({
+          content: '保存成功',
+          duration: 3
+        })
       })
     },
     clearAllData() {
@@ -535,7 +543,7 @@ export default {
       this.appName = ''
       this.appID = ''
       this.appSecret = ''
-      this.location = {}
+      this.location = { lng: 121.480652, lat: 31.2408 }
     }
   },
   mounted() {

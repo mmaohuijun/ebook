@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from '../vuex/store'
 import qs from 'qs'
 
-const devURL = 'http://172.18.84.75:88/admin/'
+const devURL = 'http://172.18.84.75:8800/admin/'
 const proURL = ''
 
 const ajaxUrl = process.env.NODE_ENV === 'production' ? proURL : devURL
@@ -31,7 +31,7 @@ const responseStatus = {
 $axios.interceptors.request.use(config => {
   store.commit('showLoading')
   // 在发送请求之前做些什么
-  console.log('axios Config', config)
+  // console.log('axios Config', config)
   return config
 }, error => {
   // 对请求错误做些什么
@@ -44,12 +44,15 @@ $axios.interceptors.response.use(response => {
   store.commit('hideLoading')
   // 对响应数据做点什么
   console.log('响应response', response)
-  const retStatus = response.data.retStatus
+  const retCode = response.data.retCode
+  const retMsg = response.data.retMsg
 
-  if (retStatus === responseStatus.sessiontimeout) {
+  if (retCode === responseStatus.ok) {
+    return response.data
+  } else { // 请求不成功, 提示错误信息
+    store.commit('showErrorMsg', retMsg)
     return null
   }
-  return response.data
 }, error => {
   store.commit('hideLoading')
   // 对请求错误做些什么

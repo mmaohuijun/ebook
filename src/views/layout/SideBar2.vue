@@ -3,66 +3,54 @@
   <div class="layout__aside_scroll">
     <div class="layout__aside-header">
       <div class="layout__aside-avatar"><img src="../../assets/logo.png" alt=""></div>
-      <p class="layout__aside-name">王某某</p>
+      <p class="layout__aside-name">{{name}}</p>
       <ul class="layout__aside-info">
-        <li><p>账号：2736273</p><router-link to="/">修改密码</router-link></li>
-        <li><p>联系方式：1672829763</p><router-link to="/">修改</router-link></li>
+        <li>
+          <p>账号：{{loginName}}</p>
+          <!-- <router-link to="/">修改密码</router-link> -->
+        </li>
+        <li>
+          <p>联系方式：{{mobile}}</p>
+          <!-- <router-link to="/">修改</router-link> -->
+        </li>
       </ul>
     </div>
     <div class="laylout__aside-menu">
-      <!-- <div class="menu__item" v-for="(values, key, index) in menuDataSource" :key="key">
-        <router-link to="" class="menu__link" :tag="values.length === 0 ? 'a' : 'div'">{{key}}</router-link>
-        <p class="menu__child" v-for="(item, index) in values" :key="index">
-          <router-link :to="item.path" class="menu__link">{{item.title}}</router-link>
+       <div class="menu__item" v-for="(ele, index) in menuDataSource" :key="index">
+        <router-link :to="ele.path" class="menu__link" :tag="ele.subMenu.length === 0 ? 'a' : 'div'">{{ele.title}}</router-link>
+        <p class="menu__child" v-for="(item, index) in ele.subMenu" :key="index" @click="selectMenu = item.key">
+          <router-link :to="item.path" :class="selectMenu === item.key ? 'menu__link menu__link--current' : 'menu__link'">{{item.title}}</router-link>
         </p>
-      </div> -->
-
-      <div class="menu__item">
-        <div class="menu__link">案场</div>
-        <p class="menu__child"><router-link to="/" class="menu__link menu__link--current">案场管理</router-link></p>
-      </div>
-      <div class="menu__item">
-        <router-link to="/" class="menu__link">组织</router-link>
-      </div>
-      <div class="menu__item">
-        <router-link to="" class="menu__link" tag="div">用户2</router-link>
-        <div class="menu__link">用户</div>
-        <p class="menu__child"><router-link to="/user" class="menu__link">内部用户</router-link></p>
-        <p class="menu__child"><router-link to="/user" class="menu__link">外部用户</router-link></p>
-      </div>
-      <div class="menu__item">
-        <router-link to="" class="menu__link">权限</router-link>
-      </div>
-      <div class="menu__item">
-        <div class="menu__link">客户数据</div>
-        <p class="menu__child"><router-link to="/" class="menu__link">来电记录</router-link></p>
-        <p class="menu__child"><router-link to="/" class="menu__link">到访记录</router-link></p>
-        <p class="menu__child"><router-link to="/" class="menu__link">成交记录</router-link></p>
-        <p class="menu__child"><router-link to="/" class="menu__link">未分配客户</router-link></p>
-        <p class="menu__child"><router-link to="/" class="menu__link">新建客户</router-link></p>
-      </div>
-      <div class="menu__item">
-        <router-link to="/" class="menu__link">硬件列表</router-link>
       </div>
     </div>
   </div>
 </aside>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'SideBar2',
   data() {
     return {
-      menuDataSource: {
-        案场: [{ title: '案场管理', path: '/' }],
-        组织: [],
-        用户: [{ title: '内部用户', path: '/user' }, { title: '外部用户', path: '/user' }],
-        权限: [],
-        客户数据: [{ title: '来电记录', path: '/' }, { title: '到访记录', path: '/' }, { title: '成交记录', path: '/' }, { title: '未分配客户', path: '/' }, { title: '新建客户', path: '/' }],
-        硬件列表: []
-      }
+      selectMenu: 'caseMag',
+      menuDataSource: [
+        { title: '案场', path: '', key: 'case', subMenu: [{ title: '案场管理', path: '/', key: 'caseMag' }] },
+        { title: '组织', path: '', key: 'org', subMenu: [] },
+        { title: '用户', path: '', key: 'user', subMenu: [{ title: '内部用户', path: '/user', key: 'userin' }, { title: '外部用户', path: '/user', key: 'userout' }] },
+        { title: '权限', path: '', key: 'auth', subMenu: [] },
+        { title: '客户数据', path: '', key: 'cdata', subMenu: [{ title: '来电记录', path: '/', key: 'call' }, { title: '到访记录', path: '/', key: 'visit' }, { title: '成交记录', path: '/', key: 'deal' }, { title: '未分配客户', path: '/', key: 'unasign' }, { title: '新建客户', path: '/', key: 'newclient' }] },
+        { title: '硬件列表', path: '', key: 'hardw', subMenu: [] }
+      ]
     }
-  }
+  },
+  computed: {
+    ...mapState({
+      loginName: state => state.LOGIN_NAME,
+      name: state => state.NAME,
+      mobile: state => state.MOBILE,
+      number: state => state.NUMBER
+    }) }
 }
 </script>
 <style lang="less" scoped>

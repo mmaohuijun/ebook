@@ -17,7 +17,7 @@ export default {
   computed: {
     ...mapState({
       ifShowLoading: state => state.loading,
-      ifShowMsg: state => state.ifShowMsg,
+      ifShowErrorMsg: state => state.ifShowErrorMsg,
       msgText: state => state.msgText
     })
   },
@@ -32,7 +32,7 @@ export default {
         this.$Message.destroy()
       }
     },
-    ifShowMsg(flag) {
+    ifShowErrorMsg(flag) {
       if (!flag) return
       this.$Message.error({
         content: this.msgText,

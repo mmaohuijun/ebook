@@ -51,10 +51,15 @@ export default {
         this.loading = false
         // 登录成功后登记一下login状态
         this.$store.commit('hasLogin')
+        const reData = response.data
+        const loginInfo = {
+          loginName: reData.loginName,
+          name: reData.name,
+          mobile: reData.mobile,
+          no: reData.no
+        }
+        this.$store.commit('initInfo', loginInfo)
         this.$router.push('/')
-      }, error => {
-        this.loading = false
-        this.$store.commit('showMsg', error)
       })
     }
   }
