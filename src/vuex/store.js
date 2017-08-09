@@ -10,7 +10,7 @@ const store = new Vuex.Store({
   state: {
     CASE_ID: '', // 案场id
     loading: false,
-    ifLogin: true, // 账号是否登录
+    ifLogin: false, // 账号是否登录
     ifShowMsg: false,
     msgText: '666'
   },

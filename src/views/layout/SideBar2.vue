@@ -10,20 +10,28 @@
       </ul>
     </div>
     <div class="laylout__aside-menu">
+      <!-- <div class="menu__item" v-for="(values, key, index) in menuDataSource" :key="key">
+        <router-link to="" class="menu__link" :tag="values.length === 0 ? 'a' : 'div'">{{key}}</router-link>
+        <p class="menu__child" v-for="(item, index) in values" :key="index">
+          <router-link :to="item.path" class="menu__link">{{item.title}}</router-link>
+        </p>
+      </div> -->
+
       <div class="menu__item">
         <div class="menu__link">案场</div>
         <p class="menu__child"><router-link to="/" class="menu__link menu__link--current">案场管理</router-link></p>
       </div>
       <div class="menu__item">
-        <a href="#" class="menu__link">组织</a>
+        <router-link to="/" class="menu__link">组织</router-link>
       </div>
       <div class="menu__item">
+        <router-link to="" class="menu__link" tag="div">用户2</router-link>
         <div class="menu__link">用户</div>
         <p class="menu__child"><router-link to="/user" class="menu__link">内部用户</router-link></p>
         <p class="menu__child"><router-link to="/user" class="menu__link">外部用户</router-link></p>
       </div>
       <div class="menu__item">
-        <a href="#" class="menu__link">权限</a>
+        <router-link to="" class="menu__link">权限</router-link>
       </div>
       <div class="menu__item">
         <div class="menu__link">客户数据</div>
@@ -45,6 +53,14 @@ export default {
   name: 'SideBar2',
   data() {
     return {
+      menuDataSource: {
+        案场: [{ title: '案场管理', path: '/' }],
+        组织: [],
+        用户: [{ title: '内部用户', path: '/user' }, { title: '外部用户', path: '/user' }],
+        权限: [],
+        客户数据: [{ title: '来电记录', path: '/' }, { title: '到访记录', path: '/' }, { title: '成交记录', path: '/' }, { title: '未分配客户', path: '/' }, { title: '新建客户', path: '/' }],
+        硬件列表: []
+      }
     }
   }
 }

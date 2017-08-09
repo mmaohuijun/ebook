@@ -51,10 +51,10 @@ export default {
         this.loading = false
         // 登录成功后登记一下login状态
         this.$store.commit('hasLogin')
+        this.$router.push('/')
       }, error => {
         this.loading = false
         this.$store.commit('showMsg', error)
-        console.log('登录失败', error)
       })
     }
   }

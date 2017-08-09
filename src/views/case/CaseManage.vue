@@ -136,7 +136,7 @@ export default {
         console.log('notEmpty', this.searchText)
         data.name = this.searchText
       }
-      this.$axios.post('case/list', data).then(response => {
+      this.$axios.get('case/list', { params: data }).then(response => {
         if (response === null) return
         console.log('案场列表', response)
       })

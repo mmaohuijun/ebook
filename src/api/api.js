@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from '../vuex/store'
 import qs from 'qs'
 
-const devURL = 'http://172.18.84.75:8080/admin/'
+const devURL = 'http://172.18.84.75:88/admin/'
 const proURL = ''
 
 const ajaxUrl = process.env.NODE_ENV === 'production' ? proURL : devURL
@@ -21,10 +21,9 @@ const $axios = axios.create({
 
 const responseStatus = {
   ok: '000', // 成功
-  notBind: '003', // 身份未验证
+  sessiontimeout: '003', // 未登录或会话已失效
   noAuthority: '004', // 权限不足
   customerError: '001', // 后台自定义错误
-  sessiontimeout: '008', // 未登录或会话已失效
   requestError: '999' // 请求错误
 }
 
@@ -48,6 +47,7 @@ $axios.interceptors.response.use(response => {
   const retStatus = response.data.retStatus
 
   if (retStatus === responseStatus.sessiontimeout) {
+    return null
   }
   return response.data
 }, error => {
