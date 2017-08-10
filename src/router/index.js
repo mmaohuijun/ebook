@@ -7,7 +7,7 @@ import CaseManage from 'views/case/CaseManage'
 import CaseInfo from 'views/case/CaseInfo'
 import IntUser from 'views/user/IntUser'
 import ExtUser from 'views/user/ExtUser'
-import Login from 'views/Login'
+import Login from 'views/setting/Login'
 
 Vue.use(Router)
 
@@ -15,6 +15,7 @@ const router = new Router({
   mode: 'history',
   routes: [
     { path: '/', redirect: '/web-admin' },
+    { path: '/login', redirect: '/web-admin/login' },
     {
       path: '/web-admin/login',
       name: 'Login',
