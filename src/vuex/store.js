@@ -15,7 +15,7 @@ const store = new Vuex.Store({
     CASE_ID: '', // 案场id
     SIDEBAR_SELECT: '', // 侧边栏选中项
     loading: false,
-    ifLogin: true, // 账号是否登录
+    ifLogin: false, // 账号是否登录
     ifShowErrorMsg: false,
     msgText: ''
   },
