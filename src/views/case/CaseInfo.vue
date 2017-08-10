@@ -406,6 +406,7 @@ export default {
         if (response === null) return
         console.log('案场详情 response', response)
         const reData = response.data
+        this.caseDataSource = reData
         for (const key in reData) {
           this[key] = reData[key]
         }

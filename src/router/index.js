@@ -15,7 +15,6 @@ const router = new Router({
   mode: 'history',
   routes: [
     { path: '/', redirect: '/web-admin' },
-    { path: '/login', redirect: '/web-admin/login' },
     {
       path: '/web-admin/login',
       name: 'Login',
@@ -38,11 +37,15 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   console.log('router.beforeEach', to, from)
   store.commit('initSideBar', to.name)
+  if (to.name === 'CaseInfo') {
+    store.commit('initSideBar', 'CaseManage')
+  }
+
   // 检查route是否有meta信息
   if (to.matched.some(record => record.meta.requiresLogin)) {
     // 检查页面是否需要登录, 若没有登录则跳转登录页
     if (!store.getters.getLoginStatus) {
-      next({ path: '/login' })
+      next({ path: '/web-admin/login' })
     } else {
       // 判断url后面是否带有参数
       if (!_.isEmpty(to.params)) {
