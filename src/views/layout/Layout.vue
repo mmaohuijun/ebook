@@ -95,7 +95,7 @@ export default {
   }
 
   .custom__search {
-    width: 180px;
+    width: 180px !important;
     .ivu-input {
       height: 28px;
       border-color: transparent;
