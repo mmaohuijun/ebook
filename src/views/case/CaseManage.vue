@@ -157,8 +157,8 @@ export default {
         id = item.id
       }
       this.$Modal.confirm({
-        title: '温馨提示',
-        content: '此操作不可恢复，确认删除？',
+        // title: '温馨提示',
+        content: '此操作不可恢复，确认删除案场？',
         loading: true,
         onOk: () => {
           this.sendDeleteRequest(id)

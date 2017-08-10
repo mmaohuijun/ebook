@@ -5,7 +5,8 @@ import store from '../vuex/store'
 import Layout from 'views/layout/Layout'
 import CaseManage from 'views/case/CaseManage'
 import CaseInfo from 'views/case/CaseInfo'
-import User from 'views/user/user'
+import IntUser from 'views/user/IntUser'
+import ExtUser from 'views/user/ExtUser'
 import Login from 'views/Login'
 
 Vue.use(Router)
@@ -25,7 +26,8 @@ const router = new Router({
       children: [
         { path: '', name: 'CaseManage', component: CaseManage },
         { path: 'caseInfo/:caseId', name: 'CaseInfo', component: CaseInfo },
-        { path: 'user', name: 'User', component: User }
+        { path: 'intUser', name: 'IntUser', component: IntUser },
+        { path: 'extUser', name: 'ExtUser', component: ExtUser }
       ],
       meta: { requiresLogin: true }
     }

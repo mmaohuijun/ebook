@@ -37,7 +37,7 @@ export default {
       menuDataSource: [
         { title: '案场', path: '', key: 'case', subMenu: [{ title: '案场管理', path: '/', key: 'caseMag' }] },
         // { title: '组织', path: '', key: 'org', subMenu: [] },
-        { title: '用户', path: '', key: 'user', subMenu: [{ title: '内部用户', path: '/user', key: 'userin' }, { title: '外部用户', path: '/user', key: 'userout' }] }
+        { title: '用户', path: '', key: 'user', subMenu: [{ title: '内部用户', path: '/intUser', key: 'intUser' }, { title: '外部用户', path: '/extUser', key: 'extUser' }] }
         // { title: '权限', path: '', key: 'auth', subMenu: [] },
         // { title: '客户数据', path: '', key: 'cdata', subMenu: [{ title: '来电记录', path: '/', key: 'call' }, { title: '到访记录', path: '/', key: 'visit' }, { title: '成交记录', path: '/', key: 'deal' }, { title: '未分配客户', path: '/', key: 'unasign' }, { title: '新建客户', path: '/', key: 'newclient' }] },
         // { title: '硬件列表', path: '', key: 'hardw', subMenu: [] }
