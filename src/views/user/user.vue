@@ -43,6 +43,9 @@
       <Form-item label="E-mail：" prop="email">
         <Input v-model="formValidate.email" placeholder="请您输入"></Input>
       </Form-item>
+      <Form-item label="工号：" prop="no">
+        <Input v-model="formValidate.no" placeholder="请您输入"></Input>
+      </Form-item>
       <!-- <Form-item label="权限：" prop="power">
         <Select v-model="formValidate.power" placeholder="请您选择...">
           <Option value="beijing">全选1</Option>
@@ -185,13 +188,7 @@ export default {
                 },
                 on: {
                   click() {
-                    that.$Modal.confirm({
-                      content: '此操作不可恢复，确认删除用户？',
-                      onOk: () => {
-                        that.removeUser(params.index)
-                        that.$Message.success('删除成功')
-                      }
-                    })
+                    that.removeUser(params.row.id)
                   }
                 }
               })
@@ -212,8 +209,19 @@ export default {
     }
   },
   methods: {
-    removeUser(index) {
-      this.userListData.splice(index, 1)
+    removeUser(selectedId) {
+      // this.userListData.splice(index, 1)
+      const that = this
+      this.$Modal.confirm({
+        content: '此操作不可恢复，确认删除用户？',
+        onOk: () => {
+          that.$axios.get('/int-user/del', { params: { id: selectedId } }).then(response => {
+            if (response === null) return
+            that.$Message.success('删除成功')
+            this.getData()
+          })
+        }
+      })
     },
     addModal() {
       for (const item in this.formValidate) {
@@ -238,13 +246,9 @@ export default {
         if (valid) {
           this.modal.saveLoading = true
           if (this.formValidate.id === 0) {
-            // setTimeout(() => {
             this.saveUserInfo('新建用户成功')
-            // }, 2000)
           } else {
-            // setTimeout(() => {
             this.saveUserInfo('修改用户成功')
-            // }, 2000)
           }
         } else {
           this.modal.saveLoading = false
@@ -252,13 +256,18 @@ export default {
       })
     },
     saveUserInfo(successText) {
-      console.log('1:' + this.formValidate.name)
       const data = {
+        id: this.formValidate.id,
+        name: this.formValidate.name,
+        mobile: this.formValidate.mobile,
+        password: this.formValidate.password,
         email: this.formValidate.email,
-        name: this.formValidate.name
+        no: this.formValidate.no
       }
+      console.log('1:' + data.id)
       this.$axios.get('/int-user/save', { params: data }).then(response => {
         if (response === null) return
+        this.getData()
         this.$Message.success(successText)
       })
       console.log('2:' + this.formValidate.name)
@@ -283,12 +292,13 @@ export default {
     },
     trashSelect(id) {
       console.log(this.postData.selectedId)
-      this.$Modal.confirm({
-        content: '此操作不可恢复，确认删除用户？',
-        onOk: () => {
-          this.$Message.success('删除成功')
-        }
-      })
+      this.removeUser(this.postData.selectedId)
+      // this.$Modal.confirm({
+      //   content: '此操作不可恢复，确认删除用户？',
+      //   onOk: () => {
+      //     this.$Message.success('删除成功')
+      //   }
+      // })
     },
     startDateChange(date) {
       this.postData.startDate = date
@@ -323,10 +333,11 @@ export default {
       this.$axios.get('/int-user/list', { params: that.postData }).then(response => {
         console.log(response)
         if (response === null) return
+        that.userListData = []
         for (const items in response.data.list) {
           that.userListData.push(response.data.list[items])
         }
-        // that.userListData.push(response.list)
+        that.total = response.data.total
       })
     }
   },
