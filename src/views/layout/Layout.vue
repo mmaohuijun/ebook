@@ -43,6 +43,7 @@ export default {
 </script>
 
 <style lang="less">
+.custom{
   .float-left {float: left;}
   .float-right {float: right;}
   .clearfix {
@@ -411,4 +412,5 @@ export default {
       display: none;
     }
   }
+}
 </style>

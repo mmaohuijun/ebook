@@ -58,7 +58,7 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
   .layout__aside{
     float: left;
     width: 260px;
