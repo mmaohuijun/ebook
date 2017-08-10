@@ -9,10 +9,10 @@
     <h2 class="layout__header-title">用户 - 外部用户</h2>
     <div class="layout__header-tool">
       <span style="font-size:16px; color:#fff; padding: 0 10px;">时间</span>
-      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" :options="maxData" format="yyyy-MM-dd" @on-ok="startDateOk" @on-change="postData.startDate=$event" v-model="postData.startDate" placeholder="开始日期" :clearable="false" style="width: 95px"></Date-picker>
+      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="startDateOk" @on-change="startDate=$event" v-model="startDate" placeholder="开始日期" :clearable="false" style="width: 95px"></Date-picker>
       <span style="font-size:16px; color:#fff; padding: 0 10px;">-</span>
-      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" :option="minData" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="postData.endDate=$event" v-model="postData.endDate" placeholder="结束日期" :clearable="false" style="width: 95px; margin-right: 30px;"></Date-picker>
-      <Input class="custom__search" icon="search" placeholder="姓名／手机号" v-model="postData.name" @on-click="textSearch"></Input>
+      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="endDate=$event" v-model="endDate" placeholder="结束日期" :clearable="false" style="width: 95px; margin-right: 30px;"></Date-picker>
+      <Input class="custom__search" icon="search" placeholder="姓名／手机号" v-model="name" @on-click="textSearch"></Input>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="removeUser(postData.selectedId)"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addModal"></Button>
     </div>
@@ -45,6 +45,17 @@
       </Form-item>
       <Form-item label="工号：" prop="no">
         <Input v-model="formValidate.no" placeholder="请您输入"></Input>
+      </Form-item>
+      <Form-item label="案场：" prop="caseId">
+        <Select v-model="formValidate.caseId" placeholder="请您选择...">
+          <Option v-for="items in formValidate.caseList" :value="items.id" :key="items.id">{{items.id}}{{items.name}}</Option>
+        </Select>
+      </Form-item>
+      <Form-item label="管理员：">
+        <i-switch v-model="formValidate.adminFlag">
+          <span slot="open"></span>
+          <span slot="close"></span>
+        </i-switch>
       </Form-item>
       <!-- <Form-item label="权限：" prop="power">
         <Select v-model="formValidate.power" placeholder="请您选择...">
@@ -94,8 +105,11 @@ export default {
         pageNo: 1,         // 页码
         pageSize: 20       // 每页条数
       },
-      isTrash: false,    // 是否显示删除按钮
-      total: 20,         // 数据总条数
+      startDate: '',       // 开始时间
+      endDate: '',         // 结束时间
+      name: '',            // 搜索关键字
+      isTrash: false,      // 是否显示删除按钮
+      total: 20,           // 数据总条数
       formValidate: {
         id: '',           // id
         name: '',         // 姓名
@@ -103,10 +117,12 @@ export default {
         mobile: '',       // 电话
         email: '',        // 邮箱
         password: '',     // 密码
-        no: ''           // 工号
+        no: '',           // 工号
+        caseId: '',       // 案场ID
+        caseName: '',     // 案场名称
+        caseList: [],     // 案场列表
         // power: '1',    // 权限
-        // caseId: '',       // 案场ID
-        // adminFlag: false  // 是否案场管理员
+        adminFlag: false  // 是否案场管理员
       },
       ruleValidate: {
         name: [
@@ -120,13 +136,13 @@ export default {
         ],
         no: [
           { required: true, message: '工号不能为空', trigger: 'blur' }
-        ]
+        ],
         // power: [
         //   { required: true, message: '权限不能为空', trigger: 'change' }
         // ],
-        // caseId: [
-        //   { required: true, message: '案场不能为空', trigger: 'change' }
-        // ]
+        caseId: [
+          { required: true, message: '案场不能为空', trigger: 'change' }
+        ]
       },
       userListTitle: [
         {
@@ -218,7 +234,7 @@ export default {
       this.$Modal.confirm({
         content: '此操作不可恢复，确认删除用户？',
         onOk: () => {
-          that.$axios.get('/int-user/del', { params: { id: selectedId } }).then(response => {
+          that.$axios.get('/ext-user/del', { params: { id: selectedId } }).then(response => {
             if (response === null) return
             that.$Message.success('删除成功')
             this.getData()
@@ -235,11 +251,19 @@ export default {
       this.modal.show = true
     },
     editModal(userId) {
-      this.$axios.get('/int-user/detail', { params: { id: userId } }).then(response => {
+      this.$axios.get('/case/list', { params: { pageNo: 1, pageSize: 1000 } }).then(response => {
         if (response === null) return
-        for (const items in response.data) {
-          this.formValidate[items] = response.data[items]
+        for (const items in response.data.list) {
+          this.formValidate.caseList[items] = response.data.list[items]
         }
+
+        this.$axios.get('/ext-user/detail', { params: { id: userId } }).then(response => {
+          if (response === null) return
+          for (const items in response.data) {
+            this.formValidate[items] = response.data[items]
+          }
+          console.log(this.formValidate.caseId)
+        })
       })
       this.modal.title = '修改用户'
       this.modal.show = true
@@ -265,11 +289,14 @@ export default {
         mobile: this.formValidate.mobile,
         password: this.formValidate.password,
         email: this.formValidate.email,
-        no: this.formValidate.no
+        no: this.formValidate.no,
+        adminFlag: this.formValidate.adminFlag,
+        caseId: this.formValidate.caseId
       }
-      this.$axios.get('/int-user/save', { params: data }).then(response => {
+      this.$axios.get('/ext-user/save', { params: data }).then(response => {
         if (response === null) return
         this.$Message.success(successText)
+        this.postData.pageNo = 1
         this.getData()
       })
       this.modal.show = false
@@ -292,61 +319,45 @@ export default {
       that.postData.selectedId = idList.join(',')
     },
     startDateOk(data) {
-      if (this.postData.endDate) {
+      if (this.endDate) {
         this.dateSearch()
       }
     },
     endDateOk(data) {
-      if (this.postData.startDate) {
+      if (this.startDate) {
         this.dateSearch()
       }
     },
     dateSearch() {
-      const postData = {
-        name: '',
-        startDate: this.postData.startDate,
-        endDate: this.postData.endDate,
-        pageNo: 1,
-        pageSize: this.postData.pageSize
-      }
       this.postData.name = ''
+      this.postData.startDate = this.startDate
+      this.postData.endDate = this.endDate
       this.postData.pageNo = 1
-      this.getData(postData)
+
+      this.name = ''
+      this.getData()
     },
     textSearch() {
-      const postData = {
-        name: this.postData.name,
-        startDate: '',
-        endDate: '',
-        pageNo: 1,
-        pageSize: this.postData.pageSize
-      }
+      this.postData.name = this.name
       this.postData.startDate = ''
       this.postData.endDate = ''
       this.postData.pageNo = 1
-      this.getData(postData)
+
+      this.startDate = ''
+      this.endDate = ''
+      this.getData()
     },
     pageChange(currentPage) {
-      const postData = {
-        name: this.postData.name,
-        startDate: this.postData.startDate,
-        endDate: this.postData.endDate,
-        pageNo: currentPage,
-        pageSize: this.postData.pageSize
-      }
-      this.getData(postData)
+      this.postData.name = this.name
+      this.postData.startDate = this.startDate
+      this.postData.endDate = this.endDate
+      this.postData.pageNo = currentPage
+      this.getData()
     },
-    getData(data) {
+    getData() {
       const that = this
-      const postData = data || {
-        name: '',
-        startDate: '',
-        endDate: '',
-        pageNo: this.postData.pageNo,
-        pageSize: this.postData.pageSize
-      }
       console.log('当前页面：' + this.postData.pageNo)
-      this.$axios.get('/int-user/list', { params: postData }).then(response => {
+      this.$axios.get('/ext-user/list', { params: this.postData }).then(response => {
         if (response === null) return
         that.userListData = []
         for (const items in response.data.list) {
