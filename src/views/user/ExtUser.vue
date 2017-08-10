@@ -267,7 +267,6 @@ export default {
         email: this.formValidate.email,
         no: this.formValidate.no
       }
-      console.log('1:' + data.id)
       this.$axios.get('/int-user/save', { params: data }).then(response => {
         if (response === null) return
         this.$Message.success(successText)
@@ -292,12 +291,6 @@ export default {
 
       that.postData.selectedId = idList.join(',')
     },
-    startDateChange(date) {
-      // this.postData.startDate = date
-    },
-    endDateChange(date) {
-      // this.postData.endDate = date
-    },
     startDateOk(data) {
       if (this.postData.endDate) {
         this.dateSearch()
@@ -309,7 +302,6 @@ export default {
       }
     },
     dateSearch() {
-      // this.$_.assign(this.postData, { name: '', startDate: this.postData.startDate, endDate: this.postData.endDate, pageNo: 1, pageSize: this.postData.pageSize })
       const postData = {
         name: '',
         startDate: this.postData.startDate,
@@ -318,10 +310,10 @@ export default {
         pageSize: this.postData.pageSize
       }
       this.postData.name = ''
+      this.postData.pageNo = 1
       this.getData(postData)
     },
     textSearch() {
-      // this.$_.assign(this.postData, { name: this.postData.name, startDate: '', endDate: '', pageNo: 1, pageSize: this.postData.pageSize })
       const postData = {
         name: this.postData.name,
         startDate: '',
@@ -331,6 +323,7 @@ export default {
       }
       this.postData.startDate = ''
       this.postData.endDate = ''
+      this.postData.pageNo = 1
       this.getData(postData)
     },
     pageChange(currentPage) {
@@ -341,7 +334,6 @@ export default {
         pageNo: currentPage,
         pageSize: this.postData.pageSize
       }
-      // this.$_.assign(this.postData, { name: this.postData.name, startDate: this.postData.startDate, endDate: this.postData.endDate, pageNo: currentPage, pageSize: this.postData.pageSize })
       this.getData(postData)
     },
     getData(data) {
@@ -353,8 +345,8 @@ export default {
         pageNo: this.postData.pageNo,
         pageSize: this.postData.pageSize
       }
+      console.log('当前页面：' + this.postData.pageNo)
       this.$axios.get('/int-user/list', { params: postData }).then(response => {
-        console.log(response)
         if (response === null) return
         that.userListData = []
         for (const items in response.data.list) {
