@@ -18,7 +18,7 @@
     <div class="laylout__aside-menu">
        <div class="menu__item" v-for="(ele, index) in menuDataSource" :key="index">
         <router-link :to="ele.path" class="menu__link" :tag="ele.subMenu.length === 0 ? 'a' : 'div'">{{ele.title}}</router-link>
-        <p class="menu__child" v-for="(item, index) in ele.subMenu" :key="index" @click="selectMenu = item.key">
+        <p class="menu__child" v-for="(item, index) in ele.subMenu" :key="index" @click="onClickMenu(item.key)">
           <router-link :to="item.path" :class="selectMenu === item.key ? 'menu__link menu__link--current' : 'menu__link'">{{item.title}}</router-link>
         </p>
       </div>
@@ -33,11 +33,10 @@ export default {
   name: 'SideBar2',
   data() {
     return {
-      selectMenu: 'caseMag',
       menuDataSource: [
-        { title: '案场', path: '', key: 'case', subMenu: [{ title: '案场管理', path: '/', key: 'caseMag' }] },
+        { title: '案场', path: '', key: 'case', subMenu: [{ title: '案场管理', path: '/', key: 'CaseManage' }] },
         // { title: '组织', path: '', key: 'org', subMenu: [] },
-        { title: '用户', path: '', key: 'user', subMenu: [{ title: '内部用户', path: '/intUser', key: 'intUser' }, { title: '外部用户', path: '/extUser', key: 'extUser' }] }
+        { title: '用户', path: '', key: 'user', subMenu: [{ title: '内部用户', path: '/intUser', key: 'IntUser' }, { title: '外部用户', path: '/extUser', key: 'ExtUser' }] }
         // { title: '权限', path: '', key: 'auth', subMenu: [] },
         // { title: '客户数据', path: '', key: 'cdata', subMenu: [{ title: '来电记录', path: '/', key: 'call' }, { title: '到访记录', path: '/', key: 'visit' }, { title: '成交记录', path: '/', key: 'deal' }, { title: '未分配客户', path: '/', key: 'unasign' }, { title: '新建客户', path: '/', key: 'newclient' }] },
         // { title: '硬件列表', path: '', key: 'hardw', subMenu: [] }
@@ -49,8 +48,14 @@ export default {
       loginName: state => state.LOGIN_NAME,
       name: state => state.NAME,
       mobile: state => state.MOBILE,
-      number: state => state.NUMBER
-    }) }
+      number: state => state.NUMBER,
+      selectMenu: state => state.SIDEBAR_SELECT
+    }) },
+  methods: {
+    onClickMenu(key) {
+      this.$store.commit('initSideBar', key)
+    }
+  }
 }
 </script>
 <style lang="less" scoped>

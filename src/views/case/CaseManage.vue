@@ -10,7 +10,7 @@
   </div>
   <div class="layout__body">
     <Table class="custom__table" :columns="caseTable" :data="caseList" @on-row-click="onClickCaseItem" @on-selection-change="onSelectCaseItem"></Table>
-    <Page style="margin-top: 14px;" class="custom__page" :total="total" :page-size="pageSize" @on-change="changePage"></Page>
+    <Page style="margin-top: 14px;" class="custom__page" :total="total" :page-size="pageSize" @on-change="changePage" :current="pageNo"></Page>
   </div>
 
 </div>
@@ -90,7 +90,8 @@ export default {
           ])
         }
       ],
-      caseList: []
+      caseList: [],
+      afterSearch: false
     }
   },
   methods: {
@@ -99,7 +100,7 @@ export default {
         pageNo: this.pageNo,
         pageSize: this.pageSize
       }
-      if (!this.$_.isEmpty(this.searchText.trim())) {
+      if (this.afterSearch && !this.$_.isEmpty(this.searchText.trim())) {
         console.log('notEmpty', this.searchText)
         data.name = this.searchText
       }
@@ -116,9 +117,13 @@ export default {
       console.log('goSearch', this.searchText)
       if (this.$_.isEmpty(this.searchText.trim())) {
         this.$Message.error('请输入案场名!')
+        this.afterSearch = false
         this.searchText = ''
+        this.initCaseList()
         return
       }
+      this.afterSearch = true
+      this.pageNo = 1
       this.initCaseList()
     },
     // 新建案场

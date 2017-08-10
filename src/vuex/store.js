@@ -13,10 +13,11 @@ const store = new Vuex.Store({
     MOBILE: '',
     NUMBER: '',
     CASE_ID: '', // 案场id
+    SIDEBAR_SELECT: '', // 侧边栏选中项
     loading: false,
     ifLogin: true, // 账号是否登录
     ifShowErrorMsg: false,
-    msgText: '666'
+    msgText: ''
   },
   getters: {
     getLoginStatus: state => state.ifLogin,
@@ -31,6 +32,9 @@ const store = new Vuex.Store({
     },
     initCaseId(state, id) {
       state.CASE_ID = id
+    },
+    initSideBar(state, str) {
+      state.SIDEBAR_SELECT = str
     },
     showLoading(state) {
       state.loading = true

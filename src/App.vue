@@ -39,9 +39,6 @@ export default {
         duration: 3
       })
     }
-  },
-  mounted() {
-    console.log('APP mounted')
   }
 }
 </script>

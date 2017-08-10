@@ -36,6 +36,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   console.log('router.beforeEach', to, from)
+  store.commit('initSideBar', to.name)
   // 检查route是否有meta信息
   if (to.matched.some(record => record.meta.requiresLogin)) {
     // 检查页面是否需要登录, 若没有登录则跳转登录页

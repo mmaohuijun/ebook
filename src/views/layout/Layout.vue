@@ -35,9 +35,6 @@ export default {
     return {
     }
   },
-  mounted() {
-    console.log('Layout mounted')
-  },
   components: {
     SideBar,
     HeadBar
