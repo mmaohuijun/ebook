@@ -111,7 +111,7 @@ export default {
       font-size: 14px !important;
 
       .ivu-checkbox-inner {
-        border-color: #1c93ea !important;
+        border: 1px solid #1c93ea !important;
         background: none !important;
       }
       .ivu-checkbox-checked .ivu-checkbox-inner::after {

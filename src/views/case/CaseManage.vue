@@ -145,7 +145,7 @@ export default {
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
       this.caseId = item.id
-      this.$router.push(`web-admin/caseInfo/${this.caseId}`)
+      this.$router.push(`caseInfo/${this.caseId}`)
     },
     // 选中列表
     onSelectCaseItem(item) {
