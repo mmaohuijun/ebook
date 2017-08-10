@@ -117,9 +117,11 @@ export default {
       console.log('goSearch', this.searchText)
       if (this.$_.isEmpty(this.searchText.trim())) {
         this.$Message.error('请输入案场名!')
+        if (this.afterSearch) {
+          this.initCaseList()
+        }
         this.afterSearch = false
         this.searchText = ''
-        this.initCaseList()
         return
       }
       this.afterSearch = true
