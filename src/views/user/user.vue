@@ -53,12 +53,12 @@
           <Option value="shenzhen">全选3</Option>
         </Select>
       </Form-item> -->
-      <Form-item label="禁用：">
+      <!-- <Form-item label="禁用：">
         <i-switch>
           <span slot="open"></span>
           <span slot="close"></span>
         </i-switch>
-      </Form-item>
+      </Form-item> -->
     </Form>
     <div slot="footer">
       <Button type="text" size="large" @click="modal.show = false">取消</Button>
@@ -117,6 +117,9 @@ export default {
         ],
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' }
+        ],
+        no: [
+          { required: true, message: '工号不能为空', trigger: 'blur' }
         ]
         // power: [
         //   { required: true, message: '权限不能为空', trigger: 'change' }
@@ -256,6 +259,7 @@ export default {
       })
     },
     saveUserInfo(successText) {
+      const that = this
       const data = {
         id: this.formValidate.id,
         name: this.formValidate.name,
@@ -267,10 +271,12 @@ export default {
       console.log('1:' + data.id)
       this.$axios.get('/int-user/save', { params: data }).then(response => {
         if (response === null) return
-        this.getData()
-        this.$Message.success(successText)
+        this.$Message.success({
+          content: successText,
+          duration: 3
+        })
+        that.getData()
       })
-      console.log('2:' + this.formValidate.name)
       this.modal.show = false
       this.modal.saveLoading = false
     },
