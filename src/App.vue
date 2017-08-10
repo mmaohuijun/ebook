@@ -24,12 +24,12 @@ export default {
   watch: {
     ifShowLoading(flag) {
       if (flag) {
-        this.$Message.loading({
+        this.msg = this.$Message.loading({
           content: '正在加载中...',
           duration: 0
         })
       } else {
-        this.$Message.destroy()
+        this.msg()
       }
     },
     ifShowErrorMsg(flag) {

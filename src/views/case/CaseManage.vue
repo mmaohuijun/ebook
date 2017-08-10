@@ -149,21 +149,21 @@ export default {
     },
     deleteItem(item) {
       console.log('deleteItem', item)
-      this.caseId = item.id
+      let id = ''
+      if (item === 'select') { // 头部的多选'删除'按钮
+        id = this.selectId
+      } else { // 列表右边的'删除'按钮
+        this.caseId = item.id
+        id = item.id
+      }
       this.$Modal.confirm({
         title: '温馨提示',
         content: '此操作不可恢复，确认删除？',
         loading: true,
-        onOk: this.confirmDelete
+        onOk: () => {
+          this.sendDeleteRequest(id)
+        }
       })
-    },
-    confirmDelete() {
-      console.log('confirmDelete', this.caseId)
-      if (!_.isEmpty(this.selectId)) {
-        this.sendDeleteRequest(this.selectId)
-      } else {
-        this.sendDeleteRequest(this.caseId)
-      }
     },
     // 发送删除请求
     sendDeleteRequest(id) {

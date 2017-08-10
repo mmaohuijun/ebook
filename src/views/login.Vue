@@ -46,9 +46,9 @@ export default {
         loginName: this.loginName,
         password: this.password
       }).then(response => {
+        this.loading = false
         if (response === null) return
         console.log('login', response)
-        this.loading = false
         // 登录成功后登记一下login状态
         this.$store.commit('hasLogin')
         const reData = response.data
