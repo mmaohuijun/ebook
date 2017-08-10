@@ -114,6 +114,9 @@ export default {
         border-color: #1c93ea !important;
         background: none !important;
       }
+      .ivu-checkbox-checked .ivu-checkbox-inner::after {
+        display: block;
+      }
     }
   }
 
