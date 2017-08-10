@@ -91,7 +91,7 @@ export default {
         }
       ],
       caseList: [],
-      afterSearch: false
+      afterSearch: false // 点击搜索后
     }
   },
   methods: {
@@ -115,12 +115,14 @@ export default {
     // 查询
     goSearch() {
       console.log('goSearch', this.searchText)
+      // 判断是否有搜索词
       if (this.$_.isEmpty(this.searchText.trim())) {
-        this.$Message.error('请输入案场名!')
-        if (this.afterSearch) {
+        if (this.afterSearch) { // 搜索后
           this.initCaseList()
+          this.afterSearch = false
+        } else {
+          this.$Message.error('请输入案场名!')
         }
-        this.afterSearch = false
         this.searchText = ''
         return
       }
