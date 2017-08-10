@@ -150,7 +150,7 @@ export default {
     }
   }
 
-  .login-form {
+  .ivu-form.login-form {
     position: relative;
     z-index: 2;
     margin: 0 60px;
@@ -169,7 +169,7 @@ export default {
     }
   }
 
-  .login-btn {
+  .ivu-btn.login-btn {
     background:#4e546c;
     border-radius:4px;
     width:260px;
