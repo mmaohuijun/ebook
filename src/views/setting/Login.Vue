@@ -108,11 +108,11 @@ export default {
     }
 
     .login-checkbox {
-      font-size: 14px;
+      font-size: 14px !important;
 
       .ivu-checkbox-inner {
-        border-color: #1c93ea;
-        background: none;
+        border-color: #1c93ea !important;
+        background: none !important;
       }
     }
   }
@@ -156,11 +156,13 @@ export default {
     z-index: 2;
     margin: 0 60px;
     .ivu-form-item-label {
+      padding: 0 0 10px;
       color: #fff;
       font-size: 16px;
     }
 
     .ivu-input {
+      height: 32px;
       border: none;
       font-size: 14px;
 
