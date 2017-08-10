@@ -95,15 +95,6 @@ export default {
     margin: 30px auto 30px;
   }
 
-  .login-checkbox {
-    font-size: 14px;
-
-    .ivu-checkbox-inner {
-      border-color: #1c93ea;
-      background: none;
-    }
-  }
-
   .login-link {
     position: absolute;
     right: 0;
@@ -114,6 +105,15 @@ export default {
     &:hover,
     &:active {
       color:#1c93ea;
+    }
+
+    .login-checkbox {
+      font-size: 14px;
+
+      .ivu-checkbox-inner {
+        border-color: #1c93ea;
+        background: none;
+      }
     }
   }
 
