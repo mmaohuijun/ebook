@@ -405,4 +405,13 @@ export default {
     box-shadow: none;
     border: 1px solid #979797;
   }
+
+  .custom__date-picker {
+    .ivu-input {
+      padding-right: 7px;
+    }
+    i[class*="calendar"] {
+      display: none;
+    }
+  }
 </style>

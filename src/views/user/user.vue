@@ -9,18 +9,18 @@
     <h2 class="layout__header-title">用户 - 外部用户</h2>
     <div class="layout__header-tool">
       <span style="font-size:16px; color:#fff; padding: 0 10px;">时间</span>
-      <Date-picker confirm :editable="false" class="custom__input--white" type="date" :options="maxData" format="yyyy-MM-dd" @on-ok="startDateOk" @on-change="startDateChange" placeholder="开始日期" style="width: 120px"></Date-picker>
+      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" :options="maxData" format="yyyy-MM-dd" @on-ok="startDateOk" @on-change="postData.startDate=$event" v-model="postData.startDate" placeholder="开始日期" :clearable="false" style="width: 95px"></Date-picker>
       <span style="font-size:16px; color:#fff; padding: 0 10px;">-</span>
-      <Date-picker confirm :editable="false" class="custom__input--white" type="date" :option="minData" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="endDateChange" placeholder="结束日期" style="width: 120px; margin-right: 30px;"></Date-picker>
+      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" :option="minData" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="postData.endDate=$event" v-model="postData.endDate" placeholder="结束日期" :clearable="false" style="width: 95px; margin-right: 30px;"></Date-picker>
       <Input class="custom__search" icon="search" placeholder="姓名／手机号" v-model="postData.name" @on-click="textSearch"></Input>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="trashSelect"></Button>
+      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="removeUser(postData.selectedId)"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addModal"></Button>
     </div>
   </div>
   <div class="layout__body">
     <Table class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
     <Spin size="large" fix v-if="false"></Spin>
-    <Page style="margin-top: 14px;" class="custom__page" :total="total" :page-size="postData.pageSize" @on-change="pageChange"></Page>
+    <Page style="margin-top: 14px;" class="custom__page" :current="postData.pageNo" :total="total" :page-size="postData.pageSize" @on-change="pageChange"></Page>
   </div>
   <Modal
     on-cancel="resetFields('formValidate')"
@@ -259,7 +259,6 @@ export default {
       })
     },
     saveUserInfo(successText) {
-      const that = this
       const data = {
         id: this.formValidate.id,
         name: this.formValidate.name,
@@ -271,11 +270,8 @@ export default {
       console.log('1:' + data.id)
       this.$axios.get('/int-user/save', { params: data }).then(response => {
         if (response === null) return
-        this.$Message.success({
-          content: successText,
-          duration: 3
-        })
-        that.getData()
+        this.$Message.success(successText)
+        this.getData()
       })
       this.modal.show = false
       this.modal.saveLoading = false
@@ -296,21 +292,11 @@ export default {
 
       that.postData.selectedId = idList.join(',')
     },
-    trashSelect(id) {
-      console.log(this.postData.selectedId)
-      this.removeUser(this.postData.selectedId)
-      // this.$Modal.confirm({
-      //   content: '此操作不可恢复，确认删除用户？',
-      //   onOk: () => {
-      //     this.$Message.success('删除成功')
-      //   }
-      // })
-    },
     startDateChange(date) {
-      this.postData.startDate = date
+      // this.postData.startDate = date
     },
     endDateChange(date) {
-      this.postData.endDate = date
+      // this.postData.endDate = date
     },
     startDateOk(data) {
       if (this.postData.endDate) {
@@ -323,20 +309,51 @@ export default {
       }
     },
     dateSearch() {
-      this.$_.assign(this.postData, { name: '', startDate: this.postData.startDate, endDate: this.postData.endDate, pageNo: this.postData.pageNo, pageSize: this.postData.pageSize })
-      this.getData()
+      // this.$_.assign(this.postData, { name: '', startDate: this.postData.startDate, endDate: this.postData.endDate, pageNo: 1, pageSize: this.postData.pageSize })
+      const postData = {
+        name: '',
+        startDate: this.postData.startDate,
+        endDate: this.postData.endDate,
+        pageNo: 1,
+        pageSize: this.postData.pageSize
+      }
+      this.postData.name = ''
+      this.getData(postData)
     },
     textSearch() {
-      this.$_.assign(this.postData, { name: this.postData.name, startDate: '', endDate: '', pageNo: this.postData.pageNo, pageSize: this.postData.pageSize })
-      this.getData()
+      // this.$_.assign(this.postData, { name: this.postData.name, startDate: '', endDate: '', pageNo: 1, pageSize: this.postData.pageSize })
+      const postData = {
+        name: this.postData.name,
+        startDate: '',
+        endDate: '',
+        pageNo: 1,
+        pageSize: this.postData.pageSize
+      }
+      this.postData.startDate = ''
+      this.postData.endDate = ''
+      this.getData(postData)
     },
     pageChange(currentPage) {
-      this.$_.assign(this.postData, { name: this.postData.name, startDate: this.postData.startDate, endDate: this.postData.endDate, pageNo: currentPage, pageSize: this.postData.pageSize })
-      this.getData()
+      const postData = {
+        name: this.postData.name,
+        startDate: this.postData.startDate,
+        endDate: this.postData.endDate,
+        pageNo: currentPage,
+        pageSize: this.postData.pageSize
+      }
+      // this.$_.assign(this.postData, { name: this.postData.name, startDate: this.postData.startDate, endDate: this.postData.endDate, pageNo: currentPage, pageSize: this.postData.pageSize })
+      this.getData(postData)
     },
-    getData() {
+    getData(data) {
       const that = this
-      this.$axios.get('/int-user/list', { params: that.postData }).then(response => {
+      const postData = data || {
+        name: '',
+        startDate: '',
+        endDate: '',
+        pageNo: this.postData.pageNo,
+        pageSize: this.postData.pageSize
+      }
+      this.$axios.get('/int-user/list', { params: postData }).then(response => {
         console.log(response)
         if (response === null) return
         that.userListData = []
