@@ -48,7 +48,7 @@
       </Form-item>
       <Form-item label="案场：" prop="caseId">
         <Select v-model="formValidate.caseId" placeholder="请您选择..." @on-change="onChangeCaseId">
-          <Option v-for="items in formValidate.caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
+          <Option v-for="items in caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
         </Select>
       </Form-item>
       <Form-item label="管理员：">
@@ -120,10 +120,10 @@ export default {
         no: '',           // 工号
         caseId: '',       // 案场ID
         caseName: '',     // 案场名称
-        caseList: [],     // 案场列表
         // power: '1',    // 权限
         adminFlag: false  // 是否案场管理员
       },
+      caseList: [],     // 案场列表
       ruleValidate: {
         name: [
           { required: true, message: '姓名不能为空', trigger: 'blur' }
@@ -250,27 +250,31 @@ export default {
       for (const item in this.formValidate) {
         this.formValidate[item] = ''
       }
+      this.formValidate.adminFlag = false
+      this.getCaseList()
       this.formValidate.id = 0
       this.modal.title = '新建用户'
       this.modal.show = true
     },
     editModal(userId) {
-      this.$axios.get('/case/list', { params: { pageNo: 1, pageSize: 1000 } }).then(response => {
+      this.$axios.get('/ext-user/detail', { params: { id: userId } }).then(response => {
         if (response === null) return
-        this.formValidate.caseList = response.data.list
-
-        this.$axios.get('/ext-user/detail', { params: { id: userId } }).then(response => {
-          if (response === null) return
-          for (const items in response.data) {
-            this.formValidate[items] = response.data[items]
-          }
-          if (this.formValidate.caseId !== 0 && this.formValidate.caseId !== '0') {
-            this.formValidate.caseId = String(this.formValidate.caseId)
-          }
-        })
+        for (const items in response.data) {
+          this.formValidate[items] = response.data[items]
+        }
+        if (this.formValidate.caseId !== 0 && this.formValidate.caseId !== '0') {
+          this.formValidate.caseId = String(this.formValidate.caseId)
+        }
       })
+      this.getCaseList()
       this.modal.title = '修改用户'
       this.modal.show = true
+    },
+    getCaseList() {
+      this.$axios.get('/case/list', { params: { pageNo: 1, pageSize: 1000 } }).then(response => {
+        if (response === null) return
+        this.caseList = response.data.list
+      })
     },
     saveUser(name) {
       this.$refs[name].validate(valid => {
