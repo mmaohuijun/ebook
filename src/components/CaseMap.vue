@@ -14,7 +14,7 @@ export default {
   },
   data() {
     return {
-      mapCenter: { lng: 0, lat: 0 }
+      mapCenter: { lng: 121.480652, lat: 31.2408 }
     }
   },
   computed: {
@@ -22,7 +22,7 @@ export default {
       if (!_.isEmpty(this.location)) {
         return this.location
       } else {
-        return { lng: 121.480652, lat: 31.2408 }
+        return this.mapCenter
       }
     }
   },
@@ -31,12 +31,15 @@ export default {
     handler({ BMap, map }) {
       // 开启鼠标滚轮放大缩小
       map.enableScrollWheelZoom(true)
-      this.mapCenter.lng = 121.480652
-      this.mapCenter.lat = 31.2408
+      // this.mapCenter.lng = 121.480652
+      // this.mapCenter.lat = 31.2408
     },
     mouseupMarker(event) {
       this.$emit('changeMarkerPoint', event.point)
     }
+  },
+  mounted() {
+    console.log('MAP markerPoint', this.markerPoint)
   },
   components: {
     BaiduMap,

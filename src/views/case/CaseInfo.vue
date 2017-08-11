@@ -10,7 +10,7 @@
           <Form :model="formItem" :label-width="120" label-position="left">
               <div style="overflow: hidden; margin-bottom: 30px;">
                 <div class="field-logo">
-                    <img src="../../assets/field_logo.jpg">
+                    <img src="../../assets/field_logo.png">
                     <!-- <Button type="primary" class="custom-btn">更换logo</Button> -->
                 </div>
                 <div style="float: left; padding-left: 21px;">
@@ -37,7 +37,7 @@
                   </Form-item>
                 </div>
                 <div class="field-bg">
-                  <img src="../../assets/field_bg.jpg" alt="">
+                  <img src="../../assets/field_bg.png" alt="">
                   <!-- <Button type="ghost" class="btn-upload-field-bg">上传图片</Button> -->
                 </div>
               </div>
@@ -48,7 +48,7 @@
                 <!-- <Button type="primary" class="custom-btn" style="float: right; margin-top: -2px;">确定</Button> -->
               </div>
               <div class="field-map" style="width: 100%; height:430px;">
-                <case-map :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
+                <case-map v-if="caseDataSource.length !== 0" :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
               </div>
               <div class="field-bottom-btn">
                 <Button type="primary" class="custom-btn" @click="saveCaseInfo">保存</Button>

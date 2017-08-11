@@ -24,7 +24,8 @@ export default {
       pageSize: 20, // 页面大小
       total: 0,
       selectId: [], // 已选择项
-      searchText: '', // 案场名(查询)
+      searchText: '', // 搜索关键词(显示)
+      searchTextCfm: '', // 搜索关键词(查询)
       caseTable: [
         {
           type: 'selection',
@@ -36,6 +37,7 @@ export default {
           title: '案场',
           key: 'name',
           ellipsis: true
+          // sortable: true // 开启排序
         },
         // {
         //   title: '所属组织',
@@ -95,16 +97,12 @@ export default {
     }
   },
   methods: {
-    initCaseList() {
-      const data = {
+    initCaseList(searchText) {
+      this.$axios.get('case/list', { params: {
         pageNo: this.pageNo,
-        pageSize: this.pageSize
-      }
-      if (this.afterSearch && !this.$_.isEmpty(this.searchText.trim())) {
-        console.log('notEmpty', this.searchText)
-        data.name = this.searchText
-      }
-      this.$axios.get('case/list', { params: data }).then(response => {
+        pageSize: this.pageSize,
+        name: searchText || ''
+      } }).then(response => {
         if (response === null) return
         console.log('案场列表', response)
         const reData = response.data
@@ -117,7 +115,8 @@ export default {
       console.log('goSearch', this.searchText)
       // 判断是否有搜索词
       if (this.$_.isEmpty(this.searchText.trim())) {
-        if (this.afterSearch) { // 搜索后
+        if (this.afterSearch) { // 搜索后清空搜索词, 初始化列表
+          this.pageNo = 1
           this.initCaseList()
           this.afterSearch = false
         } else {
@@ -128,24 +127,30 @@ export default {
       }
       this.afterSearch = true
       this.pageNo = 1
-      this.initCaseList()
+      this.searchTextCfm = this.searchText
+      this.initCaseList(this.searchTextCfm)
     },
     // 新建案场
     addCase() {
       console.log('addCase')
-      this.$router.push('web-admin/caseInfo/0')
+      this.$router.push('/web-admin/caseInfo/0')
     },
     // 点击分页
     changePage(pageNo) {
-      console.log('changePage', pageNo)
+      console.log('changePage', pageNo, this.selectId)
       this.pageNo = pageNo
-      this.initCaseList()
+      this.selectId = []
+      if (this.afterSearch) {
+        this.initCaseList(this.searchTextCfm)
+      } else {
+        this.initCaseList()
+      }
     },
     // 点击案场跳转详情页
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
       this.caseId = item.id
-      this.$router.push(`caseInfo/${this.caseId}`)
+      this.$router.push(`/web-admin/caseInfo/${this.caseId}`)
     },
     // 选中列表
     onSelectCaseItem(item) {

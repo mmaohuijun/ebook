@@ -43,7 +43,7 @@ $axios.interceptors.request.use(config => {
 $axios.interceptors.response.use(response => {
   store.commit('hideLoading')
   // 对响应数据做点什么
-  console.log('响应response', response)
+  // console.log('响应response', response)
   const retCode = response.data.retCode
   const retMsg = response.data.retMsg
 

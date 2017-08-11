@@ -2,11 +2,11 @@
 <aside class="layout__aside">
   <div class="layout__aside_scroll">
     <div class="layout__aside-header">
-      <div class="layout__aside-avatar"><img src="../../assets/logo.png" alt=""></div>
+      <div class="layout__aside-avatar"><img src="../../assets/avatar.png" alt=""></div>
       <p class="layout__aside-name">{{name}}</p>
       <ul class="layout__aside-info">
         <li>
-          <p>账号：{{loginName}}</p>
+          <p>工号：{{number}}</p>
           <!-- <router-link to="/">修改密码</router-link> -->
         </li>
         <li>
