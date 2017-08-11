@@ -4,13 +4,13 @@
     <h1>金地电子台账</h1>
     <Form label-position="top" class="login-form">
       <Form-item label="账号">
-        <div href="#" class="login-link">
+        <div class="login-link">
           <Checkbox class="login-checkbox" v-model="ifRemember">记住账号</Checkbox>
         </div>
         <Input placeholder="请输入您的账号" v-model="loginName"></Input>
       </Form-item>
       <Form-item label="密码">
-        <a href="#" class="login-link" @click="modalForgetPWD = true">忘记密码？</a>
+        <a href="" class="login-link" @click="modalForgetPWD = true">忘记密码？</a>
         <Input placeholder="请输入您的密码" type="password" v-model="password"></Input>
       </Form-item>
       <Button class="login-btn" long :loading="loading" @click="goLogin">登录</Button>
@@ -111,7 +111,7 @@ export default {
       font-size: 14px !important;
 
       .ivu-checkbox-inner {
-        border-color: #1c93ea !important;
+        border: 1px solid #1c93ea !important;
         background: none !important;
       }
       .ivu-checkbox-checked .ivu-checkbox-inner::after {

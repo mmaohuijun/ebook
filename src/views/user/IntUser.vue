@@ -6,13 +6,13 @@
 <template>
 <div class="layout__content">
   <div class="layout__header">
-    <h2 class="layout__header-title">用户 - 外部用户</h2>
+    <h2 class="layout__header-title">用户 - 内部用户</h2>
     <div class="layout__header-tool">
       <span style="font-size:16px; color:#fff; padding: 0 10px;">时间</span>
-      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" :options="maxData" format="yyyy-MM-dd" @on-ok="startDateOk" @on-change="postData.startDate=$event" v-model="postData.startDate" placeholder="开始日期" :clearable="false" style="width: 95px"></Date-picker>
+      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="startDateOk" @on-change="startDate=$event" v-model="startDate" placeholder="开始日期" :clearable="false" style="width: 95px"></Date-picker>
       <span style="font-size:16px; color:#fff; padding: 0 10px;">-</span>
-      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" :option="minData" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="postData.endDate=$event" v-model="postData.endDate" placeholder="结束日期" :clearable="false" style="width: 95px; margin-right: 30px;"></Date-picker>
-      <Input class="custom__search" icon="search" placeholder="姓名／手机号" v-model="postData.name" @on-click="textSearch"></Input>
+      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="endDate=$event" v-model="endDate" placeholder="结束日期" :clearable="false" style="width: 95px; margin-right: 30px;"></Date-picker>
+      <Input class="custom__search" icon="search" placeholder="姓名／手机号" v-model="name" @on-click="textSearch"></Input>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="removeUser(postData.selectedId)"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addModal"></Button>
     </div>
@@ -94,8 +94,11 @@ export default {
         pageNo: 1,         // 页码
         pageSize: 20       // 每页条数
       },
-      isTrash: false,    // 是否显示删除按钮
-      total: 20,         // 数据总条数
+      startDate: '',       // 开始时间
+      endDate: '',         // 结束时间
+      name: '',            // 搜索关键字
+      isTrash: false,      // 是否显示删除按钮
+      total: 20,           // 数据总条数
       formValidate: {
         id: '',           // id
         name: '',         // 姓名
@@ -270,6 +273,7 @@ export default {
       this.$axios.get('/int-user/save', { params: data }).then(response => {
         if (response === null) return
         this.$Message.success(successText)
+        this.postData.pageNo = 1
         this.getData()
       })
       this.modal.show = false
@@ -292,62 +296,45 @@ export default {
       that.postData.selectedId = idList.join(',')
     },
     startDateOk(data) {
-      if (this.postData.endDate) {
+      if (this.endDate) {
         this.dateSearch()
       }
     },
     endDateOk(data) {
-      if (this.postData.startDate) {
+      if (this.startDate) {
         this.dateSearch()
       }
     },
     dateSearch() {
-      const postData = {
-        name: '',
-        startDate: this.postData.startDate,
-        endDate: this.postData.endDate,
-        pageNo: 1,
-        pageSize: this.postData.pageSize
-      }
       this.postData.name = ''
+      this.postData.startDate = this.startDate
+      this.postData.endDate = this.endDate
       this.postData.pageNo = 1
-      this.getData(postData)
+
+      this.name = ''
+      this.getData()
     },
     textSearch() {
-      const postData = {
-        name: this.postData.name,
-        startDate: '',
-        endDate: '',
-        pageNo: 1,
-        pageSize: this.postData.pageSize
-      }
+      this.postData.name = this.name
       this.postData.startDate = ''
       this.postData.endDate = ''
       this.postData.pageNo = 1
-      this.getData(postData)
+
+      this.startDate = ''
+      this.endDate = ''
+      this.getData()
     },
     pageChange(currentPage) {
-      const postData = {
-        name: this.postData.name,
-        startDate: this.postData.startDate,
-        endDate: this.postData.endDate,
-        pageNo: currentPage,
-        pageSize: this.postData.pageSize
-      }
+      this.postData.name = this.name
+      this.postData.startDate = this.startDate
+      this.postData.endDate = this.endDate
       this.postData.pageNo = currentPage
-      this.getData(postData)
+      this.getData()
     },
-    getData(data) {
+    getData() {
       const that = this
-      const postData = data || {
-        name: '',
-        startDate: '',
-        endDate: '',
-        pageNo: this.postData.pageNo,
-        pageSize: this.postData.pageSize
-      }
       console.log('当前页面：' + this.postData.pageNo)
-      this.$axios.get('/int-user/list', { params: postData }).then(response => {
+      this.$axios.get('/int-user/list', { params: this.postData }).then(response => {
         if (response === null) return
         that.userListData = []
         for (const items in response.data.list) {
