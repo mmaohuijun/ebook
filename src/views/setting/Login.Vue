@@ -10,7 +10,7 @@
         <Input placeholder="请输入您的账号" v-model="loginName"></Input>
       </Form-item>
       <Form-item label="密码">
-        <a href="" class="login-link" @click="modalForgetPWD = true">忘记密码？</a>
+        <a href="javascript:;" class="login-link" @click="modalForgetPWD = true">忘记密码？</a>
         <Input placeholder="请输入您的密码" type="password" v-model="password"></Input>
       </Form-item>
       <Button class="login-btn" long :loading="loading" @click="goLogin">登录</Button>
