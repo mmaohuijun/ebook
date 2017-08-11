@@ -190,8 +190,8 @@ export default {
 
   .ivu-checkbox {
     &-inner {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       background: #e5e5e5;
       border: none;
 
@@ -202,6 +202,8 @@ export default {
 
     &-checked {
       .ivu-checkbox-inner {
+        width: 14px;
+        heigth: 14px;
         background: #4e546c;
         &:after{
           display: none;
@@ -295,7 +297,7 @@ export default {
   }
 
   .ivu-form-item {
-    margin-bottom: 14px;
+    margin-bottom: 24px;
   }
 
   .ivu-form-item-content {
