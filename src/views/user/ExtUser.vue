@@ -46,9 +46,9 @@
       <Form-item label="工号：" prop="no">
         <Input v-model="formValidate.no" placeholder="请您输入"></Input>
       </Form-item>
-      <Form-item label="案场：" prop="caseId" v-if="formValidate.caseList.length !== 0">
+      <Form-item label="案场：" prop="caseId">
         <Select v-model="formValidate.caseId" placeholder="请您选择..." @on-change="onChangeCaseId">
-          <Option v-for="items in formValidate.caseList" :value="items.id" :key="items.id" :label="items.name">{{items.id}}{{items.name}}</Option> 
+          <Option v-for="items in formValidate.caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
         </Select>
       </Form-item>
       <Form-item label="管理员：">
@@ -267,7 +267,9 @@ export default {
           for (const items in response.data) {
             this.formValidate[items] = response.data[items]
           }
-          this.formValidate.caseId = String(this.formValidate.caseId)
+          if (this.formValidate.caseId !== 0 && this.formValidate.caseId !== '0') {
+            this.formValidate.caseId = String(this.formValidate.caseId)
+          }
           console.log('formValidate', this.formValidate)
         })
       })
