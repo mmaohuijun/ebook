@@ -257,20 +257,16 @@ export default {
     editModal(userId) {
       this.$axios.get('/case/list', { params: { pageNo: 1, pageSize: 1000 } }).then(response => {
         if (response === null) return
-        for (const items in response.data.list) {
-          this.formValidate.caseList[items] = response.data.list[items]
-        }
+        this.formValidate.caseList = response.data.list
 
         this.$axios.get('/ext-user/detail', { params: { id: userId } }).then(response => {
           if (response === null) return
-          console.log('详情', response.data)
           for (const items in response.data) {
             this.formValidate[items] = response.data[items]
           }
           if (this.formValidate.caseId !== 0 && this.formValidate.caseId !== '0') {
             this.formValidate.caseId = String(this.formValidate.caseId)
           }
-          console.log('formValidate', this.formValidate)
         })
       })
       this.modal.title = '修改用户'
