@@ -6,7 +6,7 @@
       <p class="layout__aside-name">{{name}}</p>
       <ul class="layout__aside-info">
         <li>
-          <p>账号：{{loginName}}</p>
+          <p>工号：{{number}}</p>
           <!-- <router-link to="/">修改密码</router-link> -->
         </li>
         <li>

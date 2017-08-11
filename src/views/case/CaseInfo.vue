@@ -48,7 +48,7 @@
                 <!-- <Button type="primary" class="custom-btn" style="float: right; margin-top: -2px;">确定</Button> -->
               </div>
               <div class="field-map" style="width: 100%; height:430px;">
-                <case-map :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
+                <case-map v-if="caseDataSource.length !== 0" :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
               </div>
               <div class="field-bottom-btn">
                 <Button type="primary" class="custom-btn" @click="saveCaseInfo">保存</Button>
