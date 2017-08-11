@@ -3,7 +3,7 @@
   <div class="layout__header">
     <h2 class="layout__header-title">案场管理</h2>
     <div class="layout__header-tool">
-      <Input class="custom__search" icon="search" placeholder="案场" :value="searchText" @on-click="goSearch"></Input>
+      <Input class="custom__search" icon="search" placeholder="案场" v-model="searchText" @on-click="goSearch"></Input>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-show="selectId.length !== 0" @click="deleteItem('select')"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addCase"></Button>
     </div>
