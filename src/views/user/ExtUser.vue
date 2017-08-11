@@ -47,8 +47,8 @@
         <Input v-model="formValidate.no" placeholder="请您输入"></Input>
       </Form-item>
       <Form-item label="案场：" prop="caseId">
-        <Select v-model="formValidate.caseId" placeholder="请您选择...">
-          <Option v-for="items in formValidate.caseList" :value="items.id" :key="items.id">{{items.id}}{{items.name}}</Option>
+        <Select v-model="formValidate.caseId" placeholder="请您选择..." @on-change="onChangeCaseId">
+          <Option v-for="items in formValidate.caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
         </Select>
       </Form-item>
       <Form-item label="管理员：">
@@ -228,6 +228,10 @@ export default {
     }
   },
   methods: {
+    // 编辑用户改变案场
+    onChangeCaseId(id) {
+      this.formValidate.caseId = id
+    },
     removeUser(selectedId) {
       // this.userListData.splice(index, 1)
       const that = this
@@ -253,16 +257,16 @@ export default {
     editModal(userId) {
       this.$axios.get('/case/list', { params: { pageNo: 1, pageSize: 1000 } }).then(response => {
         if (response === null) return
-        for (const items in response.data.list) {
-          this.formValidate.caseList[items] = response.data.list[items]
-        }
+        this.formValidate.caseList = response.data.list
 
         this.$axios.get('/ext-user/detail', { params: { id: userId } }).then(response => {
           if (response === null) return
           for (const items in response.data) {
             this.formValidate[items] = response.data[items]
           }
-          console.log(this.formValidate.caseId)
+          if (this.formValidate.caseId !== 0 && this.formValidate.caseId !== '0') {
+            this.formValidate.caseId = String(this.formValidate.caseId)
+          }
         })
       })
       this.modal.title = '修改用户'
