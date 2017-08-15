@@ -195,7 +195,7 @@ export default {
         }
       })
     },
-    // 新增用户
+    // 新增用户modal
     addModal() {
       for (const item in this.userInfo) {
         this.userInfo[item] = ''
@@ -204,7 +204,7 @@ export default {
       this.modal.title = '新建用户'
       this.modal.show = true
     },
-    // 修改用户
+    // 修改用户modal
     editModal(userId) {
       this.$axios.get('/int-user/detail', { params: { id: userId } }).then(response => {
         if (response === null) return
