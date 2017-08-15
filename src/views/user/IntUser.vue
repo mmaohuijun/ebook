@@ -13,56 +13,43 @@
       <span style="font-size:16px; color:#fff; padding: 0 10px;">-</span>
       <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="endDate=$event" v-model="endDate" placeholder="结束日期" :clearable="false" style="width: 95px; margin-right: 30px;"></Date-picker>
       <Input class="custom__search" icon="search" placeholder="姓名／手机号" v-model="name" @on-click="textSearch"></Input>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="removeUser(postData.selectedId)"></Button>
+      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="removeUser(selectedId)"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addModal"></Button>
     </div>
   </div>
   <div class="layout__body">
     <Table class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
     <Spin size="large" fix v-if="false"></Spin>
-    <Page style="margin-top: 14px;" class="custom__page" :current="postData.pageNo" :total="total" :page-size="postData.pageSize" @on-change="pageChange"></Page>
+    <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
   </div>
   <Modal
-    on-cancel="resetFields('formValidate')"
+    on-cancel="resetFields('userInfo')"
     v-model="modal.show"
     :closable="false"
     width="560">
     <p slot="header">
       {{modal.title}}
     </p>
-    <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120" class="modal-form">
+    <Form ref="userInfo" :model="userInfo" :rules="ruleValidate" :label-width="120" class="modal-form">
       <Form-item label="姓名：" prop="name">
-        <Input v-model="formValidate.name" placeholder="请您输入..."></Input>
+        <Input v-model="userInfo.name" placeholder="请您输入..."></Input>
       </Form-item>
       <Form-item label="电话号码：" prop="mobile">
-        <Input v-model="formValidate.mobile" placeholder="请您输入..."></Input>
+        <Input v-model="userInfo.mobile" placeholder="请您输入..."></Input>
       </Form-item>
       <Form-item label="密码：" prop="password">
-        <Input v-model="formValidate.password" placeholder="123456（或随机生成）"></Input>
+        <Input v-model="userInfo.password" placeholder="123456（或随机生成）"></Input>
       </Form-item>
       <Form-item label="E-mail：" prop="email">
-        <Input v-model="formValidate.email" placeholder="请您输入"></Input>
+        <Input v-model="userInfo.email" placeholder="请您输入"></Input>
       </Form-item>
       <Form-item label="工号：" prop="no">
-        <Input v-model="formValidate.no" placeholder="请您输入"></Input>
+        <Input v-model="userInfo.no" placeholder="请您输入"></Input>
       </Form-item>
-      <!-- <Form-item label="权限：" prop="power">
-        <Select v-model="formValidate.power" placeholder="请您选择...">
-          <Option value="beijing">全选1</Option>
-          <Option value="shanghai">全选2</Option>
-          <Option value="shenzhen">全选3</Option>
-        </Select>
-      </Form-item> -->
-      <!-- <Form-item label="禁用：">
-        <i-switch>
-          <span slot="open"></span>
-          <span slot="close"></span>
-        </i-switch>
-      </Form-item> -->
     </Form>
     <div slot="footer">
       <Button type="text" size="large" @click="modal.show = false">取消</Button>
-      <Button type="primary" size="large" :loading="modal.saveLoading" @click="saveUser('formValidate')">完成</Button>
+      <Button type="primary" size="large" :loading="modal.saveLoading" @click="saveUser('userInfo')">完成</Button>
     </div>
   </Modal>
 </div>
@@ -71,45 +58,28 @@
 export default {
   data() {
     return {
-      maxData: {        // 开始时间的最大时间
-        disabledDate(date) {
-          // console.log(date)
-        }
-      },
-      minData: {        // 结束时间的最小时间
-        disabledDate(date) {
-          // console.log(date)
-        }
-      },
       modal: {
         show: false,        // 是否显示编辑和查看modal
         saveLoading: false, // 是否正在保存用户中
         title: ''           // modal的标题
       },
-      postData: {          // 用户列表发送请求所需要的对象
-        startDate: '',     // 开始时间
-        endDate: '',       // 结束时间
-        name: '',          // 搜索关键字
-        selectedId: '',    // 选中的用户Id
-        pageNo: 1,         // 页码
-        pageSize: 20       // 每页条数
-      },
-      startDate: '',       // 开始时间
-      endDate: '',         // 结束时间
-      name: '',            // 搜索关键字
-      isTrash: false,      // 是否显示删除按钮
-      total: 20,           // 数据总条数
-      formValidate: {
+      startDate: '',    // 开始时间
+      endDate: '',      // 结束时间
+      name: '',         // 搜索关键字
+      isSearch: false,  // 是否开始条件筛选
+      isTrash: false,   // 是否显示删除按钮
+      selectedId: '',   // 选中的用户Id
+      pageNo: 1,        // 页码
+      total: 20,        // 数据总条数
+      pageSize: 20,     // 每页条数
+      userInfo: {
         id: '',           // id
         name: '',         // 姓名
         gender: '',       // 性别
         mobile: '',       // 电话
         email: '',        // 邮箱
         password: '',     // 密码
-        no: ''           // 工号
-        // power: '1',    // 权限
-        // caseId: '',       // 案场ID
-        // adminFlag: false  // 是否案场管理员
+        no: ''            // 工号
       },
       ruleValidate: {
         name: [
@@ -124,12 +94,6 @@ export default {
         no: [
           { required: true, message: '工号不能为空', trigger: 'blur' }
         ]
-        // power: [
-        //   { required: true, message: '权限不能为空', trigger: 'change' }
-        // ],
-        // caseId: [
-        //   { required: true, message: '案场不能为空', trigger: 'change' }
-        // ]
       },
       userListTitle: [
         {
@@ -215,6 +179,7 @@ export default {
     }
   },
   methods: {
+    // 删除用户
     removeUser(selectedId) {
       // this.userListData.splice(index, 1)
       const that = this
@@ -224,35 +189,41 @@ export default {
           that.$axios.get('/int-user/del', { params: { id: selectedId } }).then(response => {
             if (response === null) return
             that.$Message.success('删除成功')
-            this.getData()
+            this.userList()
+            this.isTrash = false
           })
         }
       })
     },
+    // 新增用户
     addModal() {
-      for (const item in this.formValidate) {
-        this.formValidate[item] = ''
+      for (const item in this.userInfo) {
+        this.userInfo[item] = ''
       }
-      this.formValidate.id = 0
+      this.userInfo.id = 0
       this.modal.title = '新建用户'
       this.modal.show = true
     },
+    // 修改用户
     editModal(userId) {
       this.$axios.get('/int-user/detail', { params: { id: userId } }).then(response => {
         if (response === null) return
         for (const items in response.data) {
-          this.formValidate[items] = response.data[items]
+          this.userInfo[items] = response.data[items]
         }
       })
       this.modal.title = '修改用户'
       this.modal.show = true
     },
+
+    // 点击用户完成按钮
     saveUser(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.modal.saveLoading = true
-          if (this.formValidate.id === 0) {
+          if (this.userInfo.id === 0) {
             this.saveUserInfo('新建用户成功')
+            this.pageNo = 1
           } else {
             this.saveUserInfo('修改用户成功')
           }
@@ -263,94 +234,100 @@ export default {
     },
     saveUserInfo(successText) {
       const data = {
-        id: this.formValidate.id,
-        name: this.formValidate.name,
-        mobile: this.formValidate.mobile,
-        password: this.formValidate.password,
-        email: this.formValidate.email,
-        no: this.formValidate.no
+        id: this.userInfo.id,
+        name: this.userInfo.name,
+        mobile: this.userInfo.mobile,
+        password: this.userInfo.password,
+        email: this.userInfo.email,
+        no: this.userInfo.no
       }
       this.$axios.get('/int-user/save', { params: data }).then(response => {
         if (response === null) return
         this.$Message.success(successText)
-        this.postData.pageNo = 1
-        this.getData()
+        this.userList()
       })
       this.modal.show = false
       this.modal.saveLoading = false
     },
+    // 清空用户信息
     resetFields(name) {
       this.$refs[name].resetFields()
     },
+    // 监听选中用户
     onSelect(selection) {
-      const that = this
       const idList = []
-
       this.isTrash = selection.length > 0
-      that.postData.selectedId = ''
+      this.selectedId = ''
 
       for (let i = selection.length - 1; i >= 0; i--) {
         idList.push(selection[i].id)
       }
 
-      that.postData.selectedId = idList.join(',')
+      this.selectedId = idList.join(',')
     },
+    // 点击确认开始时间按钮
     startDateOk(data) {
       if (this.endDate) {
         this.dateSearch()
       }
     },
+    // 点击确认结束时间按钮
     endDateOk(data) {
       if (this.startDate) {
         this.dateSearch()
       }
     },
+    // 时间段搜索
     dateSearch() {
-      this.postData.name = ''
-      this.postData.startDate = this.startDate
-      this.postData.endDate = this.endDate
-      this.postData.pageNo = 1
-
       this.name = ''
-      this.getData()
+      this.isSearch = true
+      this.pageNo = 1
+      this.userList()
     },
+    // 文本搜索
     textSearch() {
-      this.postData.name = this.name
-      this.postData.startDate = ''
-      this.postData.endDate = ''
-      this.postData.pageNo = 1
-
       this.startDate = ''
       this.endDate = ''
-      this.getData()
+      this.isSearch = true
+      this.pageNo = 1
+      this.userList()
     },
+    // 改变分页
     pageChange(currentPage) {
-      this.postData.name = this.name
-      this.postData.startDate = this.startDate
-      this.postData.endDate = this.endDate
-      this.postData.pageNo = currentPage
-      this.getData()
+      this.pageNo = currentPage
+      this.userList()
     },
-    getData() {
-      const that = this
-      console.log('当前页面：' + this.postData.pageNo)
-      this.$axios.get('/int-user/list', { params: this.postData }).then(response => {
+    // 获取并渲染用户列表
+    userList() {
+      const data = {
+        name: this.name || '',
+        startDate: this.startDate || '',
+        endDate: this.endDate || '',
+        pageNo: this.pageNo || 1,
+        pageSize: this.pageSize
+      }
+      if (!this.isSearch) {
+        this.name = ''
+        this.startDate = ''
+        this.endDate = ''
+      }
+      this.$axios.get('/int-user/list', { params: data }).then(response => {
         if (response === null) return
-        that.userListData = []
+        this.userListData = []
         for (const items in response.data.list) {
-          that.userListData.push(response.data.list[items])
+          this.userListData.push(response.data.list[items])
         }
-        that.total = response.data.total
+        this.total = response.data.total
       })
     }
   },
   mounted() {
-    this.getData()
+    this.userList()
   },
   watch: {
     'modal.show'(val, oldVal) {
       if (!val) {
-        this.resetFields('formValidate')
+        this.resetFields('userInfo')
       }
     }
   }
