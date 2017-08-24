@@ -8,6 +8,7 @@ import CaseInfo from 'views/case/CaseInfo'
 import IntUser from 'views/user/IntUser'
 import ExtUser from 'views/user/ExtUser'
 import Login from 'views/setting/Login'
+import Organization from 'views/organization/Organization'
 
 Vue.use(Router)
 
@@ -26,6 +27,7 @@ const router = new Router({
       children: [
         { path: '', name: 'CaseManage', component: CaseManage },
         { path: 'caseInfo/:caseId', name: 'CaseInfo', component: CaseInfo },
+        { path: 'organization', name: 'Organization', component: Organization },
         { path: 'intUser', name: 'IntUser', component: IntUser },
         { path: 'extUser', name: 'ExtUser', component: ExtUser }
       ],
