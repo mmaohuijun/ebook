@@ -151,12 +151,6 @@ export default {
       }
     }
   }
-
-  .field-add-btn {
-    display: block;
-    margin-top: 14px;
-    font-size: 15px;
-  }
   .attrsinfo__card {
     position: relative;
     padding: 20px 20px 0;
@@ -297,5 +291,17 @@ export default {
     top: 2px;
     font-size: 24px;
     cursor: pointer;
+  }
+
+  .case-add-btn {
+    position: absolute;
+    top: 15px;
+    right: 0px;
+    font-size: 15px;
+  }
+
+  .field-add-btn {
+    display: block;
+    margin-top: 14px;
   }
 </style>

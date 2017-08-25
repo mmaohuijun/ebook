@@ -1,5 +1,5 @@
 <template>
-<div>
+<!-- <div>
   <Row :gutter="16">
     <Col :md="24" :lg="8" style="margin-bottom: 16px;">
       <Button type="dashed" icon="plus-round" long style="height: 230px; font-size: 30px;">添加项目</Button>
@@ -192,6 +192,89 @@
         </Form>
     </Col>
 </Row>
+</div> -->
+<div class="case-project">
+  <a href="javascript:;" class="case-add-btn">新建项目</a>
+  <Row :gutter="24" class="case-project__list">
+    <Col :md="12">
+      <div class="case-project__item">
+        <div class="case-project__line">
+          <div class="case-project__label"><span>项目名称</span></div>
+          <div class="case-project__data"><span>金地艺境一期</span></div>
+        </div>
+        <div class="case-project__scroll">
+          <div class="case-project__line">
+            <div class="case-project__label"><span>别墅</span></div>
+            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          </div>
+          <div class="case-project__line">
+            <div class="case-project__label"><span>住宅</span></div>
+            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          </div>
+          <div class="case-project__line">
+            <div class="case-project__label"><span>酒店式公寓</span></div>
+            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          </div>
+        </div>
+        <div class="case-project__tool">
+          <i class="iconfont icon-xiugai"></i>
+          <i class="iconfont icon-shanchu1"></i>
+        </div>
+      </div>
+    </Col>
+    <Col :md="12">
+      <div class="case-project__item">
+        <div class="case-project__line">
+          <div class="case-project__label"><span>项目名称</span></div>
+          <div class="case-project__data"><span>金地艺境一期</span></div>
+        </div>
+        <div class="case-project__scroll">
+          <div class="case-project__line">
+            <div class="case-project__label"><span>别墅</span></div>
+            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          </div>
+          <div class="case-project__line">
+            <div class="case-project__label"><span>住宅</span></div>
+            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          </div>
+          <div class="case-project__line">
+            <div class="case-project__label"><span>酒店式公寓</span></div>
+            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          </div>
+        </div>
+        <div class="case-project__tool">
+          <i class="iconfont icon-xiugai"></i>
+          <i class="iconfont icon-shanchu1"></i>
+        </div>
+      </div>
+    </Col>
+    <Col :md="12">
+      <div class="case-project__item">
+        <div class="case-project__line">
+          <div class="case-project__label"><span>项目名称</span></div>
+          <div class="case-project__data"><span>金地艺境一期</span></div>
+        </div>
+        <div class="case-project__scroll">
+          <div class="case-project__line">
+            <div class="case-project__label"><span>别墅</span></div>
+            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          </div>
+          <div class="case-project__line">
+            <div class="case-project__label"><span>住宅</span></div>
+            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          </div>
+          <div class="case-project__line">
+            <div class="case-project__label"><span>酒店式公寓</span></div>
+            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          </div>
+        </div>
+        <div class="case-project__tool">
+          <i class="iconfont icon-xiugai"></i>
+          <i class="iconfont icon-shanchu1"></i>
+        </div>
+      </div>
+    </Col>
+  </Row>
 </div>
 </template>
 <script>
@@ -314,5 +397,76 @@ export default {
   }
 }
 </script>
-<style lang="css" scoped>
+<style lang="less">
+.case-project__list {
+  padding: 0 -15px;
+}
+.case-project__item {
+  position: relative;
+  height: 240px;
+  padding: 15px 0 15px 20px;
+  margin-bottom: 25px;
+  background:#f8f8f8;
+  box-shadow:0 1px 2px 0 rgba(0,0,0,0.50);
+  border-radius:5px;
+  overflow: hidden;
+
+  &:hover {
+    .case-project__tool {
+      display: block;
+    }
+  }
+}
+
+.case-project__tool {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 22px;
+
+  i {
+    margin-left: 8px;
+    cursor: pointer;
+  }
+}
+
+.case-project__line {
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.case-project__label{
+  float: left;
+  font-size: 18px;
+  &::after {
+    content: "：";
+    display: inline-block;
+    color: #555;
+  }
+
+  span {
+    display:inline-block;
+    width: 90px;
+    text-align: justify;
+    text-align-last: justify;
+    color: #777;
+  }
+}
+.case-project__data {
+  margin-left: 115px;
+  font-size: 16px;
+  line-height: 27px;
+
+  span {
+    display: inline-block;
+    color: #111;
+    margin:0 30px 5px 0;
+    white-space:nowrap
+  }
+}
+
+.case-project__scroll {
+  height: 179px;
+  overflow-y: auto;
+}
 </style>
