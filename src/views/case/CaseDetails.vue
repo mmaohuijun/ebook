@@ -14,10 +14,6 @@
                   <div class="ivu-tabs-ink-bar" style="display: none; width: 138px; left: 0px;"></div>
                   <div v-for="(item, index) in tabsList" :key="index" class="ivu-tabs-tab" :class="item.pathName === currentTabsName ? 'ivu-tabs-tab-active' : ''" @click="onClickTabs(item.pathName)">{{item.title}}</div>
                 </div>
-                <!-- <div class="ivu-tabs-nav-right">
-                  <a href="javascript:;" v-if="currentTabsName === 'CaseProject'" class="field-add-btn">新建项目</a>
-                  <a href="javascript:;" v-if="currentTabsName === 'CaseAttrs'" class="field-add-btn">新建分栏</a>
-                </div> -->
               </div>
             </div>
           </div>
@@ -39,19 +35,21 @@ export default {
         { title: '案场信息', pathName: 'CaseInfo' },
         { title: '项目信息', pathName: 'CaseProject' },
         { title: '维度信息', pathName: 'CaseAttrs' }
-      ],
-      currentTabsName: 'CaseInfo'
+      ]
     }
   },
   computed: {
     caseId() {
       return this.$store.state.CASE_ID
+    },
+    currentTabsName() {
+      return this.$store.state.CURRENT_PATH
     }
   },
   methods: {
+    // 点击tab栏切换
     onClickTabs(pathName) {
       console.log('onClickTabs', pathName)
-      this.currentTabsName = pathName
       this.$router.push({ name: pathName, params: { caseId: this.caseId } })
     }
   }

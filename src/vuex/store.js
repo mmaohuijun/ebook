@@ -14,6 +14,7 @@ const store = new Vuex.Store({
     NUMBER: '',
     CASE_ID: '', // 案场id
     SIDEBAR_SELECT: '', // 侧边栏选中项
+    CURRENT_PATH: '', // 当前路径名
     loading: false,
     ifLogin: true, // 账号是否登录
     ifShowErrorMsg: false,
@@ -35,6 +36,9 @@ const store = new Vuex.Store({
     },
     initSideBar(state, str) {
       state.SIDEBAR_SELECT = str
+    },
+    initPathName(state, str) {
+      state.CURRENT_PATH = str
     },
     showLoading(state) {
       state.loading = true

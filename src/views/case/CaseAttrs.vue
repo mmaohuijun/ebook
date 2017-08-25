@@ -1,7 +1,7 @@
 <template>
 <div>
+  <a href="javascript:;" class="case-add-btn">新建分栏</a>
   <div class="attrsinfo">
-    <a href="javascript:;" class="case-add-btn">新建分栏</a>
     <div class="attrsinfo__card">
       <div class="attrsinfo__card__item">
         <label>栏目名称：</label>

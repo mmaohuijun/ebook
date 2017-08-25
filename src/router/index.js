@@ -75,4 +75,9 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
+// 路由跳转后记录下当前路径名
+router.afterEach(route => {
+  store.commit('initPathName', route.name)
+})
+
 export default router
