@@ -1,123 +1,125 @@
 <template>
-<div class="attrsinfo">
-  <div class="attrsinfo__card">
-    <div class="attrsinfo__card__item">
-      <label>栏目名称：</label>
-      <div class="attrsinfo__card__info">意向因素</div>
-    </div>
-    <div class="attrsinfo__card__item">
-      <label>详细维度：</label>
-      <div class="attrsinfo__card__info">
-        <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+<div>
+  <div class="attrsinfo">
+    <a href="javascript:;" class="case-add-btn">新建分栏</a>
+    <div class="attrsinfo__card">
+      <div class="attrsinfo__card__item">
+        <label>栏目名称：</label>
+        <div class="attrsinfo__card__info">意向因素</div>
+      </div>
+      <div class="attrsinfo__card__item">
+        <label>详细维度：</label>
+        <div class="attrsinfo__card__info">
+          <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+        </div>
+      </div>
+      <div class="attrsinfo__card__tool">
+        <i class="iconfont icon-xiugai"></i>
+        <i class="iconfont icon-shanchu1"></i>
+        <i class="iconfont icon-yincang"></i>
       </div>
     </div>
-    <div class="attrsinfo__card__tool">
-      <i class="iconfont icon-xiugai"></i>
-      <i class="iconfont icon-shanchu1"></i>
-      <i class="iconfont icon-yincang"></i>
-    </div>
-  </div>
-  <div class="attrsinfo__card">
-    <div class="attrsinfo__card__item">
-      <label>栏目名称：</label>
-      <div class="attrsinfo__card__info">意向因素</div>
-    </div>
-    <div class="attrsinfo__card__item">
-      <label>详细维度：</label>
-      <div class="attrsinfo__card__info">
-        <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+    <div class="attrsinfo__card">
+      <div class="attrsinfo__card__item">
+        <label>栏目名称：</label>
+        <div class="attrsinfo__card__info">意向因素</div>
+      </div>
+      <div class="attrsinfo__card__item">
+        <label>详细维度：</label>
+        <div class="attrsinfo__card__info">
+          <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+        </div>
+      </div>
+      <div class="attrsinfo__card__tool">
+        <i class="iconfont icon-xiugai"></i>
+        <i class="iconfont icon-shanchu1"></i>
+        <i class="iconfont icon-yincang"></i>
       </div>
     </div>
-    <div class="attrsinfo__card__tool">
-      <i class="iconfont icon-xiugai"></i>
-      <i class="iconfont icon-shanchu1"></i>
-      <i class="iconfont icon-yincang"></i>
-    </div>
-  </div>
-  <div class="attrsinfo__card">
-    <div class="attrsinfo__card__item">
-      <label>栏目名称：</label>
-      <div class="attrsinfo__card__info">意向因素</div>
-    </div>
-    <div class="attrsinfo__card__item">
-      <label>详细维度：</label>
-      <div class="attrsinfo__card__info">
-        <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+    <div class="attrsinfo__card">
+      <div class="attrsinfo__card__item">
+        <label>栏目名称：</label>
+        <div class="attrsinfo__card__info">意向因素</div>
+      </div>
+      <div class="attrsinfo__card__item">
+        <label>详细维度：</label>
+        <div class="attrsinfo__card__info">
+          <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+        </div>
+      </div>
+      <div class="attrsinfo__card__tool">
+        <i class="iconfont icon-xiugai"></i>
+        <i class="iconfont icon-shanchu1"></i>
+        <i class="iconfont icon-yincang"></i>
       </div>
     </div>
-    <div class="attrsinfo__card__tool">
-      <i class="iconfont icon-xiugai"></i>
-      <i class="iconfont icon-shanchu1"></i>
-      <i class="iconfont icon-yincang"></i>
-    </div>
-  </div>
-  <div class="attrsinfo__card attrsinfo__card-active">
-    <div class="attrsinfo__card__item">
-      <label>栏目名称：</label>
-      <div class="attrsinfo__card__info">意向因素</div>
-    </div>
-    <div class="attrsinfo__card__item">
-      <label>详细维度：</label>
-      <div class="attrsinfo__card__info">
-        <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-        <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+    <div class="attrsinfo__card attrsinfo__card-active">
+      <div class="attrsinfo__card__item">
+        <label>栏目名称：</label>
+        <div class="attrsinfo__card__info">意向因素</div>
+      </div>
+      <div class="attrsinfo__card__item">
+        <label>详细维度：</label>
+        <div class="attrsinfo__card__info">
+          <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+        </div>
+      </div>
+      <div class="attrsinfo__card__tool">
+        <i class="iconfont icon-xiugai"></i>
+        <i class="iconfont icon-shanchu1"></i>
+        <i class="iconfont icon-yincang"></i>
       </div>
     </div>
-    <div class="attrsinfo__card__tool">
-      <i class="iconfont icon-xiugai"></i>
-      <i class="iconfont icon-shanchu1"></i>
-      <i class="iconfont icon-yincang"></i>
-    </div>
   </div>
-
-    <Modal
+  <Modal
     v-model="showModal"
     :closable="false"
     width="560">

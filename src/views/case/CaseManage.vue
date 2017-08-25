@@ -133,7 +133,7 @@ export default {
     // 新建案场
     addCase() {
       console.log('addCase')
-      this.$router.push('/web-admin/caseInfo/0')
+      this.gotoCaseDetails('0')
     },
     // 点击分页
     changePage(pageNo) {
@@ -149,7 +149,10 @@ export default {
     // 点击案场跳转详情页
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
-      this.caseId = item.id
+      this.gotoCaseDetails(item.id)
+    },
+    gotoCaseDetails(id) {
+      this.caseId = id
       this.$store.commit('initCaseId', this.caseId)
       this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
     },

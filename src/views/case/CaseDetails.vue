@@ -14,10 +14,10 @@
                   <div class="ivu-tabs-ink-bar" style="display: none; width: 138px; left: 0px;"></div>
                   <div v-for="(item, index) in tabsList" :key="index" class="ivu-tabs-tab" :class="item.pathName === currentTabsName ? 'ivu-tabs-tab-active' : ''" @click="onClickTabs(item.pathName)">{{item.title}}</div>
                 </div>
-                <div class="ivu-tabs-nav-right">
+                <!-- <div class="ivu-tabs-nav-right">
                   <a href="javascript:;" v-if="currentTabsName === 'CaseProject'" class="field-add-btn">新建项目</a>
                   <a href="javascript:;" v-if="currentTabsName === 'CaseAttrs'" class="field-add-btn">新建分栏</a>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>

@@ -155,6 +155,7 @@ export default {
   },
   mounted() {
     if (this.caseId === '0') {
+      // 新建案场
       this.clearAllData()
       return
     }
