@@ -753,6 +753,10 @@ export default {
       padding: 0 28px;
       background-color: #fff;
       border-color: #fff;
+
+      a {
+        color: #888;
+      }
     }
 
     &.ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-tab-active {
@@ -760,7 +764,10 @@ export default {
       height: 50px;
       line-height: 50px;
       border-color: #ddd;
-      color: #111;
+
+      a {
+        color: #111;
+      }
     }
   }
 
