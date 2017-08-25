@@ -150,9 +150,8 @@ export default {
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
       this.caseId = item.id
-      // this.$router.push(`/web-admin/caseInfo/${this.caseId}`)
-      // this.$router.push({ name: 'CaseDetails', params: { caseId: this.caseId } })
-      this.$router.push({ name: 'CaseDetails' })
+      this.$store.commit('initCaseId', this.caseId)
+      this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
     },
     // 选中列表
     onSelectCaseItem(item) {

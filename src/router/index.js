@@ -28,15 +28,16 @@ const router = new Router({
       path: '/web-admin',
       component: Layout,
       children: [
-        { path: '/', name: 'CaseManage', component: CaseManage },
-        { path: 'case',
+        { path: '', name: 'CaseManage', component: CaseManage },
+        { path: 'case/:caseId',
           name: 'CaseDetails',
           component: CaseDetails,
           children: [
-          { path: 'caseInfo', name: 'CaseInfo', component: CaseInfo },
-          { path: 'caseProject', name: 'CaseProject', component: CaseProject },
-          { path: 'caseAttrs', name: 'CaseAttrs', component: CaseAttrs }
-          ] },
+            { path: '', name: 'CaseInfo', component: CaseInfo },
+            { path: 'caseProject', name: 'CaseProject', component: CaseProject },
+            { path: 'caseAttrs', name: 'CaseAttrs', component: CaseAttrs }
+          ]
+        },
         { path: 'organization', name: 'Organization', component: Organization },
         { path: 'intUser', name: 'IntUser', component: IntUser },
         { path: 'extUser', name: 'ExtUser', component: ExtUser }
@@ -49,7 +50,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   console.log('router.beforeEach', to, from)
   store.commit('initSideBar', to.name)
-  if (to.name === 'CaseInfo') {
+  if (to.name.indexOf('Case') !== -1) { // 包含'Case'的页面
     store.commit('initSideBar', 'CaseManage')
   }
 
