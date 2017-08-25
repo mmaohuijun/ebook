@@ -1,7 +1,4 @@
 <style lang="less">
-  .modal-form {
-    margin: 30px 70px;
-  }
 </style>
 <template>
 <div class="layout__content">

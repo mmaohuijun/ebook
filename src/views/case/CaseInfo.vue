@@ -383,8 +383,73 @@
       意向信息-维度编辑
     </p>
     <Form :label-width="120" class="modal-form">
-      <Form-item label="姓名：">
+      <Form-item label="维度名称：">
         <Input placeholder="请您输入..."></Input>
+      </Form-item>
+      <Form-item label="名称序号：">
+        <Input placeholder="请您输入..."></Input>
+      </Form-item>
+      <Form-item label="填写要求：">
+        <Select placeholder="请选择">
+          <Option value="beijing">选填</Option>
+          <Option value="shanghai">必填</Option>
+        </Select>
+      </Form-item>
+      <Form-item label="类型：">
+        <Select placeholder="请选择">
+          <Option value="beijing">文本框</Option>
+          <Option value="shanghai">下拉框</Option>
+        </Select>
+      </Form-item>
+      <Form-item label="文本类型：">
+        <Select placeholder="请选择">
+          <Option value="beijing">纯文字</Option>
+          <Option value="shanghai">纯数字</Option>
+        </Select>
+      </Form-item>
+      <Form-item label="详细维度：">
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
+      </Form-item>
+      <Form-item>
+        <Input placeholder="文本不能超过20个字符"></Input>
+        <Icon type="plus-circled" class="add-detail-attrs"></Icon>
       </Form-item>
     </Form>
     <div slot="footer">
@@ -400,7 +465,7 @@ import CaseMap from 'components/CaseMap'
 export default {
   data() {
     return {
-      showModal: false,
+      showModal: true,
       caseDataSource: [],
       name: '', // 案场名
       address: '', // 案场地址
@@ -835,5 +900,14 @@ export default {
       font-size: 24px !important;
       margin: 0 auto;
     }
+  }
+
+  .add-detail-attrs {
+    display: inline;
+    position: absolute;
+    right: -30px;
+    top: 2px;
+    font-size: 24px;
+    cursor: pointer;
   }
 </style>

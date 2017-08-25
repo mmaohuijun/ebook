@@ -43,10 +43,18 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="less">
 #app {
   height: 100%;
   overflow: hidden;
 }
-@import 'assets/css/common.css';  
+
+.modal-form {
+  margin: 30px 70px;
+}
+.ivu-modal-body {
+  height: 400px;
+  overflow-y: auto;
+}
+@import 'assets/css/common.css';
 </style>
