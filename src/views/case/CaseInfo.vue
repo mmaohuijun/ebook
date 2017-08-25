@@ -5,7 +5,7 @@
   </div>
   <div class="layout__body">
     <div class="field-box">
-    <Tabs :value="displayPane" type="card" class="custom-tabs">
+    <Tabs :value="displayPane" type="card" class="custom-tabs" :animated="false">
       <Tab-pane label="案场信息" name="caseInfo">
           <Form :model="formItem" :label-width="120" label-position="left">
               <div style="overflow: hidden; margin-bottom: 30px;">
@@ -250,18 +250,157 @@
               </Col>
           </Row>
       </Tab-pane>
-      <Tab-pane label="维度信息" name="attrsInfo" disabled>敬请期待</Tab-pane>
+      <Tab-pane label="维度信息" name="attrsInfo">
+        <div class="attrsinfo">
+          <div class="attrsinfo__card">
+            <div class="attrsinfo__card__item">
+              <label>栏目名称：</label>
+              <div class="attrsinfo__card__info">意向因素</div>
+            </div>
+            <div class="attrsinfo__card__item">
+              <label>详细维度：</label>
+              <div class="attrsinfo__card__info">
+                <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+              </div>
+            </div>
+            <div class="attrsinfo__card__tool">
+              <i class="iconfont icon-xiugai"></i>
+              <i class="iconfont icon-shanchu1"></i>
+              <i class="iconfont icon-yincang"></i>
+            </div>
+          </div>
+          <div class="attrsinfo__card">
+            <div class="attrsinfo__card__item">
+              <label>栏目名称：</label>
+              <div class="attrsinfo__card__info">意向因素</div>
+            </div>
+            <div class="attrsinfo__card__item">
+              <label>详细维度：</label>
+              <div class="attrsinfo__card__info">
+                <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+              </div>
+            </div>
+            <div class="attrsinfo__card__tool">
+              <i class="iconfont icon-xiugai"></i>
+              <i class="iconfont icon-shanchu1"></i>
+              <i class="iconfont icon-yincang"></i>
+            </div>
+          </div>
+          <div class="attrsinfo__card">
+            <div class="attrsinfo__card__item">
+              <label>栏目名称：</label>
+              <div class="attrsinfo__card__info">意向因素</div>
+            </div>
+            <div class="attrsinfo__card__item">
+              <label>详细维度：</label>
+              <div class="attrsinfo__card__info">
+                <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+              </div>
+            </div>
+            <div class="attrsinfo__card__tool">
+              <i class="iconfont icon-xiugai"></i>
+              <i class="iconfont icon-shanchu1"></i>
+              <i class="iconfont icon-yincang"></i>
+            </div>
+          </div>
+          <div class="attrsinfo__card attrsinfo__card-active">
+            <div class="attrsinfo__card__item">
+              <label>栏目名称：</label>
+              <div class="attrsinfo__card__info">意向因素</div>
+            </div>
+            <div class="attrsinfo__card__item">
+              <label>详细维度：</label>
+              <div class="attrsinfo__card__info">
+                <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+                <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+              </div>
+            </div>
+            <div class="attrsinfo__card__tool">
+              <i class="iconfont icon-xiugai"></i>
+              <i class="iconfont icon-shanchu1"></i>
+              <i class="iconfont icon-yincang"></i>
+            </div>
+          </div>
+        </div>
+      </Tab-pane>
+      <a href="javascript:;" slot="extra" class="field-add-btn">新建分栏</a>
     </Tabs>
     </div>
   </div>
+
+  <Modal
+    v-model="showModal"
+    :closable="false"
+    width="560">
+    <p slot="header">
+      意向信息-维度编辑
+    </p>
+    <Form :label-width="120" class="modal-form">
+      <Form-item label="姓名：">
+        <Input v-model="" placeholder="请您输入..."></Input>
+      </Form-item>
+    </Form>
+    <div slot="footer">
+      <Button type="text" size="large" @click="showModal = false">取消</Button>
+      <Button type="primary" size="large">完成</Button>
+    </div>
+  </Modal>
 </div>
 </template>
 <script>
-import CaseMap from 'components/CaseMap'
+import { CaseMap, Modal } from 'components/CaseMap'
 
 export default {
   data() {
     return {
+      showModal: false,
       caseDataSource: [],
       name: '', // 案场名
       address: '', // 案场地址
@@ -468,7 +607,8 @@ export default {
     this.initCaseInfo()
   },
   components: {
-    CaseMap
+    CaseMap,
+    Modal
   }
 }
 </script>
@@ -538,6 +678,7 @@ export default {
   }
 
   .custom-tabs {
+    overflow: visible;
     &.ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-nav-container {
       height: 50px;
     }
@@ -556,6 +697,144 @@ export default {
       line-height: 50px;
       border-color: #ddd;
       color: #111;
+    }
+  }
+
+  .field-add-btn {
+    display: block;
+    margin-top: 14px;
+    font-size: 15px;
+  }
+  .attrsinfo__card {
+    position: relative;
+    padding: 20px 20px 0;
+    margin-bottom: 28px;
+    background: #f8f8f8;
+    border-radius: 5px;
+    box-shadow:0 1px 1px 0 rgba(133,133,133,0.50);
+
+    &:nth-child(1),
+    &:nth-child(2),
+    &:nth-child(3) {
+      .attrsinfo__card__tool {
+        display: none !important;
+      }
+
+      .attr__item {
+        i {
+          display: none !important;
+        }
+      }
+      .attr__item-add {
+        display: none !important;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 10px;
+    }
+
+    &:hover {
+      .attrsinfo__card__tool {
+        display: block;
+      }
+    }
+
+    &-active {
+      box-shadow:0 1px 3px 0 #94d2ff;
+      background: #fff;
+      border:1px solid #94d2ff;
+    }
+  }
+
+  .attrsinfo__card__info {
+    overflow: hidden;
+  }
+
+
+  .attrsinfo__card__item {
+    font-size: 17px;
+    padding-bottom: 16px;
+
+    > label {
+      float: left;
+    }
+
+    &:nth-child(2) {
+      padding-bottom: 0 !important;
+    }
+  }
+
+  .attr__item {
+    float: left;
+    position: relative;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 24px 0 5px;
+    margin: 0 16px 20px 0;
+    border-radius: 15px;
+    color: #fff;
+    background: #5e6479;
+
+    .attr__item_rank {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      margin-right: 8px;
+      text-align: center;
+      border-radius: 50%;
+      background: #fff;
+      color: #555;
+      font-size: 14px;
+    }
+
+    > i.ivu-icon {
+      display: none;
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    &:hover {
+      > i.ivu-icon {
+        display: block;
+      }
+    }
+  }
+
+  .attr__item_rank-red {
+    color: #fa7b7b !important;
+  }
+
+  .attrsinfo__card__tool {
+    display: none;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    > i {
+      margin-left: 10px;
+      font-size: 20px;
+      color: #818181;
+      cursor: pointer;
+    }
+  }
+
+  .attr__item-add {
+    text-align: center;
+    width:140px;
+    padding: 0;
+    background:#b8bbc4;
+    cursor: pointer;
+
+    i {
+      display: block !important;
+      top: 3px !important;
+      right: 55px !important;
+      font-size: 24px !important;
+      margin: 0 auto;
     }
   }
 </style>
