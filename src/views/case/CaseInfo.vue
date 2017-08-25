@@ -384,7 +384,7 @@
     </p>
     <Form :label-width="120" class="modal-form">
       <Form-item label="姓名：">
-        <Input v-model="" placeholder="请您输入..."></Input>
+        <Input placeholder="请您输入..."></Input>
       </Form-item>
     </Form>
     <div slot="footer">
@@ -395,7 +395,7 @@
 </div>
 </template>
 <script>
-import { CaseMap, Modal } from 'components/CaseMap'
+import CaseMap from 'components/CaseMap'
 
 export default {
   data() {
@@ -607,8 +607,7 @@ export default {
     this.initCaseInfo()
   },
   components: {
-    CaseMap,
-    Modal
+    CaseMap
   }
 }
 </script>
