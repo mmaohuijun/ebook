@@ -4,7 +4,10 @@ import store from '../vuex/store'
 
 import Layout from 'views/layout/Layout'
 import CaseManage from 'views/case/CaseManage'
+import CaseDetails from 'views/case/CaseDetails'
 import CaseInfo from 'views/case/CaseInfo'
+import CaseProject from 'views/case/CaseProject'
+import CaseAttrs from 'views/case/CaseAttrs'
 import IntUser from 'views/user/IntUser'
 import ExtUser from 'views/user/ExtUser'
 import Login from 'views/setting/Login'
@@ -25,8 +28,15 @@ const router = new Router({
       path: '/web-admin',
       component: Layout,
       children: [
-        { path: '', name: 'CaseManage', component: CaseManage },
-        { path: 'caseInfo/:caseId', name: 'CaseInfo', component: CaseInfo },
+        { path: '/', name: 'CaseManage', component: CaseManage },
+        { path: 'case',
+          name: 'CaseDetails',
+          component: CaseDetails,
+          children: [
+          { path: 'caseInfo', name: 'CaseInfo', component: CaseInfo },
+          { path: 'caseProject', name: 'CaseProject', component: CaseProject },
+          { path: 'caseAttrs', name: 'CaseAttrs', component: CaseAttrs }
+          ] },
         { path: 'organization', name: 'Organization', component: Organization },
         { path: 'intUser', name: 'IntUser', component: IntUser },
         { path: 'extUser', name: 'ExtUser', component: ExtUser }
