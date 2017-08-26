@@ -13,6 +13,7 @@ const $axios = axios.create({
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   },
+  withCredentials: false,
   transformRequest: [function(data) {
     // 对 data 进行任意转换处理
     return qs.stringify(data)

@@ -19,7 +19,7 @@
             <span class="attr__item_rank" :class="ele.required ? 'attr__item_rank-red' : ''">{{index + 1}}</span>{{ele.label}}
             <Icon type="close-round"></Icon>
           </div>
-          <div class="attr__item attr__item-add" v-show="item.id === hoverAttrId && item.editable"><Icon type="plus-circled"></Icon></div>
+          <div class="attr__item attr__item-add" v-show="item.id === hoverAttrId && item.editable" @click.stop="addAttrs"><Icon type="plus-circled"></Icon></div>
         </div>
       </div>
       <div class="attrsinfo__card__tool">
@@ -260,6 +260,7 @@ export default {
       })
       item.hidden = !item.hidden
     },
+    // 删除维度分栏
     deleteAttrsGroup(item) {
       console.log('deleteAttrsGroup', item)
       this.attrsGroupId = item.id
@@ -278,11 +279,18 @@ export default {
     },
     // 初始化维度分栏列表
     initAttrsGroupList() {
+      console.log('initAttrsGroupList')
       this.$axios.post('case-attr/list', { caseId: this.caseId }).then(response => {
         if (_.isNull(response)) return
         console.log('初始化维度分栏列表', response)
         /** 赋值给 attrListData */
       })
+    },
+    addAttrs() {
+      console.log('addAttrs')
+      this.isAttrsGroup = false
+      this.modalTitle = '新建维度'
+      this.showModal()
     },
     // 鼠标移入分栏高亮显示编辑
     onEnterAttrs(item) {

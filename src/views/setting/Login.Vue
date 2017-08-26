@@ -28,8 +28,6 @@
 </div>
 </template>
 <script>
-import $cookies from 'api/cookies'
-
 export default {
   data() {
     return {
@@ -61,9 +59,6 @@ export default {
           no: reData.no
         }
         this.$store.commit('initInfo', loginInfo)
-        // 保存cookies
-        const cookies = $cookies.getAll()
-        $cookies.setAll(cookies)
         this.$router.push({ name: 'CaseManage' })
       })
     }

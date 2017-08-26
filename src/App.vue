@@ -53,7 +53,7 @@ export default {
   margin: 30px 70px;
 }
 .ivu-modal-body {
-  max-height: 400px;
+  max-height: 500px;
   overflow-y: auto;
 }
 @import 'assets/css/common.css';
