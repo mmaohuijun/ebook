@@ -157,9 +157,7 @@ export default {
     border-radius: 5px;
     box-shadow:0 1px 1px 0 rgba(133,133,133,0.50);
 
-    &:nth-child(1),
-    &:nth-child(2),
-    &:nth-child(3) {
+    &.attrsinf__card-hiden-tool {
       .attrsinfo__card__tool {
         display: none !important;
       }

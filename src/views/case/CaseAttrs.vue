@@ -2,7 +2,7 @@
 <div>
   <a href="javascript:;" class="case-add-btn">新建分栏</a>
   <div class="attrsinfo">
-    <div class="attrsinfo__card">
+    <div class="attrsinfo__card attrsinf__card-hiden-tool">
       <div class="attrsinfo__card__item">
         <label>栏目名称：</label>
         <div class="attrsinfo__card__info">核心因素</div>
