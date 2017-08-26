@@ -5,7 +5,7 @@
     <div class="attrsinfo__card">
       <div class="attrsinfo__card__item">
         <label>栏目名称：</label>
-        <div class="attrsinfo__card__info">意向因素</div>
+        <div class="attrsinfo__card__info">核心因素</div>
       </div>
       <div class="attrsinfo__card__item">
         <label>详细维度：</label>
@@ -34,7 +34,7 @@
     <div class="attrsinfo__card">
       <div class="attrsinfo__card__item">
         <label>栏目名称：</label>
-        <div class="attrsinfo__card__info">意向因素</div>
+        <div class="attrsinfo__card__info">相关因素</div>
       </div>
       <div class="attrsinfo__card__item">
         <label>详细维度：</label>
@@ -63,7 +63,7 @@
     <div class="attrsinfo__card">
       <div class="attrsinfo__card__item">
         <label>栏目名称：</label>
-        <div class="attrsinfo__card__info">意向因素</div>
+        <div class="attrsinfo__card__info">特征因素</div>
       </div>
       <div class="attrsinfo__card__item">
         <label>详细维度：</label>
@@ -100,14 +100,26 @@
           <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
           <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
           <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
-          <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
+          <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
+        </div>
+      </div>
+      <div class="attrsinfo__card__tool">
+        <i class="iconfont icon-xiugai"></i>
+        <i class="iconfont icon-shanchu1"></i>
+        <i class="iconfont icon-yincang"></i>
+      </div>
+    </div>
+
+    <div class="attrsinfo__card" @mouseenter="onEnter" @mouseleave="onLeave" v-for="item in attrListData" :key="item.id">
+      <div class="attrsinfo__card__item">
+        <label>栏目名称：</label>
+        <div class="attrsinfo__card__info">{{item.label}}</div>
+      </div>
+      <div class="attrsinfo__card__item">
+        <label>详细维度：</label>
+        <div class="attrsinfo__card__info">
+          <div class="attr__item"><span class="attr__item_rank attr__item_rank-red">99</span>姓名很长很长很长<Icon type="close-round"></Icon></div>
+          <div class="attr__item" v-for="(ele, index) in item.attrs" :key="ele.id"><span class="attr__item_rank">1</span>{{ele.label}}<Icon type="close-round"></Icon></div>
           <div class="attr__item"><span class="attr__item_rank">1</span>姓名<Icon type="close-round"></Icon></div>
           <div class="attr__item attr__item-add"><Icon type="plus-circled"></Icon></div>
         </div>
@@ -208,7 +220,110 @@ export default {
   name: 'CaseAttrs',
   data() {
     return {
+      attrListData: [
+        {
+          id: '12',
+          name: 'XXXX',
+          label: '核心因素',
+          editable: false, // 不可编辑的分栏，不允许隐藏操作
+          hidden: false, // 隐藏状态
+          attrs: [
+            {
+              id: '21',
+              name: 'XXXX',
+              label: '姓名',
+              required: true
+            },
+            {
+              id: '22',
+              name: 'XXXX',
+              label: '性别',
+              required: true
+            },
+            {
+              id: '23',
+              name: 'XXXX',
+              label: '年龄段',
+              required: true
+            },
+            {
+              id: '24',
+              name: 'XXXX',
+              label: '联系方式',
+              required: true
+            },
+            {
+              id: '25',
+              name: 'XXXX',
+              label: '意向楼盘',
+              required: true
+            }
+          ]
+        },
+        {
+          id: '13',
+          name: 'XXXX',
+          label: '意向因素',
+          editable: false, // 不可编辑的分栏，不允许隐藏操作
+          hidden: false, // 隐藏状态
+          attrs: [
+            {
+              id: '31',
+              name: 'XXXX',
+              label: '购房用途',
+              required: true
+            },
+            {
+              id: '32',
+              name: 'XXXX',
+              label: '关注因素',
+              required: false
+            },
+            {
+              id: '33',
+              name: 'XXXX',
+              label: '购房预算',
+              required: false
+            }
+          ]
+        },
+        {
+          id: '14',
+          name: 'XXXX',
+          label: '特征因素',
+          editable: true,
+          hidden: false,
+          attrs: [
+            {
+              id: '41',
+              name: 'XXXX',
+              label: '职业',
+              required: true
+            },
+            {
+              id: '42',
+              name: 'XXXX',
+              label: '行业',
+              required: true
+            },
+            {
+              id: '43',
+              name: 'XXXX',
+              label: '收入',
+              required: false
+            }
+          ]
+        }
+      ],
       showModal: false
+    }
+  },
+  methods: {
+    onEnter() {
+      console.log('onHover')
+    },
+    onLeave() {
+      console.log('onLeave')
     }
   }
 }
