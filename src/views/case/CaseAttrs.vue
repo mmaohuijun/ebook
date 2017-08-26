@@ -1,6 +1,6 @@
 <template>
 <div>
-  <a href="javascript:;" class="case-add-btn" @click="addAttrs">新建分栏</a>
+  <a href="javascript:;" class="case-add-btn" @click="addAttrsGroup">新建分栏</a>
   <div class="attrsinfo">
     <div class="attrsinfo__card"
       v-for="item in attrListData"
@@ -23,9 +23,9 @@
         </div>
       </div>
       <div class="attrsinfo__card__tool">
-        <i class="iconfont icon-xiugai" @click="showModal(item)"></i>
-        <i class="iconfont icon-shanchu1"></i>
-        <i class="iconfont icon-yincang"></i>
+        <i class="iconfont icon-xiugai" @click.stop="editAttrsGroup(item)"></i>
+        <i class="iconfont icon-shanchu1" @click.stop="deleteAttrsGroup(item)"></i>
+        <i class="iconfont" :class="item.hidden ? 'icon-xiugai' : 'icon-yincang'" @click.stop="displayAttrsGroup(item)"></i>
       </div>
     </div>
   </div>
@@ -35,18 +35,15 @@
     :mask-closable="false"
     width="560">
     <p slot="header">{{modalTitle}}</p>
-    <Form :label-width="120" class="modal-form" v-if="ifAddAttrs">
+    <Form :label-width="120" class="modal-form" v-if="isAttrsGroup">
       <Form-item label="栏目名称：">
-        <Input placeholder="请输入..."></Input>
+        <Input placeholder="请输入..." v-model="attrsGroupLabel"></Input>
       </Form-item>
       <Form-item label="名称序号：">
-        <Input placeholder="请输入..."></Input>
+        <Input placeholder="请输入..." v-model="attrsGroupIndex"></Input>
       </Form-item>
-      <Form-item label="填写要求：">
-        <Select placeholder="请选择">
-          <Option value="beijing">选填</Option>
-          <Option value="shanghai">必填</Option>
-        </Select>
+      <Form-item label="是否隐藏：">
+        <i-switch v-model="attrsGroupIfHide"></i-switch>
       </Form-item>
     </Form>
     <Form :label-width="120" class="modal-form" v-else>
@@ -105,6 +102,7 @@ export default {
           id: '12',
           name: 'XXXX',
           label: '核心因素',
+          sort: 77,
           editable: false, // 不可编辑的分栏，不允许隐藏操作
           hidden: false, // 隐藏状态
           attrs: [
@@ -144,6 +142,7 @@ export default {
           id: '13',
           name: 'XXXX',
           label: '意向因素',
+          sort: 88,
           editable: false, // 不可编辑的分栏，不允许隐藏操作
           hidden: false, // 隐藏状态
           attrs: [
@@ -171,6 +170,7 @@ export default {
           id: '14',
           name: 'XXXX',
           label: '特征因素',
+          sort: 99,
           editable: true,
           hidden: false,
           attrs: [
@@ -193,11 +193,37 @@ export default {
               required: false
             }
           ]
+        },
+        {
+          id: '15',
+          name: 'XXXX',
+          label: '家庭因素',
+          sort: 66,
+          editable: true,
+          hidden: true,
+          attrs: [
+            {
+              id: '51',
+              name: 'XXXX',
+              label: '家庭结构',
+              required: true
+            },
+            {
+              id: '52',
+              name: 'XXXX',
+              label: '家庭总收入',
+              required: false
+            }
+          ]
         }
       ],
-      ifAddAttrs: false,
+      isAttrsGroup: false, // 是否打开维度分栏Modal
       ifShowModal: false,
-      modalTitle: ''
+      modalTitle: '',
+      attrsGroupId: '', // 维度分栏id
+      attrsGroupLabel: '', // 维度分栏名称
+      attrsGroupIndex: '', // 维度分栏序号
+      attrsGroupIfHide: false // 维度分栏是否隐藏
     }
   },
   computed: {
@@ -207,10 +233,56 @@ export default {
   },
   methods: {
     // 点击'新建栏目'
-    addAttrs() {
+    addAttrsGroup() {
       this.showModal()
-      this.ifAddAttrs = true
+      this.isAttrsGroup = true
       this.modalTitle = '新建栏目'
+    },
+    // 点击'编辑栏目'
+    editAttrsGroup(item) {
+      console.log('editAttrsGroup', item)
+      this.showModal()
+      this.isAttrsGroup = true
+      this.modalTitle = '编辑栏目'
+      this.attrsGroupLabel = item.label
+      this.attrsGroupIndex = item.sort
+      this.attrsGroupIfHide = item.hidden
+    },
+    // 维度分栏隐藏与显现
+    displayAttrsGroup(item) {
+      console.log('displayAttrsGroup', item)
+      this.attrsGroupId = item.id
+      /** 发送 栏目隐藏与显现 请求 */
+      this.$axios.post('case-attr/group-hidden', { id: this.attrsGroupId }).then(response => {
+        if (_.isNull(response)) return
+        console.log('栏目隐藏与显现', response)
+        // item.hidden = !item.hidden
+      })
+      item.hidden = !item.hidden
+    },
+    deleteAttrsGroup(item) {
+      console.log('deleteAttrsGroup', item)
+      this.attrsGroupId = item.id
+      this.$Modal.confirm({
+        // title: '温馨提示',
+        content: '此操作不可恢复，确认删除分栏？',
+        onOk: this.sendDelateAttrsGroupRequest
+      })
+    },
+    sendDelateAttrsGroupRequest() {
+      console.log('sendDelateAttrsGroupRequest')
+      this.$axios.post('case-attr/group-del', { id: this.attrsGroupId }).then(response => {
+        if (_.isNull(response)) return
+        console.log('删除栏目', response)
+      })
+    },
+    // 初始化维度分栏列表
+    initAttrsGroupList() {
+      this.$axios.post('case-attr/list', { caseId: this.caseId }).then(response => {
+        if (_.isNull(response)) return
+        console.log('初始化维度分栏列表', response)
+        /** 赋值给 attrListData */
+      })
     },
     // 鼠标移入分栏高亮显示编辑
     onEnterAttrs(item) {
@@ -226,12 +298,13 @@ export default {
     hideModal() {
       this.ifShowModal = false
       _.delay(() => {
-        this.ifAddAttrs = false
+        this.isAttrsGroup = false
       }, 500)
     }
   },
   mounted() {
     console.log('caseId', this.caseId)
+    this.initAttrsGroupList()
   }
 }
 </script>
