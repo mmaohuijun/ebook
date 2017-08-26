@@ -3,6 +3,7 @@ import store from '../vuex/store'
 import qs from 'qs'
 
 const devURL = 'http://172.18.84.75:88/admin/'
+// const devURL = 'http://172.18.84.75:8801/admin/'
 const proURL = 'http://zhongnan.masadata.com/admin/'
 
 const ajaxUrl = process.env.NODE_ENV === 'production' ? proURL : devURL
@@ -13,7 +14,7 @@ const $axios = axios.create({
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   },
-  withCredentials: false,
+  withCredentials: true,
   transformRequest: [function(data) {
     // 对 data 进行任意转换处理
     return qs.stringify(data)
