@@ -33,6 +33,7 @@
     v-model="ifShowModal"
     :closable="false"
     :mask-closable="false"
+    :loading="ifShowLoading"
     width="560">
     <p slot="header">{{modalTitle}}</p>
     <Form :label-width="120" class="modal-form" v-if="isAttrsGroup">
@@ -85,8 +86,8 @@
       </Form-item>
     </Form>
     <div slot="footer">
-      <Button type="text" size="large" @click="hideModal">取消</Button>
-      <Button type="primary" size="large">完成</Button>
+      <Button type="text" size="large" @click.stop="hideModal">取消</Button>
+      <Button type="primary" size="large" @click.stop="saveAttrsData">完成</Button>
     </div>
   </Modal>
 </div>
@@ -217,8 +218,9 @@ export default {
           ]
         }
       ],
-      isAttrsGroup: false, // 是否打开维度分栏Modal
       ifShowModal: false,
+      ifShowLoading: false,
+      isAttrsGroup: false, // 是否打开维度分栏Modal
       modalTitle: '',
       attrsGroupId: '', // 维度分栏id
       attrsGroupLabel: '', // 维度分栏名称
@@ -235,8 +237,16 @@ export default {
     // 点击'新建栏目'
     addAttrsGroup() {
       this.showModal()
+      this.clearAttrsGroupData()
       this.isAttrsGroup = true
       this.modalTitle = '新建栏目'
+    },
+    // 清空分栏数据
+    clearAttrsGroupData() {
+      this.attrsGroupId = ''
+      this.attrsGroupLabel = ''
+      this.attrsGroupIndex = ''
+      this.attrsGroupIfHide = false
     },
     // 点击'编辑栏目'
     editAttrsGroup(item) {
@@ -286,11 +296,40 @@ export default {
         /** 赋值给 attrListData */
       })
     },
+    // 新建维度
     addAttrs() {
       console.log('addAttrs')
       this.isAttrsGroup = false
       this.modalTitle = '新建维度'
       this.showModal()
+    },
+    // 保存分栏/保存维度更改
+    saveAttrsData() {
+      this.ifShowLoading = true
+      if (this.isAttrsGroup) {
+        this.saveAttrsGroup()
+      } else {
+        this.saveAttrs()
+      }
+    },
+    // 栏目信息保存（新建、修改）
+    saveAttrsGroup() {
+      const data = {
+        id: this.attrsGroupId,
+        label: this.attrsGroupLabel,
+        sort: this.attrsGroupIndex,
+        hidden: this.attrsGroupIfHide
+      }
+      console.log('saveAttrsGroup', data)
+      this.$axios.post('case-attr/group-save', data).then(response => {
+        if (_.isNull(response)) return
+        console.log('栏目信息保存（新建、修改）', response)
+        /** 刷新List */
+        this.hideModal()
+      })
+    },
+    saveAttrs() {
+      console.log('saveAttrs')
     },
     // 鼠标移入分栏高亮显示编辑
     onEnterAttrs(item) {
@@ -304,6 +343,7 @@ export default {
       this.ifShowModal = true
     },
     hideModal() {
+      this.ifShowLoading = false
       this.ifShowModal = false
       _.delay(() => {
         this.isAttrsGroup = false
