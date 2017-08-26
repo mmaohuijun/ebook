@@ -62,7 +62,7 @@ router.beforeEach((to, from, next) => {
     } else {
       // 判断url后面是否带有参数
       if (!_.isEmpty(to.params)) {
-        if (to.name === 'CaseInfo') {
+        if (to.name.indexOf('Case') !== -1) {
           const caseId = to.params.caseId
           store.commit('initCaseId', caseId)
         }
