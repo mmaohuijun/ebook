@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="case-attrs">
   <a href="javascript:;" class="case-add-btn" @click="addAttrsGroup">新建分栏</a>
   <div class="attrsinfo">
     <div class="attrsinfo__card"
@@ -15,11 +15,15 @@
       <div class="attrsinfo__card__item">
         <label>详细维度：</label>
         <div class="attrsinfo__card__info">
-          <div class="attr__item"v-for="(ele, index) in item.attrs" :key="ele.id">
-            <span class="attr__item_rank" :class="ele.required ? 'attr__item_rank-red' : ''">{{index + 1}}</span>{{ele.label}}
-            <Icon type="close-round"></Icon>
+          <div class="attr__item"v-for="(ele, index) in item.attrs" :key="ele.id" @click.stop="editAttrs(ele)">
+            <span class="attr__item_rank" :class="ele.required ? 'attr__item_rank-red' : ''">{{index + 1}}</span>
+            {{ele.label}}
+            <!-- <Icon type="close-round"></Icon> -->
+            <i class="ivu-icon ivu-icon-close-round" @click.stop="deleteAttrs(ele.id)"></i>
           </div>
-          <div class="attr__item attr__item-add" v-show="item.id === hoverAttrId && item.editable" @click.stop="addAttrs"><Icon type="plus-circled"></Icon></div>
+          <div class="attr__item attr__item-add" v-show="item.id === hoverAttrId && item.editable" @click.stop="addAttrs">
+            <Icon type="plus-circled"></Icon>
+          </div>
         </div>
       </div>
       <div class="attrsinfo__card__tool">
@@ -34,7 +38,8 @@
     :closable="false"
     :mask-closable="false"
     :loading="ifShowLoading"
-    width="560">
+    width="560"
+    class-name="case-attrs">
     <p slot="header">{{modalTitle}}</p>
     <Form :label-width="120" class="modal-form" v-if="isAttrsGroup">
       <Form-item label="栏目名称：">
@@ -49,41 +54,42 @@
     </Form>
     <Form :label-width="120" class="modal-form" v-else>
       <Form-item label="维度名称：">
-        <Input placeholder="请输入..."></Input>
+        <Input placeholder="请输入..." v-model="attrsLabel"></Input>
       </Form-item>
       <Form-item label="名称序号：">
-        <Input placeholder="请输入..."></Input>
+        <Input placeholder="请输入..." v-model="attrsSort"></Input>
       </Form-item>
       <Form-item label="填写要求：">
-        <Select placeholder="请选择">
-          <Option value="beijing">选填</Option>
-          <Option value="shanghai">必填</Option>
+        <Select placeholder="请选择" v-model="attrsRequire">
+          <Option value="0">选填</Option>
+          <Option value="1">必填</Option>
         </Select>
       </Form-item>
       <Form-item label="类型：">
-        <Select placeholder="请选择">
-          <Option value="beijing">文本框</Option>
-          <Option value="shanghai">下拉框</Option>
+        <Select placeholder="请选择" v-model="attrsType" @on-change="onChange">
+          <Option value="text">单行文本框</Option>
+          <Option value="textarea">多行文本框</Option>
+          <Option value="select">单选</Option>
+          <Option value="selectbox">多选</Option>
         </Select>
       </Form-item>
-      <Form-item label="文本类型：">
-        <Select placeholder="请选择">
-          <Option value="beijing">纯文字</Option>
-          <Option value="shanghai">纯数字</Option>
+      <Form-item label="文本类型：" v-if="attrsType.indexOf('text') !== -1">
+        <Select placeholder="请选择" v-model="attrsTextType">
+          <Option value="textOnly">纯文字</Option>
+          <Option value="numberOnly">纯数字</Option>
         </Select>
       </Form-item>
-      <Form-item label="详细维度：">
-        <Input placeholder="文本不能超过20个字符"></Input>
-        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
-      </Form-item>
-      <Form-item>
-        <Input placeholder="文本不能超过20个字符"></Input>
-        <Icon type="minus-circled" class="add-detail-attrs"></Icon>
-      </Form-item>
-      <Form-item>
-        <Input placeholder="文本不能超过20个字符"></Input>
-        <Icon type="plus-circled" class="add-detail-attrs"></Icon>
-      </Form-item>
+      <div v-if="attrsType.indexOf('select') !== -1">
+        <Form-item v-for="(item, index) in attrsDetailsOptions" :key="index" :label="index === 0 ? '详细维度：' : ''" >
+          <Input placeholder="文本不能超过20个字符" :value="item"></Input>
+          <!-- <Icon type="minus-circled" class="add-detail-attrs"></Icon> -->
+          <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" @click.stop="deleteAttrsOptions(index)"></i>
+        </Form-item>
+        <Form-item>
+          <Input placeholder="文本不能超过20个字符"></Input>
+          <Icon type="plus-circled" class="add-detail-attrs"></Icon>
+        </Form-item>
+      </div>
     </Form>
     <div slot="footer">
       <Button type="text" size="large" @click.stop="hideModal">取消</Button>
@@ -109,33 +115,54 @@ export default {
           attrs: [
             {
               id: '21',
-              name: 'XXXX',
               label: '姓名',
-              required: true
+              sort: 10,
+              required: true,
+              type: 'text', // text， textarea， select， selectbox
+              config: { // text， textarea
+                textType: '纯文字',
+                textTip: '请输入姓名'
+              },
+              options: ['工程师', '项目经理'] // select， selectbox
             },
             {
               id: '22',
               name: 'XXXX',
               label: '性别',
-              required: true
+              sort: 10,
+              required: true,
+              type: 'select',
+              options: ['男', '女']
             },
             {
               id: '23',
               name: 'XXXX',
               label: '年龄段',
-              required: true
+              sort: 10,
+              required: true,
+              type: 'select',
+              options: ['未知', '20~30岁', '30~40岁', '40~50岁']
             },
             {
               id: '24',
               name: 'XXXX',
               label: '联系方式',
-              required: true
+              sort: 10,
+              required: true,
+              type: 'text',
+              config: { // text， textarea
+                textType: '纯数字',
+                textTip: '请输入电话号码'
+              }
             },
             {
               id: '25',
               name: 'XXXX',
               label: '意向楼盘',
-              required: true
+              sort: 10,
+              required: true,
+              type: 'select',
+              options: ['金地艺境1', '金地艺境2', '金地艺境3']
             }
           ]
         },
@@ -151,19 +178,28 @@ export default {
               id: '31',
               name: 'XXXX',
               label: '购房用途',
-              required: true
+              sort: 10,
+              required: true,
+              type: 'select',
+              options: ['婚房', '投资', '养老']
             },
             {
               id: '32',
               name: 'XXXX',
               label: '关注因素',
-              required: false
+              sort: 10,
+              required: true,
+              type: 'selectbox',
+              options: ['价格', '户型', '面积', '朝向']
             },
             {
               id: '33',
               name: 'XXXX',
               label: '购房预算',
-              required: false
+              sort: 10,
+              required: false,
+              type: 'select',
+              options: ['100~200万', '200~300万', '300~400万', '400~500万']
             }
           ]
         },
@@ -179,19 +215,31 @@ export default {
               id: '41',
               name: 'XXXX',
               label: '职业',
-              required: true
+              sort: 10,
+              required: true,
+              type: 'select',
+              options: ['职员', '医生', '律师', '警察']
             },
             {
               id: '42',
               name: 'XXXX',
               label: '行业',
-              required: true
+              sort: 10,
+              required: true,
+              type: 'select',
+              options: ['建筑业', '互联网行业', '政府部门', '物流']
             },
             {
               id: '43',
               name: 'XXXX',
               label: '收入',
-              required: false
+              sort: 10,
+              required: false,
+              type: 'text',
+              config: { // text， textarea
+                textType: '纯数字',
+                textTip: '请输入'
+              }
             }
           ]
         },
@@ -207,13 +255,22 @@ export default {
               id: '51',
               name: 'XXXX',
               label: '家庭结构',
-              required: true
+              sort: 10,
+              required: false,
+              type: 'select',
+              options: ['3口人', '2口人', '4口人']
             },
             {
               id: '52',
               name: 'XXXX',
-              label: '家庭总收入',
-              required: false
+              label: '家庭描述',
+              sort: 10,
+              required: false,
+              type: 'textarea',
+              config: { // text， textarea
+                textType: '纯文字',
+                textTip: '请输入'
+              }
             }
           ]
         }
@@ -225,7 +282,14 @@ export default {
       attrsGroupId: '', // 维度分栏id
       attrsGroupLabel: '', // 维度分栏名称
       attrsGroupIndex: '', // 维度分栏序号
-      attrsGroupIfHide: false // 维度分栏是否隐藏
+      attrsGroupIfHide: false, // 维度分栏是否隐藏
+      attrsLabel: '',
+      attrsSort: '',
+      attrsRequire: '',
+      attrsType: '',
+      attrsTextType: '',
+      attrsConfig: {},
+      attrsDetailsOptions: []
     }
   },
   computed: {
@@ -234,6 +298,41 @@ export default {
     }
   },
   methods: {
+    onChange(v1) {
+      console.log('onChange', v1)
+    },
+    // 点击编辑详细维度
+    editAttrs(ele) {
+      console.log('editAttrs', ele)
+      this.showModal()
+      this.modalTitle = `${ele.label} - 维度编辑`
+      this.getAttrsDetailsInfo(ele)
+    },
+    getAttrsDetailsInfo(ele) {
+      this.attrsLabel = ele.label
+      this.attrsSort = ele.sort
+      this.attrsRequire = ele.required ? '1' : '0'
+      this.attrsType = ele.type
+      if (ele.config) {
+        this.attrsConfig = ele.config
+        this.attrsTextType = ele.config.textType
+      }
+      if (ele.options) this.attrsDetailsOptions = ele.options
+    },
+    // 删除详细维度options
+    deleteAttrsOptions(index) {
+      console.log('deleteAttrsOptions', index)
+      this.$Modal.confirm({
+        content: '此操作不可恢复，确认删除？',
+        onOk: () => {
+          console.log('CFM deleteAttrsOptions')
+          this.attrsDetailsOptions.splice(index, 1)
+        }
+      })
+    },
+    deleteAttrs(id) {
+      console.log('deleteAttrs', id)
+    },
     // 点击'新建栏目'
     addAttrsGroup() {
       this.showModal()
@@ -275,7 +374,6 @@ export default {
       console.log('deleteAttrsGroup', item)
       this.attrsGroupId = item.id
       this.$Modal.confirm({
-        // title: '温馨提示',
         content: '此操作不可恢复，确认删除分栏？',
         onOk: this.sendDelateAttrsGroupRequest
       })
@@ -351,10 +449,12 @@ export default {
     }
   },
   mounted() {
-    console.log('caseId', this.caseId)
-    this.initAttrsGroupList()
+    // this.initAttrsGroupList()
   }
 }
 </script>
 <style lang="css">
+.case-attrs .ivu-modal-body {
+  min-height: 400px;
+}
 </style>
