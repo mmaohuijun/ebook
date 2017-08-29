@@ -72,6 +72,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next() // 确保一定要调用 next()
   }
+  /** 这个next要删除的, 加上是方便开发 */
   next()
 })
 

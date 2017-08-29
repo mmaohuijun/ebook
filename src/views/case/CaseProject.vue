@@ -2,16 +2,16 @@
 <div class="case-project">
   <a href="javascript:;" class="case-add-btn" @click="modal('新建项目')">新建项目</a>
   <Row :gutter="24" class="case-project__list">
-    <Col :md="12" v-for="items in caseList">
+    <Col :md="12" v-for="(items, index) in caseList" :key="index">
       <div class="case-project__item">
         <div class="case-project__line">
           <div class="case-project__label"><span>项目名称</span></div>
           <div class="case-project__data"><span>{{items.name}}</span></div>
         </div>
         <div class="case-project__scroll">
-          <div class="case-project__line" v-for="propertys in items.propertys">
+          <div class="case-project__line" v-for="(propertys, index) in items.propertys" :key="index">
             <div class="case-project__label"><span>{{propertys.propertyTypeName}}</span></div>
-            <div class="case-project__data"><span v-for="apartTypes in propertys.apartTypes">{{apartTypes}}</span></div>
+            <div class="case-project__data"><span v-for="apartTypes in propertys.apartTypes" :key="apartTypes">{{apartTypes}}</span></div>
           </div>
         </div>
         <div class="case-project__tool">
@@ -43,21 +43,27 @@
           </Form-item>
           <Form-item label="户型信息：">
             <Select placeholder="" style="width: 74px;" v-model="inputModel.apartTypes1">
-              <Option v-for="n in 20" :value="n">{{n}}</Option>
+              <Option v-for="n in 20" :value="n" :key="n">{{n}}</Option>
             </Select>
             <span style="font-size: 16px; vertical-align: middle;">室</span>
             <Select placeholder="" style="width: 74px; margin-left: 10px;" v-model="inputModel.apartTypes2">
-              <Option v-for="n in 20" :value="n">{{n}}</Option>
+              <Option v-for="n in 20" :value="n" :key="n">{{n}}</Option>
             </Select>
             <span style="font-size: 16px; vertical-align: middle;">厅</span>
           </Form-item>
           <Form-item>
-            <Select placeholder="" style="width: 74px;" v-model="inputModel.apartTypes3">
+             <!-- <Select placeholder="" style="width: 74px;" v-model="inputModel.apartTypes3" @on-change="apartTypes3Change">
               <Option v-for="n in (propertyNumber / propertyGutter)" :value="(n * propertyGutter)">{{n * propertyGutter}}</Option>
+            </Select>  -->
+            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyTypeId === '1'" v-model="inputModel.apartTypes3" @on-change="apartTypes3Change">
+              <Option v-for="n in (1000 / 50)" :value="(n * 50)" :key="n">{{n * 50}}</Option>
             </Select>
+            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyTypeId !== '1'" v-model="inputModel.apartTypes3">
+              <Option v-for="n in (300 / 10)" :value="(n * 10)" :key="n">{{n * 10}}</Option>
+            </Select>  
             <span style="margin: 0 10px; font-size: 16px; vertical-align: middle;">-</span>
             <Select placeholder=""  style="width: 74px;" v-model="inputModel.apartTypes4">
-              <Option v-for="n in (propertyNumber / propertyGutter)" :value="(n * propertyGutter)">{{n * propertyGutter}}</Option>
+              <Option v-for="n in (propertyNumber / propertyGutter)" :value="(n * propertyGutter)" :key="n">{{n * propertyGutter}}</Option>
             </Select>
             <span style="font-size: 16px; vertical-align: middle;">㎡</span>
             <i class="iconfont icon-tianjia btn-add-property" @click="addProperty"></i>
@@ -183,19 +189,31 @@ export default {
         propertyTypeId: '',
         apartTypes1: '',
         apartTypes2: '',
-        apartTypes3: '',
-        apartTypes4: ''
-      },
-      propertyNumber: 1000,
-      propertyGutter: 50
+        apartTypes3: 0,
+        apartTypes4: 0
+      }
+      // propertyNumber: 1000,
+      // propertyGutter: 50
     }
   },
   computed: {
     caseId() {
       return this.$store.state.CASE_ID
+    },
+    propertyNumber() {
+      return this.inputModel.propertyTypeId === '1' ? 1000 : 300
+    },
+    propertyGutter() {
+      return this.inputModel.propertyTypeId === '1' ? 50 : 10
     }
   },
   methods: {
+    apartTypes3Change(v1) {
+      console.log('apartTypes3Change', v1, this.inputModel.propertyTypeId)
+    },
+    apartTypes4Change(v1) {
+      console.log('apartTypes4Change', v1)
+    },
     getList() {
       this.$axios.post('/case-project/list', { caseId: this.caseId }).then(response => {
         if (response === null) return
@@ -203,13 +221,14 @@ export default {
       })
     },
     changeProperty(value) {
-      if (value === '1') {
-        this.propertyNumber = 1000
-        this.propertyGutter = 50
-      } else {
-        this.propertyNumber = 300
-        this.propertyGutter = 10
-      }
+      console.log('changeProperty', this.propertyNumber, this.propertyGutter, value)
+      // if (value === '1') {
+      //   this.propertyNumber = 1000
+      //   this.propertyGutter = 50
+      // } else {
+      //   this.propertyNumber = 300
+      //   this.propertyGutter = 10
+      // }
       this.inputModel.apartTypes3 = ''
       this.inputModel.apartTypes4 = ''
     },

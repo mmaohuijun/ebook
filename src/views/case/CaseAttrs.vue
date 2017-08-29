@@ -432,7 +432,6 @@ export default {
       this.$axios.post('case-attr/list', { caseId: this.caseId }).then(response => {
         if (_.isNull(response)) return
         console.log('初始化维度分栏列表', response)
-        /** 赋值给 attrListData */
         const responseData = response.data
         this.attrListData = responseData
       })
@@ -469,6 +468,7 @@ export default {
         return
       }
       const data = {
+        caseId: this.caseId,
         id: this.attrsGroupId,
         label: this.attrsGroupLabel,
         sort: this.attrsGroupIndex,

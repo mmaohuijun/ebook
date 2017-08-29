@@ -51,6 +51,9 @@ $axios.interceptors.response.use(response => {
 
   if (retCode === responseStatus.ok) {
     return response.data
+  } else if (retCode === responseStatus.sessiontimeout) {
+    store.commit('notLogin')
+    return null
   } else { // 请求不成功, 提示错误信息
     store.commit('showErrorMsg', retMsg)
     return null

@@ -18,10 +18,16 @@ export default {
     ...mapState({
       ifShowLoading: state => state.loading,
       ifShowErrorMsg: state => state.ifShowErrorMsg,
-      msgText: state => state.msgText
+      msgText: state => state.msgText,
+      ifLogin: state => state.ifLogin
     })
   },
   watch: {
+    ifLogin(flag) {
+      if (!flag) {
+        this.$router.push({ name: 'Login' })
+      }
+    },
     ifShowLoading(flag) {
       if (flag) {
         this.msg = this.$Message.loading({
