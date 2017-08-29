@@ -154,6 +154,7 @@ export default {
     padding: 20px 20px 0;
     margin-bottom: 28px;
     background: #f8f8f8;
+    border: 1px solid #f8f8f8;
     border-radius: 5px;
     box-shadow:0 1px 1px 0 rgba(133,133,133,0.50);
 

@@ -1,280 +1,97 @@
 <template>
-<!-- <div>
-  <Row :gutter="16">
-    <Col :md="24" :lg="8" style="margin-bottom: 16px;">
-      <Button type="dashed" icon="plus-round" long style="height: 230px; font-size: 30px;">添加项目</Button>
-    </Col>
-    <Col :md="24" :lg="8" style="margin-bottom: 16px;">
-      <Card>
-        <p class="field_name">金地意境一期</p>
-        <p class="house_type">别墅、公寓、洋房</p>
-        <p class="field_tool">
-            <a href="#">
-                <Tooltip placement="top" content="修改">
-                    <Icon type="ios-compose-outline"></Icon>
-                </Tooltip>
-            </a>
-            <a href="#">
-                <Tooltip placement="top" content="删除">
-                    <Icon type="ios-trash-outline"></Icon>
-                </Tooltip>
-            </a>
-        </p>
-        <ul>
-          <li v-for="(item, index) in houseTypeList" :key="index">
-              <Tag>{{ item.type + ' '}}</Tag>
-              {{item.name + ' ' + item.area }}
-          </li>
-        </ul>
-      </Card>
-    </Col>
-    <Col :md="24" :lg="8" style="margin-bottom: 16px;">
-        <Card>
-            <p slot="title">
-                金地意境一期
-            </p>
-            <a href="#" slot="extra" style="font-size: 16px; margin-right: 8px">
-                <Icon type="ios-compose-outline"></Icon>
-            </a>
-            <a href="#" slot="extra" style="font-size: 16px;">
-                <Icon type="ios-trash-outline"></Icon>
-            </a>
-
-            <p class="house_type">别墅、公寓、洋房</p>
-            <ul>
-                <li v-for="(item, index) in houseTypeList" :key="index">
-                    <Tag>{{ item.type + ' '}}</Tag>
-                    {{item.name + ' ' + item.area }}
-                </li>
-            </ul>
-        </Card>
-    </Col>
-</Row>
-<Row>
-    <Col :sm="21">
-        <Form :model="formItem" :label-width="100" style="padding-top: 8px;">
-            <Form-item label="项目名称：">
-                <Input placeholder="请输入" value="金地意境一期"></Input>
-            </Form-item>
-            <Form-item label="户型列表：" class="house_type_list">
-                <div style="margin-bottom: 8px">
-                    <Select v-model="houseTypeModel1" style="width:80px">
-                        <Option v-for="item in houseTypeList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Select v-model="houseTypeModel2" style="width:80px">
-                        <Option v-for="item in houseTypeList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <span>室</span>
-                    <Select v-model="houseTypeModel3" style="width:80px">
-                        <Option v-for="item in houseTypeList3" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <span>厅</span>
-                    <Select v-model="houseTypeModel4" style="width:80px">
-                        <Option v-for="item in houseTypeList4" :value="item.value" :key="item.value">{{ item.label }}㎡</Option>
-                    </Select>
-                    <span>-</span>
-                    <Select v-model="houseTypeModel5" style="width:80px">
-                        <Option v-for="item in houseTypeList4" :value="item.value" :key="item.value">{{ item.label }}㎡</Option>
-                    </Select>
-
-                    <Button-group>
-                        <Button type="ghost" icon="arrow-up-c"></Button>
-                        <Button type="ghost" icon="arrow-down-c"></Button>
-                        <Button type="ghost" icon="trash-b"></Button>
-                    </Button-group>
-                </div>
-                <div style="margin-bottom: 8px">
-                    <Select v-model="houseTypeModel1" style="width:80px">
-                        <Option v-for="item in houseTypeList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Select v-model="houseTypeModel2" style="width:80px">
-                        <Option v-for="item in houseTypeList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <span>室</span>
-                    <Select v-model="houseTypeModel3" style="width:80px">
-                        <Option v-for="item in houseTypeList3" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <span>厅</span>
-                    <Select v-model="houseTypeModel4" style="width:80px">
-                        <Option v-for="item in houseTypeList4" :value="item.value" :key="item.value">{{ item.label }}㎡</Option>
-                    </Select>
-                    <span>-</span>
-                    <Select v-model="houseTypeModel5" style="width:80px">
-                        <Option v-for="item in houseTypeList4" :value="item.value" :key="item.value">{{ item.label }}㎡</Option>
-                    </Select>
-
-                    <Button-group>
-                        <Button type="ghost" icon="arrow-up-c"></Button>
-                        <Button type="ghost" icon="arrow-down-c"></Button>
-                        <Button type="ghost" icon="trash-b"></Button>
-                    </Button-group>
-                </div>
-                <div>
-                    <Select v-model="houseTypeModel1" style="width:80px">
-                        <Option v-for="item in houseTypeList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Select v-model="houseTypeModel2" style="width:80px">
-                        <Option v-for="item in houseTypeList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <span>室</span>
-                    <Select v-model="houseTypeModel3" style="width:80px">
-                        <Option v-for="item in houseTypeList3" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <span>厅</span>
-                    <Select v-model="houseTypeModel4" style="width:80px">
-                        <Option v-for="item in houseTypeList4" :value="item.value" :key="item.value">{{ item.label }}㎡</Option>
-                    </Select>
-                    <span>-</span>
-                    <Select v-model="houseTypeModel5" style="width:80px">
-                        <Option v-for="item in houseTypeList4" :value="item.value" :key="item.value">{{ item.label }}㎡</Option>
-                    </Select>
-
-                    <Button-group>
-                        <Button type="ghost" icon="arrow-up-c"></Button>
-                        <Button type="ghost" icon="arrow-down-c"></Button>
-                        <Button type="ghost" icon="trash-b"></Button>
-                    </Button-group>
-                </div>
-            </Form-item>
-            <Form-item>
-                <Button type="dashed" long icon="plus-round">新增</Button>
-            </Form-item>
-        </Form>
-    </Col>
-</Row>
-<Row>
-    <Col :sm="21">
-        <Form :model="formItem" :label-width="100" style="padding-top: 8px;">
-            <Form-item label="项目名称：">
-                <Input placeholder="请输入" value="金地意境一期"></Input>
-            </Form-item>
-            <Form-item label="户型列表：" class="house_type_list">
-                <div style="margin-bottom: 16px">
-                    <Select v-model="houseTypeModel1" style="width:80px">
-                        <Option v-for="item in houseTypeList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Select v-model="houseTypeModel2" style="width:80px">
-                        <Option v-for="item in houseTypeList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <span>室</span>
-                    <Select v-model="houseTypeModel3" style="width:80px">
-                        <Option v-for="item in houseTypeList3" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <span>厅</span>
-                    <Select v-model="houseTypeModel4" style="width:80px">
-                        <Option v-for="item in houseTypeList4" :value="item.value" :key="item.value">{{ item.label }}㎡</Option>
-                    </Select>
-                    <span>-</span>
-                    <Select v-model="houseTypeModel5" style="width:80px">
-                        <Option v-for="item in houseTypeList4" :value="item.value" :key="item.value">{{ item.label }}㎡</Option>
-                    </Select>
-                    <Button type="info">确认添加</Button>
-                </div>
-                <div v-for="item in houseTypeList" class="house_type_list_2">
-                    <Tag>{{ item.type + ' '}}</Tag>
-                    {{item.name + ' ' + item.area }}
-                    <Button-group>
-                        <Tooltip placement="top" content="向上移动">
-                            <Button type="text" icon="arrow-up-c" size="small"></Button>
-                        </Tooltip>
-                        <Tooltip placement="top" content="向下移动">
-                            <Button type="text" icon="arrow-down-c" size="small"></Button>
-                        </Tooltip>
-                        <Tooltip placement="top" content="修改">
-                            <Button type="text" icon="edit" size="small"></Button>
-                        </Tooltip>
-                        <Tooltip placement="top" content="删除">
-                            <Button type="text" icon="trash-b" size="small"></Button>
-                        </Tooltip>
-                    </Button-group>
-                </div>
-            </Form-item>
-        </Form>
-    </Col>
-</Row>
-</div> -->
 <div class="case-project">
-  <a href="javascript:;" class="case-add-btn">新建项目</a>
+  <a href="javascript:;" class="case-add-btn" @click="modal('新建项目')">新建项目</a>
   <Row :gutter="24" class="case-project__list">
-    <Col :md="12">
+    <Col :md="12" v-for="items in caseList">
       <div class="case-project__item">
         <div class="case-project__line">
           <div class="case-project__label"><span>项目名称</span></div>
-          <div class="case-project__data"><span>金地艺境一期</span></div>
+          <div class="case-project__data"><span>{{items.name}}</span></div>
         </div>
         <div class="case-project__scroll">
-          <div class="case-project__line">
-            <div class="case-project__label"><span>别墅</span></div>
-            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
-          </div>
-          <div class="case-project__line">
-            <div class="case-project__label"><span>住宅</span></div>
-            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
-          </div>
-          <div class="case-project__line">
-            <div class="case-project__label"><span>酒店式公寓</span></div>
-            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
+          <div class="case-project__line" v-for="propertys in items.propertys">
+            <div class="case-project__label"><span>{{propertys.propertyTypeName}}</span></div>
+            <div class="case-project__data"><span v-for="apartTypes in propertys.apartTypes">{{apartTypes}}</span></div>
           </div>
         </div>
         <div class="case-project__tool">
-          <i class="iconfont icon-xiugai"></i>
-          <i class="iconfont icon-shanchu1"></i>
-        </div>
-      </div>
-    </Col>
-    <Col :md="12">
-      <div class="case-project__item">
-        <div class="case-project__line">
-          <div class="case-project__label"><span>项目名称</span></div>
-          <div class="case-project__data"><span>金地艺境一期</span></div>
-        </div>
-        <div class="case-project__scroll">
-          <div class="case-project__line">
-            <div class="case-project__label"><span>别墅</span></div>
-            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
-          </div>
-          <div class="case-project__line">
-            <div class="case-project__label"><span>住宅</span></div>
-            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
-          </div>
-          <div class="case-project__line">
-            <div class="case-project__label"><span>酒店式公寓</span></div>
-            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
-          </div>
-        </div>
-        <div class="case-project__tool">
-          <i class="iconfont icon-xiugai"></i>
-          <i class="iconfont icon-shanchu1"></i>
-        </div>
-      </div>
-    </Col>
-    <Col :md="12">
-      <div class="case-project__item">
-        <div class="case-project__line">
-          <div class="case-project__label"><span>项目名称</span></div>
-          <div class="case-project__data"><span>金地艺境一期</span></div>
-        </div>
-        <div class="case-project__scroll">
-          <div class="case-project__line">
-            <div class="case-project__label"><span>别墅</span></div>
-            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
-          </div>
-          <div class="case-project__line">
-            <div class="case-project__label"><span>住宅</span></div>
-            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
-          </div>
-          <div class="case-project__line">
-            <div class="case-project__label"><span>酒店式公寓</span></div>
-            <div class="case-project__data"><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span><span>4室3厅351㎡</span></div>
-          </div>
-        </div>
-        <div class="case-project__tool">
-          <i class="iconfont icon-xiugai"></i>
+          <i class="iconfont icon-xiugai" @click="modifyCase(items)"></i>
           <i class="iconfont icon-shanchu1"></i>
         </div>
       </div>
     </Col>
   </Row>
+
+  <Modal
+    v-model="modalShow"
+    :closable="false"
+    :mask-closable="false"
+    width="840">
+    <p slot="header">{{modalTitle}}</p>
+    <Row>
+      <Col :md="12" style="padding: 28px 0 0 17px;">
+        <Form :label-width="120" style="height: 340px; border-right: 1px solid #979797;">
+          <Form-item label="项目名称：">
+            <Input style="width: 180px;" v-model="inputModel.name"></Input>
+          </Form-item>
+          <Form-item label="物业选择：">
+            <Select style="width: 180px;" @on-change="changeProperty" v-model="inputModel.propertyTypeId">
+              <Option value="1">别墅</Option>
+              <Option value="2">住宅</Option>
+              <Option value="3">酒店式公寓</Option>
+            </Select>
+          </Form-item>
+          <Form-item label="户型信息：">
+            <Select placeholder="" style="width: 74px;" v-model="inputModel.apartTypes1">
+              <Option v-for="n in 20" :value="n">{{n}}</Option>
+            </Select>
+            <span style="font-size: 16px; vertical-align: middle;">室</span>
+            <Select placeholder="" style="width: 74px; margin-left: 10px;" v-model="inputModel.apartTypes2">
+              <Option v-for="n in 20" :value="n">{{n}}</Option>
+            </Select>
+            <span style="font-size: 16px; vertical-align: middle;">厅</span>
+          </Form-item>
+          <Form-item>
+            <Select placeholder="" style="width: 74px;" v-model="inputModel.apartTypes3">
+              <Option v-for="n in (propertyNumber / propertyGutter)" :value="(n * propertyGutter)">{{n * propertyGutter}}</Option>
+            </Select>
+            <span style="margin: 0 10px; font-size: 16px; vertical-align: middle;">-</span>
+            <Select placeholder=""  style="width: 74px;" v-model="inputModel.apartTypes4">
+              <Option v-for="n in (propertyNumber / propertyGutter)" :value="(n * propertyGutter)">{{n * propertyGutter}}</Option>
+            </Select>
+            <span style="font-size: 16px; vertical-align: middle;">㎡</span>
+            <i class="iconfont icon-tianjia btn-add-property" @click="addProperty"></i>
+          </Form-item>
+        </Form>
+      </Col>
+      <Col :md="12" style="padding: 28px 0 0 17px;">
+        <div class="case-list">
+          <div class="case-item">
+            <span class="case-item__label">别墅：</span>
+            <p class="case-item__content">三室两厅100-200㎡<i class="iconfont icon-shanchu"></i></p>
+            <p class="case-item__content">三室两厅100-200㎡<i class="iconfont icon-shanchu"></i></p>
+            <p class="case-item__content">三室两厅100-200㎡<i class="iconfont icon-shanchu"></i></p>
+          </div>
+          <div class="case-item">
+            <span class="case-item__label">住宅：</span>
+            <p class="case-item__content">三室两厅100-200㎡<i class="iconfont icon-shanchu"></i></p>
+            <p class="case-item__content">三室两厅100-200㎡<i class="iconfont icon-shanchu"></i></p>
+            <p class="case-item__content">三室两厅100-200㎡<i class="iconfont icon-shanchu"></i></p>
+          </div>
+          <div class="case-item">
+            <span class="case-item__label">酒店式公寓：</span>
+            <p class="case-item__content">三室两厅100-200㎡<i class="iconfont icon-shanchu"></i></p>
+            <p class="case-item__content">三室两厅100-200㎡<i class="iconfont icon-shanchu"></i></p>
+            <p class="case-item__content">三室两厅100-200㎡<i class="iconfont icon-shanchu"></i></p>
+          </div>
+        </div>
+      </Col>
+    </Row>
+    <div slot="footer">
+      <Button type="text" size="large" @click="modalShow = false">取消</Button>
+      <Button type="primary" size="large">完成</Button>
+    </div>
+  </Modal>
 </div>
 </template>
 <script>
@@ -282,118 +99,136 @@ export default {
   name: 'CaseProject',
   data() {
     return {
-      formItem: {
-        input: '',
-        select: '',
-        radio: 'male',
-        checkbox: [],
-        switch: true,
-        date: '',
-        time: '',
-        slider: [20, 50],
-        textarea: ''
+      modalShow: true,
+      modalTitle: '',
+      caseList: [
+        {
+          id: '1',
+          name: '中南一期1',
+          propertys: [
+            {
+              propertyTypeName: '别墅',
+              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+            },
+            {
+              propertyTypeName: '住宅',
+              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+            },
+            {
+              propertyTypeName: '酒店式公寓',
+              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+            }
+          ]
+        },
+        {
+          id: '2',
+          name: '中南一期2',
+          propertys: [
+            {
+              propertyTypeName: '别墅',
+              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+            },
+            {
+              propertyTypeName: '住宅',
+              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+            },
+            {
+              propertyTypeName: '酒店式公寓',
+              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+            }
+          ]
+        },
+        {
+          id: '3',
+          name: '中南一期3',
+          propertys: [
+            {
+              propertyTypeName: '别墅',
+              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+            },
+            {
+              propertyTypeName: '住宅',
+              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+            },
+            {
+              propertyTypeName: '酒店式公寓',
+              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+            }
+          ]
+        }
+      ],
+      caseProject: {
+        id: '1',
+        name: '中南一期1',
+        propertys: [
+          {
+            propertyTypeName: '别墅',
+            propertyTypeId: '1',
+            apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+          },
+          {
+            propertyTypeName: '住宅',
+            propertyTypeId: '2',
+            apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+          },
+          {
+            propertyTypeName: '酒店式公寓',
+            propertyTypeId: '3',
+            apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
+          }
+        ]
       },
-      houseTypeList: [
-        {
-          type: '别墅',
-          name: '4室3厅',
-          area: '100㎡-200㎡'
-        },
-        {
-          type: '公寓',
-          name: '4室3厅',
-          area: '100㎡-200㎡'
-        },
-        {
-          type: '洋房',
-          name: '4室3厅',
-          area: '100㎡-200㎡'
-        },
-        {
-          type: '洋房',
-          name: '4室3厅',
-          area: '100㎡-200㎡'
-        },
-        {
-          type: '洋房',
-          name: '4室3厅',
-          area: '100㎡-200㎡'
-        }
-      ],
-      houseTypeModel1: '',
-      houseTypeModel2: '',
-      houseTypeModel3: '',
-      houseTypeModel4: '',
-      houseTypeModel5: '',
-      houseTypeList1: [
-        {
-          value: 1,
-          label: '别墅'
-        },
-        {
-          value: 2,
-          label: '公寓'
-        },
-        {
-          value: 3,
-          label: '洋房'
-        }
-      ],
-      houseTypeList2: [
-        {
-          value: 1,
-          label: '1'
-        },
-        {
-          value: 2,
-          label: '2'
-        },
-        {
-          value: 3,
-          label: '3'
-        },
-        {
-          value: 4,
-          label: '4'
-        }
-      ],
-      houseTypeList3: [
-        {
-          value: 1,
-          label: '1'
-        },
-        {
-          value: 2,
-          label: '2'
-        },
-        {
-          value: 3,
-          label: '3'
-        },
-        {
-          value: 4,
-          label: '4'
-        }
-      ],
-      houseTypeList4: [
-        {
-          value: 1,
-          label: '100'
-        },
-        {
-          value: 2,
-          label: '200'
-        },
-        {
-          value: 3,
-          label: '300'
-        },
-        {
-          value: 4,
-          label: '400'
-        }
-      ]
+      inputModel: {
+        name: '',
+        propertyTypeId: '',
+        apartTypes1: '',
+        apartTypes2: '',
+        apartTypes3: '',
+        apartTypes4: ''
+      },
+      propertyNumber: 1000,
+      propertyGutter: 50
     }
+  },
+  computed: {
+    caseId() {
+      return this.$store.state.CASE_ID
+    }
+  },
+  methods: {
+    getList() {
+      this.$axios.post('/case-project/list', { caseId: this.caseId }).then(response => {
+        if (response === null) return
+        this.caseList = response.data
+      })
+    },
+    changeProperty(value) {
+      if (value === '1') {
+        this.propertyNumber = 1000
+        this.propertyGutter = 50
+      } else {
+        this.propertyNumber = 300
+        this.propertyGutter = 10
+      }
+      this.inputModel.apartTypes3 = ''
+      this.inputModel.apartTypes4 = ''
+    },
+    modal(title) {
+      this.modalTitle = title
+      this.modalShow = true
+    },
+    modifyCase(item) {
+      console.log(item)
+      this.case = item
+    },
+    addProperty() {
+      console.log(this.inputModel)
+    }
+
+  },
+  mounted() {
+    console.log('caseId:' + this.caseId)
+    this.getList()
   }
 }
 </script>
@@ -468,5 +303,55 @@ export default {
 .case-project__scroll {
   height: 179px;
   overflow-y: auto;
+}
+
+.case-list {
+  height: 340px;
+  overflow-y: auto;
+}
+
+.case-item {
+  line-height: 27px;
+  margin-bottom: 15px;
+}
+
+.case-item__label {
+  display: inline-block;
+  float: left;
+  width: 110px;
+  text-align: right;
+  font-size: 18px;
+  color: #111;
+}
+
+.case-item__content {
+  margin-left: 110px;
+  margin-bottom: 3px;
+  font-size: 16px;
+  color: #555;
+
+  i {
+    margin-left: 5px;
+    color: #dbdce1;
+    font-size: 14px;
+
+    &:hover {
+      color: #a5a8b4;
+      cursor: pointer;
+    }
+  }
+}
+
+.btn-add-property {
+  display: inline-block;
+  margin-left: 5px;
+  color: #dbdce1;
+  font-size: 20px;
+  vertical-align: middle;
+
+  &:hover {
+    color: #a5a8b4;
+    cursor: pointer;
+  }
 }
 </style>
