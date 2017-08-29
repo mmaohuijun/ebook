@@ -14,6 +14,7 @@ const store = new Vuex.Store({
     MOBILE: '',
     NUMBER: '',
     CASE_ID: '', // 案场id
+    CASE_NAME: '', // 案场名称
     SIDEBAR_SELECT: '', // 侧边栏选中项
     CURRENT_PATH: '', // 当前路径名
     loading: false,
@@ -32,6 +33,9 @@ const store = new Vuex.Store({
   mutations: {
     initCaseId(state, id) {
       state.CASE_ID = id
+    },
+    initCaseName(state, name) {
+      state.CASE_NAME = name
     },
     initSideBar(state, str) {
       state.SIDEBAR_SELECT = str

@@ -1,7 +1,7 @@
 <template>
 <div class="layout__content">
   <div class="layout__header">
-    <h2 class="layout__header-title">案场管理</h2>
+    <h2 class="layout__header-title">案场管理 - {{caseHeaderTitle}}</h2>
   </div>
   <div class="layout__body">
     <div class="field-box">
@@ -12,7 +12,7 @@
               <div class="ivu-tabs-nav-scroll">
                 <div class="ivu-tabs-nav">
                   <div class="ivu-tabs-ink-bar" style="display: none; width: 138px; left: 0px;"></div>
-                  <div v-for="(item, index) in tabsList" :key="index" class="ivu-tabs-tab" :class="item.pathName === currentTabsName ? 'ivu-tabs-tab-active' : ''" @click="onClickTabs(item.pathName)">{{item.title}}</div>
+                  <div v-for="(item, index) in tabsList" :key="index" class="ivu-tabs-tab" :class="[item.pathName === currentTabsName ? 'ivu-tabs-tab-active' : '', caseId === '0' && index !== 0 ? 'ivu-tabs-tab-disabled' : '']" @click="onClickTabs(item.pathName)">{{item.title}}</div>
                 </div>
               </div>
             </div>
@@ -41,6 +41,16 @@ export default {
   computed: {
     caseId() {
       return this.$store.state.CASE_ID
+    },
+    caseName() {
+      return this.$store.state.CASE_NAME
+    },
+    caseHeaderTitle() {
+      if (this.caseId === '0') {
+        return '新建客户'
+      } else {
+        return this.caseName
+      }
     },
     currentTabsName() {
       return this.$store.state.CURRENT_PATH

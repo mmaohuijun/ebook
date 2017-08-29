@@ -19,9 +19,9 @@
         <Form-item label="公众号名称：">
           <Input placeholder="请输入" v-model="appName"></Input>
         </Form-item>
-        <Form-item label="Secretkey：">
+        <!-- <Form-item label="Secretkey：">
           <Input placeholder="请输入" v-model="appSecret"></Input>
-        </Form-item>
+        </Form-item> -->
         <Form-item label="短信验证：">
           <i-switch v-model="checkCust">
             <span slot="open"></span>
@@ -41,7 +41,7 @@
       <!-- <Button type="primary" class="custom-btn" style="float: right; margin-top: -2px;">确定</Button> -->
     </div>
     <div class="field-map" style="width: 100%; height:430px;">
-      <case-map v-if="caseDataSource.length !== 0" :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
+      <case-map v-if="caseDataSource.length !== 0 || caseId === '0'" :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
     </div>
     <div class="field-bottom-btn">
       <Button type="primary" class="custom-btn" @click="saveCaseInfo">保存</Button>
@@ -58,7 +58,7 @@ export default {
       caseDataSource: [],
       name: '', // 案场名
       address: '', // 案场地址
-      location: {}, // 案场的经纬度
+      location: { lng: 121.4806, lat: 31.2408 }, // 案场的经纬度
       logoUrl: '', // 案场logo
       bgImgUrl: '', // 案场背景图
       checkCust: false, // 是否开启短信验证
@@ -82,13 +82,6 @@ export default {
     }
   },
   computed: {
-    caseHeaderTitle() {
-      if (this.caseId === '0') {
-        return '新建客户'
-      } else {
-        return this.name
-      }
-    },
     caseId() {
       return this.$store.state.CASE_ID
     }
@@ -103,6 +96,8 @@ export default {
         for (const key in reData) {
           this[key] = reData[key]
         }
+        // 全局设置案场名称
+        this.$store.commit('initCaseName', this.name)
       })
     },
     // 改变地图坐标点
@@ -150,7 +145,7 @@ export default {
       this.appName = ''
       this.appID = ''
       this.appSecret = ''
-      this.location = { lng: 121.480652, lat: 31.2408 }
+      this.location = { lng: 121.4806, lat: 31.2408 }
     }
   },
   mounted() {
