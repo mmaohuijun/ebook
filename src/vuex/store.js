@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import $storage from 'api/storage'
 // import $axios from '../api/api' // 后台接口api
 
 Vue.use(Vuex)
@@ -22,15 +23,13 @@ const store = new Vuex.Store({
   },
   getters: {
     getLoginStatus: state => state.ifLogin,
-    getCaseId: state => state.CASE_ID
+    getCaseId: state => state.CASE_ID,
+    getLoginName: state => {
+      const name = $storage.localStorage.getItem('USER_LOGIN_NAME')
+      return name || undefined
+    }
   },
   mutations: {
-    initInfo(state, json) {
-      state.NAME = json.name
-      state.LOGIN_NAME = json.loginName
-      state.MOBILE = json.mobile
-      state.NUMBER = json.no
-    },
     initCaseId(state, id) {
       state.CASE_ID = id
     },
@@ -61,6 +60,30 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    initUserInfo({ state }, json) {
+      state.NAME = json.name
+      state.LOGIN_NAME = json.loginName
+      state.MOBILE = json.mobile
+      state.NUMBER = json.no
+      $storage.localStorage.setItem('USER_INFO', json)
+    },
+    getUserInfo({ state }) {
+      const info = $storage.localStorage.getItem('USER_INFO')
+      if (!info) return
+      state.NAME = info.name
+      state.LOGIN_NAME = info.loginName
+      state.MOBILE = info.mobile
+      state.NUMBER = info.no
+    },
+    clearUserInfo() {
+      $storage.localStorage.removeItem('USER_INFO')
+    },
+    remeberLoginName({ state }, name) {
+      $storage.localStorage.setItem('USER_LOGIN_NAME', name)
+    },
+    clearLoginName() {
+      $storage.localStorage.removeItem('USER_LOGIN_NAME')
+    }
   }
 })
 

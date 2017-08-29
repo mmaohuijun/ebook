@@ -38,17 +38,25 @@ export default {
       modalForgetPWD: false
     }
   },
+  computed: {
+    // loginName() {
+    //   return this.$store.getters.getLoginName || ''
+    // }
+  },
   methods: {
     goLogin() {
       console.log('goLogin', this.loginName, this.password, this.ifRemember)
       this.loading = true
+
       this.$axios.post('login', {
         loginName: this.loginName,
         password: this.password
       }).then(response => {
         this.loading = false
-        if (response === null) return
+
+        if (_.isNull(response)) return
         console.log('login', response)
+
         // 登录成功后登记一下login状态
         this.$store.commit('hasLogin')
         const reData = response.data
@@ -58,10 +66,25 @@ export default {
           mobile: reData.mobile,
           no: reData.no
         }
-        this.$store.commit('initInfo', loginInfo)
+        // 保存用户信息到全局
+        this.$store.dispatch('initUserInfo', loginInfo)
+
+        // 是否记住账号
+        if (this.ifRemember) {
+          this.$store.dispatch('remeberLoginName', this.loginName)
+        } else {
+          this.$store.dispatch('clearLoginName')
+        }
+
+        /** 应该根据用户权限跳转对应的菜单 */
         this.$router.push({ name: 'CaseManage' })
       })
     }
+  },
+  mounted() {
+    console.log('LOGIN mounted', this.loginName)
+    this.ifRemember = this.$store.getters.getLoginName !== undefined
+    this.loginName = this.$store.getters.getLoginName
   }
 }
 </script>
@@ -70,7 +93,7 @@ export default {
   .login {
     width: 100%;
     height: 100%;
-    background: url('../../../static/img/login_bg.jpg');
+    background: url('/static/img/login_bg.jpg');
     background-size: cover;
   }
 

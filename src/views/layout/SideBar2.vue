@@ -2,7 +2,7 @@
 <aside class="layout__aside">
   <div class="layout__aside_scroll">
     <div class="layout__aside-header">
-      <div class="layout__aside-avatar"><img src="../../assets/avatar.png" alt=""></div>
+      <div class="layout__aside-avatar"><img src="/static/img/avatar.png" alt=""></div>
       <p class="layout__aside-name">{{name}}</p>
       <ul class="layout__aside-info">
         <li>
@@ -68,6 +68,10 @@ export default {
       console.log('onClickMenu', key)
       this.$store.commit('initSideBar', key)
     }
+  },
+  beforeCreate() {
+    // 获取localStorage中的用户信息
+    this.$store.dispatch('getUserInfo')
   }
 }
 </script>

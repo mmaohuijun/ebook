@@ -3,7 +3,7 @@
   <Form :model="formItem" :label-width="120" label-position="left">
     <div style="overflow: hidden; margin-bottom: 30px;">
       <div class="field-logo">
-          <img src="../../assets/field_logo.png">
+          <img src="/static/img/field_logo.png">
           <!-- <Button type="primary" class="custom-btn">更换logo</Button> -->
       </div>
       <div style="float: left; padding-left: 21px;">
@@ -30,7 +30,7 @@
         </Form-item>
       </div>
       <div class="field-bg">
-        <img src="../../assets/field_bg.png" alt="">
+        <img src="/static/img/field_bg.png" alt="">
         <!-- <Button type="ghost" class="btn-upload-field-bg">上传图片</Button> -->
       </div>
     </div>

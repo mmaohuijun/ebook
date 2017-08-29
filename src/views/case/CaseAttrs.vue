@@ -102,188 +102,11 @@ export default {
   name: 'CaseAttrs',
   data() {
     return {
+      attrListData: [], // 数据列表
       hoverAttrId: '',
-      attrListData: [],
-      attrListData1: [
-        {
-          id: '12',
-          name: 'XXXX',
-          label: '核心因素',
-          sort: 77,
-          editable: false, // 不可编辑的分栏，不允许隐藏操作
-          hidden: false, // 隐藏状态
-          attrs: [
-            {
-              id: '21',
-              groupId: '12',
-              label: '姓名',
-              sort: 10,
-              required: true,
-              type: 'text', // text， textarea， select， selectbox
-              config: { // text， textarea
-                textType: '纯文字',
-                textTip: '请输入姓名'
-              }
-            },
-            {
-              id: '22',
-              groupId: '12',
-              name: 'XXXX',
-              label: '性别',
-              sort: 10,
-              required: true,
-              type: 'select',
-              options: ['男', '女']
-            },
-            {
-              id: '23',
-              groupId: '12',
-              name: 'XXXX',
-              label: '年龄段',
-              sort: 10,
-              required: true,
-              type: 'select',
-              options: ['未知', '20~30岁', '30~40岁', '40~50岁']
-            },
-            {
-              id: '24',
-              groupId: '12',
-              name: 'XXXX',
-              label: '联系方式',
-              sort: 10,
-              required: true,
-              type: 'text',
-              config: { // text， textarea
-                textType: '纯数字'
-              }
-            },
-            {
-              id: '25',
-              name: 'XXXX',
-              label: '意向楼盘',
-              sort: 10,
-              required: true,
-              type: 'select',
-              options: ['金地艺境1', '金地艺境2', '金地艺境3']
-            }
-          ]
-        },
-        {
-          id: '13',
-          name: 'XXXX',
-          label: '意向因素',
-          sort: 88,
-          editable: false, // 不可编辑的分栏，不允许隐藏操作
-          hidden: false, // 隐藏状态
-          attrs: [
-            {
-              id: '31',
-              groupId: '13',
-              name: 'XXXX',
-              label: '购房用途',
-              sort: 10,
-              required: true,
-              type: 'select',
-              options: ['婚房', '投资', '养老']
-            },
-            {
-              id: '32',
-              groupId: '13',
-              name: 'XXXX',
-              label: '关注因素',
-              sort: 10,
-              required: true,
-              type: 'selectbox',
-              options: ['价格', '户型', '面积', '朝向']
-            },
-            {
-              id: '33',
-              groupId: '13',
-              name: 'XXXX',
-              label: '购房预算',
-              sort: 10,
-              required: false,
-              type: 'select',
-              options: ['100~200万', '200~300万', '300~400万', '400~500万']
-            }
-          ]
-        },
-        {
-          id: '14',
-          name: 'XXXX',
-          label: '特征因素',
-          sort: 99,
-          editable: true,
-          hidden: false,
-          attrs: [
-            {
-              id: '41',
-              groupId: '14',
-              name: 'XXXX',
-              label: '职业',
-              sort: 10,
-              required: true,
-              type: 'select',
-              options: ['职员', '医生', '律师', '警察']
-            },
-            {
-              id: '42',
-              groupId: '14',
-              name: 'XXXX',
-              label: '行业',
-              sort: 10,
-              required: true,
-              type: 'select',
-              options: ['建筑业', '互联网行业', '政府部门', '物流']
-            },
-            {
-              id: '43',
-              groupId: '14',
-              name: 'XXXX',
-              label: '收入',
-              sort: 10,
-              required: false,
-              type: 'text',
-              config: { // text， textarea
-                textType: '纯数字'
-              }
-            }
-          ]
-        },
-        {
-          id: '15',
-          name: 'XXXX',
-          label: '家庭因素',
-          sort: 66,
-          editable: true,
-          hidden: true,
-          attrs: [
-            {
-              id: '51',
-              name: 'XXXX',
-              label: '家庭结构',
-              sort: 10,
-              required: false,
-              type: 'select',
-              options: ['3口人', '2口人', '4口人']
-            },
-            {
-              id: '52',
-              name: 'XXXX',
-              label: '家庭描述',
-              sort: 10,
-              required: false,
-              type: 'textarea',
-              config: { // text， textarea
-                textType: '纯文字'
-              }
-            }
-          ]
-        }
-      ],
       ifShowModal: false,
       ifShowLoading: false,
-      isAttrsGroup: false, // 是否打开维度分栏Modal
+      isAttrsGroup: false, // 是否打开维度分栏(AttrsGroup)
       attrsEditable: true,
       modalTitle: '',
       attrsGroupId: '', // 维度分栏id
@@ -307,125 +130,8 @@ export default {
     }
   },
   methods: {
-    // 点击编辑详细维度
-    editAttrsDetails(ele, flag) {
-      console.log('editAttrsDetails', ele)
-      this.showModal()
-      this.modalTitle = `${ele.label} - 维度编辑`
-      this.attrsEditable = flag
-      console.log('attrsEditable', this.attrsEditable)
-      this.clearAttrsDetailsData()
-      this.getAttrsDetailsInfo(ele)
-    },
-    getAttrsDetailsInfo(ele) {
-      this.attrsId = ele.id
-      this.attrsLabel = ele.label
-      this.attrsSort = ele.sort
-      this.attrsRequire = ele.required ? '1' : '0'
-      this.attrsType = ele.type
-      if (ele.config) {
-        this.attrsConfig = ele.config
-        this.attrsTextType = ele.config.textType
-      }
-      if (ele.options) this.attrsDetailsOptions = ele.options
-    },
-    // 添加详细维度options
-    addAttrsOptions() {
-      console.log('addAttrsOptions')
-      if (this.attrsOptionsText === '') return
-      this.attrsDetailsOptions.push(this.attrsOptionsText)
-      this.attrsOptionsText = ''
-    },
-    // 删除详细维度的options
-    deleteAttrsOptions(index) {
-      console.log('deleteAttrsOptions', index)
-      this.$Modal.confirm({
-        content: '此操作不可恢复，确认删除？',
-        onOk: () => {
-          console.log('CFM deleteAttrsOptions')
-          this.attrsDetailsOptions.splice(index, 1)
-        }
-      })
-    },
-    // 删除详细维度
-    deleteAttrsDetails(id) {
-      console.log('deleteAttrsDetails', id)
-      this.attrsId = id
-      this.$Modal.confirm({
-        content: '此操作不可恢复，确认删除？',
-        onOk: this.sendDeleteAttrsDetailsRequest
-      })
-    },
-    sendDeleteAttrsDetailsRequest() {
-      console.log('CFM deleteAttrsDetails', this.attrsId)
-      this.$axios.post('case-attr/del', { id: this.attrsId }).then(response => {
-        if (_.isNull(response)) return
-        console.log('删除详细维度', response)
-      })
-    },
-    // 点击'新建栏目'
-    addAttrsGroup() {
-      this.showModal()
-      this.clearAttrsGroupData()
-      this.isAttrsGroup = true
-      this.modalTitle = '新建栏目'
-    },
-    // 清空分栏数据
-    clearAttrsGroupData() {
-      this.attrsEditable = true
-      this.attrsGroupId = ''
-      this.attrsGroupLabel = ''
-      this.attrsGroupIndex = ''
-      this.attrsGroupIfHide = false
-    },
-    // 清空详细维度数据
-    clearAttrsDetailsData() {
-      this.attrsLabel = ''
-      this.attrsSort = ''
-      this.attrsRequire = ''
-      this.attrsType = ''
-      this.attrsConfig = {}
-      this.attrsTextType = ''
-      this.attrsDetailsOptions = []
-    },
-    // 点击'编辑栏目'
-    editAttrsGroup(item) {
-      console.log('editAttrsGroup', item)
-      this.showModal()
-      this.isAttrsGroup = true
-      this.modalTitle = `${item.label} - 编辑栏目`
-      this.attrsGroupLabel = item.label
-      this.attrsGroupIndex = item.sort
-      this.attrsGroupIfHide = item.hidden
-    },
-    // 维度分栏隐藏与显现
-    displayAttrsGroup(item) {
-      console.log('displayAttrsGroup', item)
-      this.attrsGroupId = item.id
-      /** 发送 栏目隐藏与显现 请求 */
-      this.$axios.post('case-attr/group-hidden', { id: this.attrsGroupId }).then(response => {
-        if (_.isNull(response)) return
-        console.log('栏目隐藏与显现', response)
-        // item.hidden = !item.hidden
-      })
-      item.hidden = !item.hidden
-    },
-    // 删除维度分栏
-    deleteAttrsGroup(item) {
-      console.log('deleteAttrsGroup', item)
-      this.attrsGroupId = item.id
-      this.$Modal.confirm({
-        content: '此操作不可恢复，确认删除分栏？',
-        onOk: this.sendDeleteAttrsGroupRequest
-      })
-    },
-    sendDeleteAttrsGroupRequest() {
-      console.log('sendDeleteAttrsGroupRequest')
-      this.$axios.post('case-attr/group-del', { id: this.attrsGroupId }).then(response => {
-        if (_.isNull(response)) return
-        console.log('删除栏目', response)
-      })
-    },
+    /** 维度分栏(AttrsGroup) */
+
     // 初始化维度分栏列表
     initAttrsGroupList() {
       console.log('initAttrsGroupList')
@@ -436,15 +142,12 @@ export default {
         this.attrListData = responseData
       })
     },
-    // 新建维度
-    addAttrsDetails(item) {
-      console.log('addAttrsDetails')
-      this.isAttrsGroup = false
-      this.attrsEditable = true
-      this.modalTitle = `${item.label} - 新建维度`
-      this.attrsGroupId = item.id
-      this.clearAttrsDetailsData()
+    // 点击'新建栏目'
+    addAttrsGroup() {
       this.showModal()
+      this.clearAttrsGroupData()
+      this.isAttrsGroup = true
+      this.modalTitle = '新建栏目'
     },
     // 保存分栏/保存维度更改
     saveAttrsData() {
@@ -482,6 +185,57 @@ export default {
         this.hideModal()
       })
     },
+    // 维度分栏隐藏与显现
+    displayAttrsGroup(item) {
+      console.log('displayAttrsGroup', item)
+      this.attrsGroupId = item.id
+      /** 发送 栏目隐藏与显现 请求 */
+      this.$axios.post('case-attr/group-hidden', { id: this.attrsGroupId }).then(response => {
+        if (_.isNull(response)) return
+        console.log('栏目隐藏与显现', response)
+        // item.hidden = !item.hidden
+      })
+      item.hidden = !item.hidden
+    },
+    // 点击'编辑栏目'
+    editAttrsGroup(item) {
+      console.log('editAttrsGroup', item)
+      this.showModal()
+      this.isAttrsGroup = true
+      this.modalTitle = `${item.label} - 编辑栏目`
+      this.attrsGroupLabel = item.label
+      this.attrsGroupIndex = item.sort
+      this.attrsGroupIfHide = item.hidden
+    },
+    // 删除维度分栏
+    deleteAttrsGroup(item) {
+      console.log('deleteAttrsGroup', item)
+      this.attrsGroupId = item.id
+      this.$Modal.confirm({
+        content: '此操作不可恢复，确认删除分栏？',
+        onOk: this.sendDeleteAttrsGroupRequest
+      })
+    },
+    sendDeleteAttrsGroupRequest() {
+      console.log('sendDeleteAttrsGroupRequest')
+      this.$axios.post('case-attr/group-del', { id: this.attrsGroupId }).then(response => {
+        if (_.isNull(response)) return
+        console.log('删除栏目', response)
+      })
+    },
+
+    /** 详细维度(AttrsDetails) */
+
+    // 点击'新建维度'
+    addAttrsDetails(item) {
+      console.log('addAttrsDetails')
+      this.isAttrsGroup = false
+      this.attrsEditable = true
+      this.modalTitle = `${item.label} - 新建维度`
+      this.attrsGroupId = item.id
+      this.clearAttrsDetailsData()
+      this.showModal()
+    },
     // 详细维度保存（新建、修改）
     saveAttrsDetails() {
       const data = {
@@ -501,6 +255,87 @@ export default {
         })
       }
       console.log('saveAttrs', data)
+    },
+    // 点击编辑详细维度
+    editAttrsDetails(ele, flag) {
+      console.log('editAttrsDetails', ele)
+      this.showModal()
+      this.modalTitle = `${ele.label} - 维度编辑`
+      this.attrsEditable = flag
+      console.log('attrsEditable', this.attrsEditable)
+      this.clearAttrsDetailsData()
+      this.getAttrsDetailsInfo(ele)
+    },
+    // 查看获取详细维度数据
+    getAttrsDetailsInfo(ele) {
+      this.attrsId = ele.id
+      this.attrsLabel = ele.label
+      this.attrsSort = ele.sort
+      this.attrsRequire = ele.required ? '1' : '0'
+      this.attrsType = ele.type
+      if (ele.config) {
+        this.attrsConfig = ele.config
+        this.attrsTextType = ele.config.textType
+      }
+      if (ele.options) this.attrsDetailsOptions = ele.options
+    },
+    // 添加详细维度options
+    addAttrsOptions() {
+      console.log('addAttrsOptions')
+      if (this.attrsOptionsText === '') return
+      this.attrsDetailsOptions.push(this.attrsOptionsText)
+      this.attrsOptionsText = ''
+    },
+    // 删除详细维度
+    deleteAttrsDetails(id) {
+      console.log('deleteAttrsDetails', id)
+      this.attrsId = id
+      this.$Modal.confirm({
+        content: '此操作不可恢复，确认删除？',
+        onOk: this.sendDeleteAttrsDetailsRequest
+      })
+    },
+    sendDeleteAttrsDetailsRequest() {
+      console.log('CFM deleteAttrsDetails', this.attrsId)
+      this.$axios.post('case-attr/del', { id: this.attrsId }).then(response => {
+        if (_.isNull(response)) return
+        console.log('删除详细维度', response)
+        this.refreshData()
+      })
+    },
+    // 删除详细维度的options
+    deleteAttrsOptions(index) {
+      console.log('deleteAttrsOptions', index)
+      this.$Modal.confirm({
+        content: '此操作不可恢复，确认删除？',
+        onOk: () => {
+          console.log('CFM deleteAttrsOptions')
+          this.attrsDetailsOptions.splice(index, 1)
+        }
+      })
+    },
+    refreshData() {
+      this.clearAttrsGroupData()
+      this.clearAttrsDetailsData()
+      this.initAttrsGroupList()
+    },
+    // 清空分栏数据
+    clearAttrsGroupData() {
+      this.attrsEditable = true
+      this.attrsGroupId = ''
+      this.attrsGroupLabel = ''
+      this.attrsGroupIndex = ''
+      this.attrsGroupIfHide = false
+    },
+    // 清空详细维度数据
+    clearAttrsDetailsData() {
+      this.attrsLabel = ''
+      this.attrsSort = ''
+      this.attrsRequire = ''
+      this.attrsType = ''
+      this.attrsConfig = {}
+      this.attrsTextType = ''
+      this.attrsDetailsOptions = []
     },
     // 鼠标移入分栏高亮显示编辑
     onEnterAttrs(item) {

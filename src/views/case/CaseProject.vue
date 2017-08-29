@@ -91,7 +91,7 @@ export default {
   name: 'CaseProject',
   data() {
     return {
-      modalShow: true,
+      modalShow: false,
       modalTitle: '',
       caseList: [
         {
@@ -196,7 +196,7 @@ export default {
       this.$axios.post('/case-project/list', { caseId: this.caseId }).then(response => {
         if (response === null) return
         this.caseList = response.data
-        console.log(this.caseList)
+        // console.log(this.caseList)
       })
     },
     changeProperty(value) {
@@ -226,13 +226,25 @@ export default {
     deleteProperty(key, index) {
       this.caseProject.propertys[key].apartTypes.splice(index, 1)
     },
-    saveProject() {
+    getSaveData() {
       const data = {
         id: this.caseProject.id,
         caseId: this.caseId,
-        name: this.caseProject.name,
-        propertys[i].propertyType:
+        name: this.caseProject.name
       }
+
+      _.each(this.caseProject.propertys, (ele, index) => {
+        data[`propertys[${index}].propertyType`] = ele.propertyType
+        _.each(ele.apartTypes, (ele2, index2) => {
+          data[`propertys[${index}].apartTypes[${index2}]`] = ele2
+        })
+      })
+
+      return data
+    },
+    saveProject() {
+      const data = this.getSaveData()
+      console.log('saveProject', data)
       this.$axios.post('/case-project/save', { params: data }).then(response => {
         if (response === null) return
       })
