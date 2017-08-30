@@ -167,6 +167,7 @@ export default {
     border: 1px solid #f8f8f8;
     border-radius: 5px;
     box-shadow:0 1px 1px 0 rgba(133,133,133,0.50);
+    min-height: 113px;
 
     &.attrsinf__card-hiden-tool {
       .attrsinfo__card__tool {
@@ -228,6 +229,7 @@ export default {
     border-radius: 15px;
     color: #fff;
     background: #5e6479;
+    cursor: pointer;
 
     .attr__item_rank {
       display: inline-block;

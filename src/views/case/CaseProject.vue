@@ -16,7 +16,7 @@
         </div>
         <div class="case-project__tool">
           <i class="iconfont icon-xiugai" @click="modifyCase(items)"></i>
-          <i class="iconfont icon-shanchu1"></i>
+          <i class="iconfont icon-shanchu1"@click="deleteCase(items.id)"></i>
         </div>
       </div>
     </Col>
@@ -36,9 +36,9 @@
           </Form-item>
           <Form-item label="物业选择：">
             <Select style="width: 180px;" @on-change="changeProperty" v-model="inputModel.propertyType">
-              <Option value="1">别墅</Option>
-              <Option value="2">住宅</Option>
-              <Option value="3">酒店式公寓</Option>
+              <Option value="01">住宅</Option>
+              <Option value="02">别墅</Option>
+              <Option value="03">酒店式公寓</Option>
             </Select>
           </Form-item>
           <Form-item label="户型信息：">
@@ -52,17 +52,17 @@
             <span style="font-size: 16px; vertical-align: middle;">厅</span>
           </Form-item>
           <Form-item>
-            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType === '1'" v-model="inputModel.apartTypes3">
+            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType === '02'" v-model="inputModel.apartTypes3">
               <Option v-for="n in (1000 / 50)" :value="(n * 50)" :key="n">{{n * 50}}</Option>
             </Select>
-            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType !== '1'" v-model="inputModel.apartTypes3">
+            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType !== '02'" v-model="inputModel.apartTypes3">
               <Option v-for="n in (300 / 10)" :value="(n * 10)" :key="n">{{n * 10}}</Option>
             </Select>
             <span style="margin: 0 10px; font-size: 16px; vertical-align: middle;">-</span>
-            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType === '1'" v-model="inputModel.apartTypes4">
+            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType === '02'" v-model="inputModel.apartTypes4">
               <Option v-for="n in (1000 / 50)" :value="(n * 50)" :key="n">{{n * 50}}</Option>
             </Select>
-            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType !== '1'" v-model="inputModel.apartTypes4">
+            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType !== '02'" v-model="inputModel.apartTypes4">
               <Option v-for="n in (300 / 10)" :value="(n * 10)" :key="n">{{n * 10}}</Option>
             </Select>
             <span style="font-size: 16px; vertical-align: middle;">㎡</span>
@@ -94,79 +94,43 @@ export default {
       modalShow: false,
       modalTitle: '',
       caseList: [
-        {
-          id: '1',
-          name: '中南一期1',
-          propertys: [
-            {
-              propertyTypeName: '别墅',
-              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
-            },
-            {
-              propertyTypeName: '住宅',
-              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
-            },
-            {
-              propertyTypeName: '酒店式公寓',
-              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
-            }
-          ]
-        },
-        {
-          id: '2',
-          name: '中南一期2',
-          propertys: [
-            {
-              propertyTypeName: '别墅',
-              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
-            },
-            {
-              propertyTypeName: '住宅',
-              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
-            },
-            {
-              propertyTypeName: '酒店式公寓',
-              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
-            }
-          ]
-        },
-        {
-          id: '3',
-          name: '中南一期3',
-          propertys: [
-            {
-              propertyTypeName: '别墅',
-              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
-            },
-            {
-              propertyTypeName: '住宅',
-              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
-            },
-            {
-              propertyTypeName: '酒店式公寓',
-              apartTypes: ['1房1厅 50-70㎡', '1房1厅 70-90㎡']
-            }
-          ]
-        }
+        // {
+        //   id: '1',
+        //   name: '中南一期1',
+        //   propertys: [
+        //     {
+        //       propertyTypeName: '别墅',
+        //       apartTypes: ['1室1厅 50-70㎡', '1室1厅 70-90㎡']
+        //     },
+        //     {
+        //       propertyTypeName: '住宅',
+        //       apartTypes: ['1室1厅 50-70㎡', '1室1厅 70-90㎡']
+        //     },
+        //     {
+        //       propertyTypeName: '酒店式公寓',
+        //       apartTypes: ['1室1厅 50-70㎡', '1室1厅 70-90㎡']
+        //     }
+        //   ]
+        // }
       ],
       caseProject: {
-        id: '1',
-        name: '中南一期1',
+        id: '',
+        name: '',
         propertys: [
           {
-            propertyType: '1',
-            propertyTypeName: '别墅',
-            apartTypes: ['1房1厅 50-70㎡', '2房1厅 70-90㎡']
-          },
-          {
-            propertyType: '2',
+            propertyType: '01',
             propertyTypeName: '住宅',
-            apartTypes: ['4房1厅 50-70㎡', '4房1厅 70-90㎡']
+            apartTypes: []
           },
           {
-            propertyType: '3',
+            propertyType: '02',
+            propertyTypeName: '别墅',
+            apartTypes: []
+          },
+          {
+            propertyType: '03',
             propertyTypeName: '酒店式公寓',
-            apartTypes: ['5房1厅 50-70㎡', '6房1厅 70-90㎡']
+            apartTypes: []
           }
         ]
       },
@@ -175,20 +139,14 @@ export default {
         propertyType: '',
         apartTypes1: '',
         apartTypes2: '',
-        apartTypes3: 0,
-        apartTypes4: 0
+        apartTypes3: '',
+        apartTypes4: ''
       }
     }
   },
   computed: {
     caseId() {
       return this.$store.state.CASE_ID
-    },
-    propertyNumber() {
-      return this.inputModel.propertyType === '1' ? 1000 : 300
-    },
-    propertyGutter() {
-      return this.inputModel.propertyType === '1' ? 50 : 10
     }
   },
   methods: {
@@ -196,7 +154,6 @@ export default {
       this.$axios.post('/case-project/list', { caseId: this.caseId }).then(response => {
         if (response === null) return
         this.caseList = response.data
-        // console.log(this.caseList)
       })
     },
     changeProperty(value) {
@@ -209,28 +166,55 @@ export default {
     },
     addProject() {
       this.caseProject.id = '0'
-      this.caseProject.name = ''
-      this.caseProject.propertys = []
+      this.inputModel.name = ''
+      this.inputModel.apartTypes1 = ''
+      this.inputModel.apartTypes2 = ''
+      this.inputModel.apartTypes3 = ''
+      this.inputModel.apartTypes4 = ''
+      for (const i in this.caseProject.propertys) {
+        this.caseProject.propertys[i].apartTypes = []
+      }
       this.modal('新建项目')
+      console.log('caseList:', this.caseList)
     },
     modifyCase(item) {
-      console.log(item)
-      this.caseProject = item
+      this.inputModel.name = item.name
+      this.caseProject.id = item.id
+      this.caseProject.propertys = item.propertys
+      console.log(item.propertys)
+      this.modal('编辑项目')
     },
-    deleteCase(index) {
-      console.log(index)
+    deleteCase(caseId) {
+      this.$axios.post('/case-project/del', { id: parseInt(caseId) }).then(response => {
+        if (response === null) return
+        console.log(response)
+        this.getList()
+      })
     },
     addProperty() {
-      console.log(this.inputModel)
+      const apartTypes = `${this.inputModel.apartTypes1}室${this.inputModel.apartTypes2}厅 ${this.inputModel.apartTypes3}-${this.inputModel.apartTypes4}㎡`
+      const propertyType = this.inputModel.propertyType
+      switch (propertyType) {
+        case '01':
+          this.caseProject.propertys[0].apartTypes.push(apartTypes)
+          break
+        case '02':
+          this.caseProject.propertys[1].apartTypes.push(apartTypes)
+          break
+        case '03':
+          this.caseProject.propertys[2].apartTypes.push(apartTypes)
+          break
+      }
     },
     deleteProperty(key, index) {
       this.caseProject.propertys[key].apartTypes.splice(index, 1)
+      console.log(this.caseProject.propertys[key])
     },
     getSaveData() {
       const data = {
         id: this.caseProject.id,
         caseId: this.caseId,
-        name: this.caseProject.name
+        name: this.inputModel.name
       }
 
       _.each(this.caseProject.propertys, (ele, index) => {
@@ -244,9 +228,17 @@ export default {
     },
     saveProject() {
       const data = this.getSaveData()
+      console.log('dataname:' + data.name)
+      if (data.name.length <= 0) {
+        this.$Message.error('项目名称不能为空')
+        return false
+      }
       console.log('saveProject', data)
-      this.$axios.post('/case-project/save', { params: data }).then(response => {
+      this.$axios.post('/case-project/save', data).then(response => {
         if (response === null) return
+        this.modalShow = false
+        this.$Message.success(response.retMsg)
+        this.getList()
       })
     }
   },
