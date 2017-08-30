@@ -83,6 +83,8 @@ const store = new Vuex.Store({
       $storage.localStorage.removeItem('USER_INFO')
     },
     remeberLoginName({ state }, name) {
+      console.log('remeberLoginName')
+      this.clearLoginName()
       $storage.localStorage.setItem('USER_LOGIN_NAME', name)
     },
     clearLoginName() {

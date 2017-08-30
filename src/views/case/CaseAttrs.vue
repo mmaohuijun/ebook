@@ -21,7 +21,7 @@
             <!-- <Icon type="close-round"></Icon> -->
             <i class="ivu-icon ivu-icon-close-round" @click.stop="deleteAttrsDetails(ele.id)"></i>
           </div>
-          <div class="attr__item attr__item-add" v-show="item.id === hoverAttrId && item.editable" @click.stop="addAttrsDetails(item)">
+          <div class="attr__item attr__item-add" style="display: block;" v-show="item.id === hoverAttrId && item.editable" @click.stop="addAttrsDetails(item)">
             <Icon type="plus-circled"></Icon>
           </div>
         </div>
@@ -75,8 +75,8 @@
       </Form-item>
       <Form-item label="文本类型：" v-if="attrsDetailsType.indexOf('text') !== -1">
         <Select placeholder="请选择" v-model="attrsDetailsTextType" :disabled="!attrsEditable">
-          <Option value="纯文字">纯文字</Option>
-          <Option value="纯数字">纯数字</Option>
+          <Option value="00">文字</Option>
+          <Option value="01">数字</Option>
         </Select>
       </Form-item>
       <div v-if="attrsDetailsType.indexOf('select') !== -1">
@@ -129,6 +129,9 @@ export default {
       return this.$store.state.CASE_ID
     }
   },
+  mounted() {
+    this.refreshData()
+  },
   methods: {
     /** 维度分栏(AttrsGroup) */
 
@@ -162,8 +165,8 @@ export default {
         this.saveAttrsDetails()
       }
     },
-    // 栏目信息保存（新建、修改）
-    saveAttrsGroup() {
+    // 验证维度分栏的data
+    verifyAttrsGroupData() {
       if (this.attrsGroupLabel === '') {
         this.$store.commit('showErrorMsg', '请输入栏目名称')
         return
@@ -174,6 +177,10 @@ export default {
         this.$store.commit('showErrorMsg', '名称序号请输入数字')
         return
       }
+    },
+    // 栏目信息保存（新建、修改）
+    saveAttrsGroup() {
+      this.verifyAttrsGroupData()
       const data = {
         caseId: this.caseId,
         id: this.attrsGroupId,
@@ -185,7 +192,8 @@ export default {
       this.$axios.post('case-attr/group-save', data).then(response => {
         if (_.isNull(response)) return
         console.log('栏目信息保存（新建、修改）', response)
-        /** 刷新List */
+        // 刷新List
+        this.refreshData()
         this.hideModal()
       })
     },
@@ -197,9 +205,9 @@ export default {
       this.$axios.post('case-attr/group-hidden', { id: this.attrsGroupId }).then(response => {
         if (_.isNull(response)) return
         console.log('栏目隐藏与显现', response)
-        // item.hidden = !item.hidden
+        item.hidden = !item.hidden
       })
-      item.hidden = !item.hidden
+      // item.hidden = !item.hidden
     },
     // 点击'编辑栏目'
     editAttrsGroup(item) {
@@ -225,6 +233,7 @@ export default {
       this.$axios.post('case-attr/group-del', { id: this.attrsGroupId }).then(response => {
         if (_.isNull(response)) return
         console.log('删除栏目', response)
+        this.refreshData()
       })
     },
 
@@ -232,7 +241,7 @@ export default {
 
     // 点击'新建维度'
     addAttrsDetails(item) {
-      console.log('addAttrsDetails')
+      console.log('addAttrsDetails', item)
       this.isAttrsGroup = false
       this.attrsEditable = true
       this.modalTitle = `${item.label} - 新建维度`
@@ -240,8 +249,39 @@ export default {
       this.clearAttrsDetailsData()
       this.showModal()
     },
+    // 验证维度详情的data
+    verifyAttrsDetailsData() {
+      if (this.attrsDetailsLabel === '') {
+        this.$store.commit('showErrorMsg', '请输入维度名称')
+        return
+      } else if (this.attrsDetailsSort === '') {
+        this.$store.commit('showErrorMsg', '请输入名称序号')
+        return
+      } else if (!_.isFinite(parseInt(this.attrsDetailsSort))) {
+        this.$store.commit('showErrorMsg', '名称序号请输入数字')
+        return
+      } else if (this.attrsDetailsRequire === '') {
+        this.$store.commit('showErrorMsg', '请选择填写要求')
+        return
+      } else if (this.attrsDetailsType === '') {
+        this.$store.commit('showErrorMsg', '请选择类型')
+        return
+      }
+      if (this.attrsDetailsType.indexOf('text') !== -1) {
+        if (this.attrsDetailsTextType === '') {
+          this.$store.commit('showErrorMsg', '请选择文本类型')
+          return
+        }
+      } else {
+        if (_.isEmpty(this.attrsDetailsOptions)) {
+          this.$store.commit('showErrorMsg', '请填写详细维度')
+          return
+        }
+      }
+    },
     // 详细维度保存（新建、修改）
     saveAttrsDetails() {
+      this.verifyAttrsDetailsData()
       const data = {
         id: this.attrsDetailsId,
         groupId: this.attrsGroupId,
@@ -250,15 +290,25 @@ export default {
         required: this.attrsDetailsRequire,
         type: this.attrsDetailsType
       }
-      if (this.attrsDetailsTextType !== '') {
-        data['config.textType'] = this.attrsDetailsTextType
-      }
-      if (!_.isEmpty(this.attrsDetailsOptions)) {
-        _.each(this.attrsDetailsOptions, (ele, index) => {
-          data[`options[${index}]`] = ele
-        })
+      if (this.attrsDetailsType.indexOf('text') !== -1) {
+        if (this.attrsDetailsTextType !== '') {
+          data['config.textType'] = this.attrsDetailsTextType
+        }
+      } else {
+        if (!_.isEmpty(this.attrsDetailsOptions)) {
+          _.each(this.attrsDetailsOptions, (ele, index) => {
+            data[`options[${index}]`] = ele
+          })
+        }
       }
       console.log('saveAttrs', data)
+      this.$axios.post('case-attr/save', data).then(response => {
+        if (_.isNull(response)) return
+        console.log('详细维度保存（新建、修改）', response)
+        // 刷新List
+        this.refreshData()
+        this.hideModal()
+      })
     },
     // 点击编辑详细维度
     editAttrsDetails(ele, groupLabel, flag) {
@@ -273,6 +323,7 @@ export default {
     },
     // 查看获取详细维度数据
     getAttrsDetailsInfo(ele) {
+      this.attrsGroupId = ele.groupId
       this.attrsDetailsId = ele.id
       this.attrsDetailsLabel = ele.label
       this.attrsDetailsSort = ele.sort
@@ -360,9 +411,6 @@ export default {
         this.isAttrsGroup = false
       }, 500)
     }
-  },
-  mounted() {
-    this.initAttrsGroupList()
   }
 }
 </script>

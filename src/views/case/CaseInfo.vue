@@ -4,15 +4,12 @@
     <div style="overflow: hidden; margin-bottom: 30px;">
       <div class="field-logo">
           <img src="/static/img/field_logo.png">
-          <!-- <Button type="primary" class="custom-btn">更换logo</Button> -->
+           <Button type="primary" class="custom-btn">更换logo</Button> 
       </div>
       <div style="float: left; padding-left: 21px;">
         <Form-item label="案场名称：">
           <Input placeholder="请输入" v-model="name"></Input>
         </Form-item>
-        <!-- <Form-item label="所属组织：">
-          <Input placeholder="请输入"></Input>
-        </Form-item> -->
         <Form-item label="公众号ID：">
           <Input placeholder="请输入" v-model="appID"></Input>
         </Form-item>

@@ -30,7 +30,7 @@ const router = new Router({
       children: [
         { path: '', name: 'CaseManage', component: CaseManage },
         { path: 'case/:caseId',
-          name: 'CaseDetails',
+          // name: 'CaseDetails',
           component: CaseDetails,
           children: [
             { path: '', name: 'CaseInfo', component: CaseInfo },
@@ -73,7 +73,7 @@ router.beforeEach((to, from, next) => {
     next() // 确保一定要调用 next()
   }
   /** 这个next要删除的, 加上是方便开发 */
-  next()
+  // next()
 })
 
 // 路由跳转后记录下当前路径名
