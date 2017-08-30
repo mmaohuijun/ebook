@@ -81,7 +81,7 @@
       </Form-item>
       <div v-if="attrsDetailsType.indexOf('select') !== -1">
         <Form-item v-for="(item, index) in attrsDetailsOptions" :key="index" :label="index === 0 ? '详细维度：' : ''">
-          <Input placeholder="文本不能超过20个字符" :value="item" :readonly="!attrsEditable"></Input>
+          <Input placeholder="文本不能超过20个字符" :value="item" :readonly="true"></Input>
           <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" @click.stop="attrsEditable ? deleteAttrsOptions(index) : ''"></i>
         </Form-item>
         <Form-item :label="attrsDetailsOptions.length === 0 ? '详细维度：' : ''" v-show="attrsEditable">
@@ -121,7 +121,8 @@ export default {
       attrsDetailsTextType: '', // 详细维度文本类型
       attrsDetailsConfig: {}, // 详细维度文本config
       attrsDetailsOptions: [], // 详细维度选择项
-      attrsDetailsOptionsText: '' // 详细维度新建选择项
+      attrsDetailsOptionsText: '', // 详细维度新建选择项
+      backupData: {}
     }
   },
   computed: {
@@ -177,16 +178,23 @@ export default {
         this.$store.commit('showErrorMsg', '名称序号请输入数字')
         return
       }
-    },
-    // 栏目信息保存（新建、修改）
-    saveAttrsGroup() {
-      this.verifyAttrsGroupData()
+
       const data = {
         caseId: this.caseId,
         id: this.attrsGroupId,
         label: this.attrsGroupLabel,
         sort: this.attrsGroupIndex,
         hidden: this.attrsGroupIfHide
+      }
+      // 判断是否有更改
+      return _.isMatch(data, this.backupData) ? false : data
+    },
+    // 栏目信息保存（新建、修改）
+    saveAttrsGroup() {
+      const data = this.verifyAttrsGroupData()
+      if (!data) {
+        this.hideModal()
+        return
       }
       console.log('saveAttrsGroup', data)
       this.$axios.post('case-attr/group-save', data).then(response => {
@@ -207,7 +215,6 @@ export default {
         console.log('栏目隐藏与显现', response)
         item.hidden = !item.hidden
       })
-      // item.hidden = !item.hidden
     },
     // 点击'编辑栏目'
     editAttrsGroup(item) {
@@ -215,9 +222,18 @@ export default {
       this.showModal()
       this.isAttrsGroup = true
       this.modalTitle = `${item.label} - 编辑栏目`
+      this.attrsGroupId = item.id
       this.attrsGroupLabel = item.label
       this.attrsGroupIndex = item.sort
       this.attrsGroupIfHide = item.hidden
+
+      // 备份数据
+      this.backupData = {
+        id: item.id,
+        label: item.label,
+        sort: item.sort,
+        hidden: item.hidden
+      }
     },
     // 删除维度分栏
     deleteAttrsGroup(item) {
@@ -241,7 +257,7 @@ export default {
 
     // 点击'新建维度'
     addAttrsDetails(item) {
-      console.log('addAttrsDetails', item)
+      console.log('addAttrsDetails', item.label, item.id)
       this.isAttrsGroup = false
       this.attrsEditable = true
       this.modalTitle = `${item.label} - 新建维度`
@@ -278,10 +294,6 @@ export default {
           return
         }
       }
-    },
-    // 详细维度保存（新建、修改）
-    saveAttrsDetails() {
-      this.verifyAttrsDetailsData()
       const data = {
         id: this.attrsDetailsId,
         groupId: this.attrsGroupId,
@@ -290,18 +302,29 @@ export default {
         required: this.attrsDetailsRequire,
         type: this.attrsDetailsType
       }
-      if (this.attrsDetailsType.indexOf('text') !== -1) {
+
+      if (this.attrsDetailsType.indexOf('text') !== -1) { // 维度类型为文本
         if (this.attrsDetailsTextType !== '') {
           data['config.textType'] = this.attrsDetailsTextType
         }
-      } else {
+      } else { // 维度类型为选择
         if (!_.isEmpty(this.attrsDetailsOptions)) {
           _.each(this.attrsDetailsOptions, (ele, index) => {
             data[`options[${index}]`] = ele
           })
         }
       }
-      console.log('saveAttrs', data)
+
+      return _.isMatch(data, this.backupData) ? false : data
+    },
+    // 详细维度保存（新建、修改）
+    saveAttrsDetails() {
+      const data = this.verifyAttrsDetailsData()
+      if (!data) {
+        this.hideModal()
+        return
+      }
+
       this.$axios.post('case-attr/save', data).then(response => {
         if (_.isNull(response)) return
         console.log('详细维度保存（新建、修改）', response)
@@ -314,10 +337,8 @@ export default {
     editAttrsDetails(ele, groupLabel, flag) {
       console.log('editAttrsDetails', ele)
       this.showModal()
-      // this.modalTitle = `${ele.label} - 维度编辑`
       this.modalTitle = `${groupLabel} - ${ele.label}`
       this.attrsEditable = flag
-      console.log('attrsEditable', this.attrsEditable)
       this.clearAttrsDetailsData()
       this.getAttrsDetailsInfo(ele)
     },
@@ -329,11 +350,32 @@ export default {
       this.attrsDetailsSort = ele.sort
       this.attrsDetailsRequire = ele.required ? '1' : '0'
       this.attrsDetailsType = ele.type
-      if (ele.config) {
-        this.attrsDetailsConfig = ele.config
-        this.attrsDetailsTextType = ele.config.textType
+
+      if (ele.type.indexOf('text') !== -1) {
+        if (ele.config) {
+          this.attrsDetailsConfig = ele.config
+          this.attrsDetailsTextType = ele.config.textType
+          this.backupData['config.textType'] = ele.config.textType
+        }
+      } else {
+        if (ele.options) {
+          this.attrsDetailsOptions = ele.options
+          _.each(ele.options, (ele, index) => {
+            this.backupData[`options[${index}]`] = ele
+          })
+        }
       }
-      if (ele.options) this.attrsDetailsOptions = ele.options
+
+      // 备份数据
+      const backupData = {
+        id: ele.id,
+        groupId: ele.groupId,
+        label: ele.label,
+        sort: ele.sort,
+        required: ele.required ? '1' : '0',
+        type: ele.type
+      }
+      this.backupData = _.merge(this.backupData, backupData)
     },
     // 添加详细维度options
     addAttrsOptions() {
@@ -382,6 +424,7 @@ export default {
       this.attrsGroupLabel = ''
       this.attrsGroupIndex = ''
       this.attrsGroupIfHide = false
+      this.backupData = {}
     },
     // 清空详细维度数据
     clearAttrsDetailsData() {
@@ -392,6 +435,8 @@ export default {
       this.attrsDetailsConfig = {}
       this.attrsDetailsTextType = ''
       this.attrsDetailsOptions = []
+      this.attrsDetailsOptionsText = ''
+      this.backupData = {}
     },
     // 鼠标移入分栏高亮显示编辑
     onEnterAttrs(item) {

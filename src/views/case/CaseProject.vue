@@ -72,7 +72,7 @@
       </Col>
       <Col :md="12" style="padding: 28px 0 0 17px;">
         <div class="case-list">
-          <div class="case-item" v-for="(items, propertyKey) in caseProject.propertys">
+           <div class="case-item" v-for="(items, propertyKey) in caseProject.propertys">
             <span class="case-item__label">{{items.propertyTypeName}}：</span>
             <p class="case-item__content" v-for="(item, itemKey) in items.apartTypes">{{item}}<i class="iconfont icon-shanchu" @click="deleteProperty(propertyKey, itemKey)"></i></p>
           </div>
@@ -141,7 +141,24 @@ export default {
         apartTypes2: '',
         apartTypes3: '',
         apartTypes4: ''
-      }
+      },
+      propertysData: [
+        {
+          propertyType: '01',
+          propertyTypeName: '住宅',
+          apartTypes: []
+        },
+        {
+          propertyType: '02',
+          propertyTypeName: '别墅',
+          apartTypes: []
+        },
+        {
+          propertyType: '03',
+          propertyTypeName: '酒店式公寓',
+          apartTypes: []
+        }
+      ]
     }
   },
   computed: {
@@ -153,7 +170,8 @@ export default {
     getList() {
       this.$axios.post('/case-project/list', { caseId: this.caseId }).then(response => {
         if (response === null) return
-        this.caseList = response.data
+        const reData = response.data
+        this.caseList = reData
       })
     },
     changeProperty(value) {
@@ -171,17 +189,18 @@ export default {
       this.inputModel.apartTypes2 = ''
       this.inputModel.apartTypes3 = ''
       this.inputModel.apartTypes4 = ''
-      for (const i in this.caseProject.propertys) {
-        this.caseProject.propertys[i].apartTypes = []
-      }
+      _.each(this.caseProject.propertys, (ele, index) => {
+        ele.apartTypes = []
+      })
       this.modal('新建项目')
       console.log('caseList:', this.caseList)
     },
     modifyCase(item) {
+      console.log('modifyCase', item)
       this.inputModel.name = item.name
       this.caseProject.id = item.id
-      this.caseProject.propertys = item.propertys
-      console.log(item.propertys)
+      this.caseProject.propertys = _.cloneDeep(item.propertys)
+      console.log('caseList', this.caseList.propertys)
       this.modal('编辑项目')
     },
     deleteCase(caseId) {
