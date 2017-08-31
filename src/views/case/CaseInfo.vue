@@ -59,7 +59,6 @@
 <script>
 import CaseMap from 'components/CaseMap'
 import imgUpload from 'vue-image-crop-upload'
-// import EbookUpload from 'components/EbookUpload'
 
 export default {
   data() {

@@ -44,7 +44,7 @@ export default {
       return this.$store.state.CASE_ID
     },
     caseName() {
-      return this.$store.getters.getCaseName
+      return this.$store.state.CASE_NAME
     },
     caseHeaderTitle() {
       if (this.caseId === '0') {
@@ -63,6 +63,9 @@ export default {
       console.log('onClickTabs', pathName)
       this.$router.push({ name: pathName, params: { caseId: this.caseId } })
     }
+  },
+  mounted() {
+    console.log('mounted', this.caseName)
   }
 }
 </script>

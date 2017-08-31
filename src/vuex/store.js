@@ -28,17 +28,19 @@ const store = new Vuex.Store({
     getLoginName: state => {
       const loginName = $storage.localStorage.getItem('USER_LOGIN_NAME')
       return loginName
-    },
-    getCaseName: state => {
-      const caseName = $storage.localStorage.getItem('CASE_NAME')
-      return caseName
     }
+    // getCaseName: state => {
+    //   const caseName = $storage.sessionStorage.getItem('CASE_NAME')
+    //   state.CASE_NAME = caseName
+    //   return caseName
+    // }
   },
   mutations: {
     initCaseId(state, id) {
       state.CASE_ID = id
     },
     initCaseName(state, name) {
+      // $storage.sessionStorage.removeItem('CASE_NAME')
       state.CASE_NAME = name
       $storage.sessionStorage.setItem('CASE_NAME', name)
     },
