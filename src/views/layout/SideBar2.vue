@@ -2,7 +2,7 @@
 <aside class="layout__aside">
   <div class="layout__aside_scroll">
     <div class="layout__aside-header">
-      <div class="layout__aside-avatar"><img src="/static/img/avatar.png" alt=""></div>
+      <div class="layout__aside-avatar"><img src="/static/img/avatar.png" alt=""><div class="logout" @click="logout">注销</div></div>
       <p class="layout__aside-name">{{name}}</p>
       <ul class="layout__aside-info">
         <li>
@@ -67,6 +67,12 @@ export default {
     onClickMenu(key) {
       console.log('onClickMenu', key)
       this.$store.commit('initSideBar', key)
+    },
+    logout() {
+      this.$axios.post('/logout').then(response => {
+        if (response === null) return
+        this.$router.push({ name: Login })
+      })
     }
   },
   beforeCreate() {
@@ -94,16 +100,17 @@ export default {
     }
 
     &-avatar {
+      position: relative;
       width: 116px;
       height: 116px;
       margin: 0 auto;
       border-radius: 50%;
-      background: #fff;
       overflow: hidden;
 
       img {
         width: 116px;
         height: 116px;
+        border-radius: 50%;
       }
     }
 
@@ -175,5 +182,19 @@ export default {
         height: 25px;
       }
     }
+  }
+
+  .logout {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    background:rgba(0,0,0,.7);
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
   }
 </style>

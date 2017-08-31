@@ -8,45 +8,15 @@
     </div>
   </div>
   <div class="layout__body">
-    Organization
-     <Tree :data="baseData"></Tree> 
     <div class="ebook-tree">
-      <ul class="ebook-tree-children">
-        <li class="ebook-tree-open" @click="onClickTreeItem">
-          <span class="ebook-tree-title">华东区</span>
-          <ul class="ebook-tree-children">
-            <li>
-              <span class="ebook-tree-title">南京市</span>
-            </li>
-            <li class="ebook-tree-open">
-              <span class="ebook-tree-title">上海市</span>
-              <ul class="ebook-tree-children">
-                <li class="ebook-tree-open">
-                  <span class="ebook-tree-title">上海东</span>
-                  <ul class="ebook-tree-children">
-                    <li>
-                      <span class="ebook-tree-title">金地艺境1</span>
-                    </li>
-                    <li>
-                      <span class="ebook-tree-title">金地艺境2</span>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <span class="ebook-tree-title">上海西</span>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <span class="ebook-tree-title">华南区</span>
-        </li>
+      <div class="ebook-tree__root"><h2 class="ebook-tree__root--title">金地集团</h2><i class="iconfont icon-tianjia ebook-tree__root--add"></i></div>
+      <ul class="ebook-tree__children">
+        <ebook-tree v-for="(item, index) in treeData" :key="index" :tree-data="item"></ebook-tree>
       </ul>
     </div>
-
     <div class="ebook-tree">
-      <ul class="ebook-tree-children">
+      <div class="ebook-tree__root"><h2 class="ebook-tree__root--title">金地集团</h2><i class="iconfont icon-tianjia ebook-tree__root--add"></i></div>
+      <ul class="ebook-tree__children">
         <ebook-tree v-for="(item, index) in treeData" :key="index" :tree-data="item"></ebook-tree>
       </ul>
     </div>
@@ -122,4 +92,5 @@ export default {
 }
 </script>
 <style lang="less">
+
 </style>

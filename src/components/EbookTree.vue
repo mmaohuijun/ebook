@@ -1,10 +1,12 @@
 <template>
-  <li :class="open ? 'ebook-tree-open' : ''">
-    <span v-show="!treeData.ifCase" class="ebook-tree-icon" @click="toggle"></span>
-    <a href="#" v-if="treeData.ifCase">{{treeData.title}}</a> 
-    <span class="ebook-tree-title" v-else>{{treeData.title}}</span>
-    <span class="ebook-tree-new-btn"></span>
-    <ul v-if="treeData.children" class="ebook-tree-children">
+  <li>
+    <p class="ebook-tree__item">
+      <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.ifCase" style="padding-left: 33px;"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
+      <a href="#" v-if="treeData.ifCase" class="ebook-tree__item--title">{{treeData.title}}</a>
+      <span class="ebook-tree__item--title" v-else>{{treeData.title}}</span>
+      <span class="ebook-tree__item--add iconfont icon-tianjia"></span>
+    </p>
+    <ul v-if="treeData.children" class="ebook-tree__item--children">
       <ebook-tree v-show="open" v-for="(item, index) in treeData.children" :key="index" :tree-data="item"></ebook-tree>
     </ul>
   </li>
@@ -40,40 +42,79 @@ export default {
 </script>
 <style lang="less">
 .ebook-tree {
-  margin-bottom: 100px;
-  font-size: 20px;
-}
+  border:1px solid #bdbdbd;
+  background: #fff;
 
-.ebook-tree li ul {
-  margin: 0;
-  padding: 0 0 0 40px;
-}
-
-.ebook-tree-title {
-  display: inline-block;
-  // background: url('/static/img/tree_add.png') no-repeat left center;
-  // padding-left: 25px;
-}
-
-.ebook-tree-icon {
-  display: inline-block;
-  width: 21px;
-  height: 21px;
-  background: url('/static/img/tree_add.png') no-repeat left center;
-  cursor: pointer;
-}
-
-.ebook-tree-open {
-  &>.ebook-tree-icon {
-    background: url('/static/img/tree_min.png') no-repeat left center;
+  &:last-child {
+    border-top: none;
   }
 }
 
-.ebook-tree-new-btn {
-  display: block;
-  float: right;
-  width: 21px;
-  height: 21px;
-  background: url('/static/img/tree_new.png') no-repeat center;
+.ebook-tree__root {
+  height: 44px;
+  line-height: 44px;
+  background: #66c5d0;
 }
+
+.ebook-tree__root--title {
+  display: inline-block;
+  padding-left: 15px;
+  font-weight: 400;
+  font-size: 20px;
+  color: #fff;
+}
+
+.ebook-tree__root--add {
+  float: right;
+  font-size: 21px;
+  margin-right: 29px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.ebook-tree__item {
+  position: relative;
+  height: 44px;
+  line-height: 44px;
+  border-bottom: 1px solid #ddd;
+}
+
+.ebook-tree__item--title {
+  display: inline-block;
+  vertical-align: top;
+  height: 44px;
+  line-height: 44px;
+  font-size: 18px;
+}
+
+.ebook-tree__item--expand-wrapper {
+  display: inline-block;
+  height: 44px;
+  line-height: 44px;
+  padding-left: 33px;
+  padding-right: 6px;
+  border-bottom: 1px dashed #fff;
+}
+
+.ebook-tree__item--expand {
+  font-size: 20px;
+  color: #8e8e8e;
+}
+
+.ebook-tree__item--add {
+  float: right;
+  margin-right: 29px;
+  font-size: 21px;
+  color: #bbb;;
+  cursor: pointer;
+}
+
+.ebook-tree__children {
+  > li:last-child {
+    > .ebook-tree__item{
+      border-bottom: none;
+    }
+  }
+}
+
 </style>
