@@ -193,14 +193,12 @@ export default {
         ele.apartTypes = []
       })
       this.modal('新建项目')
-      console.log('caseList:', this.caseList)
     },
     modifyCase(item) {
       console.log('modifyCase', item)
       this.inputModel.name = item.name
       this.caseProject.id = item.id
       this.caseProject.propertys = _.cloneDeep(item.propertys)
-      console.log('caseList', this.caseList.propertys)
       this.modal('编辑项目')
     },
     deleteCase(caseId) {
@@ -208,6 +206,7 @@ export default {
         if (response === null) return
         console.log(response)
         this.getList()
+        this.$Message.success('删除成功')
       })
     },
     addProperty() {
