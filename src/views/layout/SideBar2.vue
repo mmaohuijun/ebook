@@ -71,7 +71,7 @@ export default {
     logout() {
       this.$axios.post('/logout').then(response => {
         if (response === null) return
-        this.$router.push({ name: Login })
+        this.$router.push({ name: 'Login' })
       })
     }
   },

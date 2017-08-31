@@ -38,11 +38,6 @@ export default {
       modalForgetPWD: false
     }
   },
-  computed: {
-    // loginName() {
-    //   return this.$store.getters.getLoginName || ''
-    // }
-  },
   methods: {
     goLogin() {
       console.log('goLogin', this.loginName, this.password, this.ifRemember)
@@ -71,7 +66,7 @@ export default {
 
         // 是否记住账号
         if (this.ifRemember) {
-          this.$store.dispatch('remeberLoginName', this.loginName)
+          this.$store.dispatch('remeberLoginName', reData.loginName)
         } else {
           this.$store.dispatch('clearLoginName')
         }
@@ -79,12 +74,14 @@ export default {
         /** 应该根据用户权限跳转对应的菜单 */
         this.$router.push({ name: 'CaseManage' })
       })
+    },
+    checkIfHadRemeber() {
+      this.loginName = this.$store.getters.getLoginName
+      this.ifRemember = this.$store.getters.getLoginName !== undefined
     }
   },
   mounted() {
-    console.log('LOGIN mounted', this.loginName)
-    this.ifRemember = this.$store.getters.getLoginName !== undefined
-    this.loginName = this.$store.getters.getLoginName
+    this.checkIfHadRemeber()
   }
 }
 </script>

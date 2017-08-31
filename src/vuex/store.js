@@ -26,8 +26,12 @@ const store = new Vuex.Store({
     getLoginStatus: state => state.ifLogin,
     getCaseId: state => state.CASE_ID,
     getLoginName: state => {
-      const name = $storage.localStorage.getItem('USER_LOGIN_NAME')
-      return name || undefined
+      const loginName = $storage.localStorage.getItem('USER_LOGIN_NAME')
+      return loginName
+    },
+    getCaseName: state => {
+      const caseName = $storage.localStorage.getItem('CASE_NAME')
+      return caseName
     }
   },
   mutations: {
@@ -36,6 +40,7 @@ const store = new Vuex.Store({
     },
     initCaseName(state, name) {
       state.CASE_NAME = name
+      $storage.sessionStorage.setItem('CASE_NAME', name)
     },
     initSideBar(state, str) {
       state.SIDEBAR_SELECT = str
@@ -69,10 +74,10 @@ const store = new Vuex.Store({
       state.LOGIN_NAME = json.loginName
       state.MOBILE = json.mobile
       state.NUMBER = json.no
-      $storage.localStorage.setItem('USER_INFO', json)
+      $storage.sessionStorage.setItem('USER_INFO', json)
     },
     getUserInfo({ state }) {
-      const info = $storage.localStorage.getItem('USER_INFO')
+      const info = $storage.sessionStorage.getItem('USER_INFO')
       if (!info) return
       state.NAME = info.name
       state.LOGIN_NAME = info.loginName
@@ -80,13 +85,16 @@ const store = new Vuex.Store({
       state.NUMBER = info.no
     },
     clearUserInfo() {
-      $storage.localStorage.removeItem('USER_INFO')
+      $storage.sessionStorage.removeItem('USER_INFO')
     },
     remeberLoginName({ state }, name) {
       $storage.localStorage.setItem('USER_LOGIN_NAME', name)
     },
     clearLoginName() {
       $storage.localStorage.removeItem('USER_LOGIN_NAME')
+    },
+    saveCaseName({ state }, name) {
+      $storage.sessionStorage.setItem('CASE_NAME', name)
     }
   }
 })

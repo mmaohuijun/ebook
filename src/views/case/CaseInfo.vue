@@ -1,10 +1,20 @@
 <template>
 <div>
-  <Form :model="formItem" :label-width="120" label-position="left">
+  <Form :label-width="120" label-position="left">
     <div style="overflow: hidden; margin-bottom: 30px;">
       <div class="field-logo">
-          <img src="/static/img/field_logo.png">
-           <Button type="primary" class="custom-btn">更换logo</Button> 
+         <!-- <img src="/static/img/field_logo.png"> -->
+         <img :src="logoUrl"> 
+        <Button type="primary" class="custom-btn" @click="toggleUploadShow">更换logo</Button>
+        <!-- url="http://172.18.84.75:88/admin/case/img-upload"  -->
+         <img-upload field="file"
+          v-model="uploadShow"
+          @crop-upload-success="imgUploadSuccess"
+          @crop-upload-fail="imgUploadFail"
+          url="http://172.18.84.75:88/admin/case/img-upload"
+          :width="300"
+          :height="300"
+          img-format="png"></img-upload>
       </div>
       <div style="float: left; padding-left: 21px;">
         <Form-item label="案场名称：">
@@ -48,6 +58,8 @@
 </template>
 <script>
 import CaseMap from 'components/CaseMap'
+import imgUpload from 'vue-image-crop-upload'
+// import EbookUpload from 'components/EbookUpload'
 
 export default {
   data() {
@@ -56,7 +68,7 @@ export default {
       name: '', // 案场名
       address: '', // 案场地址
       location: { lng: 121.4806, lat: 31.2408 }, // 案场的经纬度
-      logoUrl: '', // 案场logo
+      logoUrl: '/static/img/field_logo.png', // 案场logo
       bgImgUrl: '', // 案场背景图
       checkCust: false, // 是否开启短信验证
       remark: '', // 描述
@@ -65,17 +77,7 @@ export default {
       appSecret: '', // 公众号密码
       initialized: 0,
       displayPane: 'caseInfo', // 选项栏显示栏
-      formItem: {
-        input: '',
-        select: '',
-        radio: 'male',
-        checkbox: [],
-        switch: true,
-        date: '',
-        time: '',
-        slider: [20, 50],
-        textarea: ''
-      }
+      uploadShow: false
     }
   },
   computed: {
@@ -143,6 +145,17 @@ export default {
       this.appID = ''
       this.appSecret = ''
       this.location = { lng: 121.4806, lat: 31.2408 }
+    },
+    toggleUploadShow() {
+      this.uploadShow = !this.uploadShow
+    },
+    imgUploadSuccess(response) {
+      console.log('--------imgUploadSuccess 上传成功 --------', response)
+      this.uploadShow = false
+      this.logoUrl = response.data
+    },
+    imgUploadFail(status) {
+      console.log('--------imgUploadFail 上传失败 --------', status)
     }
   },
   mounted() {
@@ -154,7 +167,8 @@ export default {
     this.initCaseInfo()
   },
   components: {
-    CaseMap
+    CaseMap,
+    imgUpload
   }
 }
 </script>

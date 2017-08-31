@@ -31,6 +31,7 @@ export default {
   name: 'CaseDetails',
   data() {
     return {
+      // caseName: '',
       tabsList: [
         { title: '案场信息', pathName: 'CaseInfo' },
         { title: '项目信息', pathName: 'CaseProject' },
@@ -43,7 +44,7 @@ export default {
       return this.$store.state.CASE_ID
     },
     caseName() {
-      return this.$store.state.CASE_NAME
+      return this.$store.getters.getCaseName
     },
     caseHeaderTitle() {
       if (this.caseId === '0') {

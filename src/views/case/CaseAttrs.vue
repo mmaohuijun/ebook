@@ -18,7 +18,6 @@
           <div class="attr__item"v-for="(ele, index) in item.attrs" :key="ele.id" @click.stop="editAttrsDetails(ele, item.label, item.editable)">
             <span class="attr__item_rank" :class="ele.required ? 'attr__item_rank-red' : ''">{{index + 1}}</span>
             {{ele.label}}
-            <!-- <Icon type="close-round"></Icon> -->
             <i class="ivu-icon ivu-icon-close-round" @click.stop="deleteAttrsDetails(ele.id)"></i>
           </div>
           <div class="attr__item attr__item-add" style="display: block;" v-show="item.id === hoverAttrId && item.editable" @click.stop="addAttrsDetails(item)">
@@ -122,6 +121,7 @@ export default {
       attrsDetailsConfig: {}, // 详细维度文本config
       attrsDetailsOptions: [], // 详细维度选择项
       attrsDetailsOptionsText: '', // 详细维度新建选择项
+      ifNew: false, // 新建还是编辑
       backupData: {}
     }
   },
@@ -151,6 +151,7 @@ export default {
       this.showModal()
       this.clearAttrsGroupData()
       this.isAttrsGroup = true
+      this.ifNew = true
       this.modalTitle = '新建栏目'
     },
     // 保存分栏/保存维度更改
@@ -179,25 +180,31 @@ export default {
         return
       }
 
-      const data = {
+      const requestData = {
         caseId: this.caseId,
         id: this.attrsGroupId,
         label: this.attrsGroupLabel,
         sort: this.attrsGroupIndex,
         hidden: this.attrsGroupIfHide
       }
-      // 判断是否有更改
-      return _.isMatch(data, this.backupData) ? false : data
+
+      // 判断是新建还是编辑
+      if (this.ifNew) {
+        return requestData
+      } else {
+        // 和备份数据做比较, 如果一样则表示没有改动, 返回false
+        return _.isMatch(requestData, this.backupData) ? false : requestData
+      }
     },
     // 栏目信息保存（新建、修改）
     saveAttrsGroup() {
-      const data = this.verifyAttrsGroupData()
-      if (!data) {
+      const requestData = this.verifyAttrsGroupData()
+      if (!requestData) {
         this.hideModal()
         return
       }
-      console.log('saveAttrsGroup', data)
-      this.$axios.post('case-attr/group-save', data).then(response => {
+      console.log('saveAttrsGroup', requestData)
+      this.$axios.post('case-attr/group-save', requestData).then(response => {
         if (_.isNull(response)) return
         console.log('栏目信息保存（新建、修改）', response)
         // 刷新List
@@ -221,6 +228,7 @@ export default {
       console.log('editAttrsGroup', item)
       this.showModal()
       this.isAttrsGroup = true
+      this.ifNew = false
       this.modalTitle = `${item.label} - 编辑栏目`
       this.attrsGroupId = item.id
       this.attrsGroupLabel = item.label
@@ -259,6 +267,7 @@ export default {
     addAttrsDetails(item) {
       console.log('addAttrsDetails', item.label, item.id)
       this.isAttrsGroup = false
+      this.ifNew = true
       this.attrsEditable = true
       this.modalTitle = `${item.label} - 新建维度`
       this.attrsGroupId = item.id
@@ -294,7 +303,7 @@ export default {
           return
         }
       }
-      const data = {
+      const requestData = {
         id: this.attrsDetailsId,
         groupId: this.attrsGroupId,
         label: this.attrsDetailsLabel,
@@ -305,27 +314,35 @@ export default {
 
       if (this.attrsDetailsType.indexOf('text') !== -1) { // 维度类型为文本
         if (this.attrsDetailsTextType !== '') {
-          data['config.textType'] = this.attrsDetailsTextType
+          requestData['config.textType'] = this.attrsDetailsTextType
         }
       } else { // 维度类型为选择
         if (!_.isEmpty(this.attrsDetailsOptions)) {
           _.each(this.attrsDetailsOptions, (ele, index) => {
-            data[`options[${index}]`] = ele
+            requestData[`options[${index}]`] = ele
           })
         }
       }
+      console.log('详细维度保存', requestData)
 
-      return _.isMatch(data, this.backupData) ? false : data
+      // 判断是新建还是编辑
+      if (this.ifNew) {
+        return requestData
+      } else {
+        // 和备份数据做比较, 如果一样则表示没有改动, 返回false
+        return _.isMatch(requestData, this.backupData) ? false : requestData
+      }
     },
     // 详细维度保存（新建、修改）
     saveAttrsDetails() {
-      const data = this.verifyAttrsDetailsData()
-      if (!data) {
+      const requestData = this.verifyAttrsDetailsData()
+
+      if (!requestData) {
         this.hideModal()
         return
       }
 
-      this.$axios.post('case-attr/save', data).then(response => {
+      this.$axios.post('case-attr/save', requestData).then(response => {
         if (_.isNull(response)) return
         console.log('详细维度保存（新建、修改）', response)
         // 刷新List
@@ -337,6 +354,7 @@ export default {
     editAttrsDetails(ele, groupLabel, flag) {
       console.log('editAttrsDetails', ele)
       this.showModal()
+      this.ifNew = false
       this.modalTitle = `${groupLabel} - ${ele.label}`
       this.attrsEditable = flag
       this.clearAttrsDetailsData()
@@ -403,11 +421,10 @@ export default {
     },
     // 删除详细维度的options
     deleteAttrsOptions(index) {
-      console.log('deleteAttrsOptions', index)
       this.$Modal.confirm({
         content: '此操作不可恢复，确认删除？',
         onOk: () => {
-          console.log('CFM deleteAttrsOptions')
+          console.log('CFM deleteAttrsOptions', index)
           this.attrsDetailsOptions.splice(index, 1)
         }
       })
