@@ -1,6 +1,5 @@
 import axios from 'axios'
 import store from '../vuex/store'
-import router from '../router'
 import qs from 'qs'
 
 const devURL = 'http://172.18.84.75:88/admin/'
@@ -55,6 +54,7 @@ $axios.interceptors.response.use(response => {
     return response.data
   } else if (retCode === responseStatus.sessiontimeout) {
     store.commit('notLogin')
+    store.dispatch('clearUserInfo')
     return null
   } else { // 请求不成功, 提示错误信息
     store.commit('showErrorMsg', retMsg)
