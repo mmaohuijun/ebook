@@ -3,17 +3,17 @@
   <Form :label-width="120" label-position="left">
     <div style="overflow: hidden; margin-bottom: 30px;">
       <div class="field-logo">
-         <!-- <img src="/static/img/field_logo.png"> -->
-         <img :src="logoUrl"> 
-        <Button type="primary" class="custom-btn" @click="toggleUploadShow">更换logo</Button>
+        <img v-if="logoUrl !== ''" :src="logoUrl"> 
+        <img v-else src="/static/img/field_logo.png"> 
+        <Button type="primary" class="custom-btn" @click="toggleUploadShow('logo')">更换logo</Button>
         <!-- url="http://172.18.84.75:88/admin/case/img-upload"  -->
          <img-upload field="file"
-          v-model="uploadShow"
+          v-model="logoUploadShow"
           @crop-upload-success="imgUploadSuccess"
           @crop-upload-fail="imgUploadFail"
           url="http://172.18.84.75:88/admin/case/img-upload"
-          :width="300"
-          :height="300"
+          :width="156"
+          :height="156"
           img-format="png"></img-upload>
       </div>
       <div style="float: left; padding-left: 21px;">
@@ -37,8 +37,17 @@
         </Form-item>
       </div>
       <div class="field-bg">
-        <img src="/static/img/field_bg.png" alt="">
-        <!-- <Button type="ghost" class="btn-upload-field-bg">上传图片</Button> -->
+        <img v-if="bgImgUrl !== ''" :src="bgImgUrl" alt="">
+        <img v-else src="/static/img/field_bg.png" alt="">
+        <Button type="ghost" class="btn-upload-field-bg" @click="toggleUploadShow('bg')">上传图片</Button>
+        <img-upload field="file"
+          v-model="bgUploadShow"
+          @crop-upload-success="imgUploadSuccess"
+          @crop-upload-fail="imgUploadFail"
+          url="http://172.18.84.75:88/admin/case/img-upload"
+          :width="450"
+          :height="228"
+          img-format="png"></img-upload>
       </div>
     </div>
     <div style="width: 540px; height: 43px;">
@@ -67,7 +76,7 @@ export default {
       name: '', // 案场名
       address: '', // 案场地址
       location: { lng: 121.4806, lat: 31.2408 }, // 案场的经纬度
-      logoUrl: '/static/img/field_logo.png', // 案场logo
+      logoUrl: '', // 案场logo
       bgImgUrl: '', // 案场背景图
       checkCust: false, // 是否开启短信验证
       remark: '', // 描述
@@ -76,7 +85,8 @@ export default {
       appSecret: '', // 公众号密码
       initialized: 0,
       displayPane: 'caseInfo', // 选项栏显示栏
-      uploadShow: false
+      logoUploadShow: false,
+      bgUploadShow: false
     }
   },
   computed: {
@@ -145,13 +155,25 @@ export default {
       this.appSecret = ''
       this.location = { lng: 121.4806, lat: 31.2408 }
     },
-    toggleUploadShow() {
-      this.uploadShow = !this.uploadShow
+    toggleUploadShow(key) {
+      if (key === 'logo') {
+        this.logoUploadShow = !this.logoUploadShow
+      } else if (key === 'bg') {
+        this.bgUploadShow = !this.bgUploadShow
+      }
+    },
+    hideUpload() {
+      this.logoUploadShow = false
+      this.bgUploadShow = false
     },
     imgUploadSuccess(response) {
       console.log('--------imgUploadSuccess 上传成功 --------', response)
-      this.uploadShow = false
-      this.logoUrl = response.data
+      if (this.logoUploadShow) {
+        this.logoUrl = response.data
+      } else if (this.bgUploadShow) {
+        this.bgImgUrl = response.data
+      }
+      this.hideUpload()
     },
     imgUploadFail(status) {
       console.log('--------imgUploadFail 上传失败 --------', status)
