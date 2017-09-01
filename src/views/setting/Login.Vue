@@ -52,6 +52,7 @@ export default {
         if (_.isNull(response)) return
         console.log('login', response)
 
+        this.$store.commit('hasLogin')
         const reData = response.data
         const loginInfo = {
           loginName: reData.loginName,

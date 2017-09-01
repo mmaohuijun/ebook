@@ -53,13 +53,10 @@ router.beforeEach((to, from, next) => {
     store.commit('initSideBar', 'CaseManage')
   }
 
-  // 检查route是否有meta信息
+  // 检查页面是否需要登录
   if (to.matched.some(record => record.meta.requiresLogin)) {
-    // 检查页面是否需要登录, 若没有登录则跳转登录页
-    // if (!store.getters.getLoginStatus) {
-    if (!store.getters.hasUserInfo) {
-      next({ path: '/web-admin/login' })
-    } else {
+    // 若没有登录或没有用户信息则跳转登录页
+    if (store.getters.getLoginStatus || store.getters.hasUserInfo) {
       store.dispatch('getUserInfo')
       // 判断url后面是否带有参数
       if (!_.isEmpty(to.params)) {
@@ -69,6 +66,8 @@ router.beforeEach((to, from, next) => {
         }
       }
       next()
+    } else {
+      next({ name: 'Login' })
     }
   } else {
     next() // 确保一定要调用 next()
