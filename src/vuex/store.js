@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     CASE_NAME: '', // 案场名称
     SIDEBAR_SELECT: '', // 侧边栏选中项
     CURRENT_PATH: '', // 当前路径名
+    HAS_LOGIN: false, // 是否登录
     loading: false,
     ifShowErrorMsg: false,
     msgText: ''
@@ -27,8 +28,9 @@ const store = new Vuex.Store({
       const loginName = $storage.localStorage.getItem('USER_LOGIN_NAME')
       return loginName
     },
+    getLoginStatus: state => state.HAS_LOGIN,
     hasUserInfo: state => {
-      const userInfo = $storage.localStorage.getItem('USER_INFO')
+      const userInfo = $storage.sessionStorage.getItem('USER_INFO')
       return userInfo !== undefined
     }
   },
@@ -57,6 +59,12 @@ const store = new Vuex.Store({
       setTimeout(() => {
         state.ifShowErrorMsg = false
       }, 3000)
+    },
+    hasLogin(state) {
+      state.HAS_LOGIN = true
+    },
+    notLogin(state) {
+      state.HAS_LOGIN = false
     }
   },
   actions: {
