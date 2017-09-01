@@ -16,21 +16,15 @@
         </li>
       </ul>
     </div>
-    <!-- <div class="laylout__aside-menu">
-      <div class="menu__item" v-for="(ele, index) in menuDataSource" :key="index">
-        <router-link :to="ele.path" class="menu__link" :tag="ele.subMenu.length === 0 ? 'a' : 'div'" @click="onClickMenu(ele.key)">{{ele.title}}</router-link>
-        <p class="menu__child" v-for="(item, index) in ele.subMenu" :key="index" @click="onClickMenu(item.key)">
-          <router-link :to="item.path" :class="selectMenu === item.key ? 'menu__link menu__link--current' : 'menu__link'">{{item.title}}</router-link>
-        </p>
-      </div>
-    </div> -->
     <ul class="laylout__aside-menu">
       <li class="menu__item" v-for="(ele, index) in menuDataSource" :key="index">
         <ul>
-          <li @click="ele.subMenu.length === 0 ? onClickMenu(ele.key) : ''"><router-link :to="ele.path" :tag="ele.subMenu.length === 0 ? 'a' : 'p'" :class="selectMenu === ele.key ? 'menu__link menu__link--current' : 'menu__link'">{{ele.title}}</router-link></li>
-          <!-- <router-link :to="ele.path" class="menu__link" :tag="ele.subMenu.length === 0 ? 'a' : 'li'">{{ele.title}}</router-link> -->
-          <li class="menu__child" v-for="(item, index) in ele.subMenu" :key="index" @click="onClickMenu(item.key)">
-            <router-link :to="item.path" :class="selectMenu === item.key ? 'menu__link menu__link--current' : 'menu__link'">{{item.title}}</router-link>
+          <li @click="ele.subMenu.length === 0 ? onClickMenu(ele.name) : ''">
+            <a href="javascript:;" v-if="ele.subMenu.length === 0" :class="selectMenu === ele.name ? 'menu__link menu__link--current' : 'menu__link'">{{ele.title}}</a>
+            <p v-else :class="selectMenu === ele.name ? 'menu__link menu__link--current' : 'menu__link'">{{ele.title}}</p>
+          </li>
+          <li class="menu__child" v-for="(item, index) in ele.subMenu" :key="index" @click="onClickMenu(item.name)">
+            <a href="javascript:;" :class="selectMenu === item.name ? 'menu__link menu__link--current' : 'menu__link'">{{item.title}}</a>
           </li>
         </ul>
       </li>
@@ -46,10 +40,31 @@ export default {
   data() {
     return {
       menuDataSource: [
-        // { title: '案场', path: '', key: 'case', subMenu: [{ title: '案场管理', path: '/web-admin', key: 'CaseManage' }] },
-        { title: '案场', path: '/test/web-admin', key: 'CaseManage', subMenu: [] },
-        { title: '组织', path: '/test/web-admin/organization', key: 'org', subMenu: [] },
-        { title: '用户', path: '', key: 'user', subMenu: [{ title: '内部用户', path: '/test/web-admin/intUser', key: 'IntUser' }, { title: '外部用户', path: '/test/web-admin/extUser', key: 'ExtUser' }] }
+        {
+          title: '案场',
+          name: 'CaseManage',
+          subMenu: []
+        },
+        {
+          title: '组织',
+          name: 'Organization',
+          subMenu: []
+        },
+        {
+          title: '用户',
+          name: 'User',
+          path: '',
+          subMenu: [
+            {
+              title: '内部用户',
+              name: 'IntUser'
+            },
+            {
+              title: '外部用户',
+              name: 'ExtUser'
+            }
+          ]
+        }
         // { title: '权限', path: '', key: 'auth', subMenu: [] },
         // { title: '客户数据', path: '', key: 'cdata', subMenu: [{ title: '来电记录', path: '/', key: 'call' }, { title: '到访记录', path: '/', key: 'visit' }, { title: '成交记录', path: '/', key: 'deal' }, { title: '未分配客户', path: '/', key: 'unasign' }, { title: '新建客户', path: '/', key: 'newclient' }] },
         // { title: '硬件列表', path: '', key: 'hardw', subMenu: [] }
@@ -65,9 +80,10 @@ export default {
       selectMenu: state => state.SIDEBAR_SELECT
     }) },
   methods: {
-    onClickMenu(key) {
-      console.log('onClickMenu', key)
-      this.$store.commit('initSideBar', key)
+    onClickMenu(name) {
+      console.log('onClickMenu', name)
+      this.$store.commit('initSideBar', name)
+      this.$router.push({ name })
     },
     logout() {
       this.$axios.post('/logout').then(response => {
@@ -75,10 +91,6 @@ export default {
         this.$router.push({ name: 'Login' })
       })
     }
-  },
-  beforeCreate() {
-    // 获取localStorage中的用户信息
-    this.$store.dispatch('getUserInfo')
   }
 }
 </script>

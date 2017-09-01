@@ -18,16 +18,18 @@ const store = new Vuex.Store({
     SIDEBAR_SELECT: '', // 侧边栏选中项
     CURRENT_PATH: '', // 当前路径名
     loading: false,
-    ifLogin: false, // 账号是否登录
     ifShowErrorMsg: false,
     msgText: ''
   },
   getters: {
-    getLoginStatus: state => state.ifLogin,
     getCaseId: state => state.CASE_ID,
     getLoginName: state => {
       const loginName = $storage.localStorage.getItem('USER_LOGIN_NAME')
       return loginName
+    },
+    hasUserInfo: state => {
+      const userInfo = $storage.localStorage.getItem('USER_INFO')
+      return userInfo !== undefined
     }
   },
   mutations: {
@@ -55,12 +57,6 @@ const store = new Vuex.Store({
       setTimeout(() => {
         state.ifShowErrorMsg = false
       }, 3000)
-    },
-    hasLogin(state) {
-      state.ifLogin = true
-    },
-    notLogin(state) {
-      state.ifLogin = false
     }
   },
   actions: {
