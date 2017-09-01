@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '../vuex/store'
+import router from '../router'
 import qs from 'qs'
 
 const devURL = 'http://172.18.84.75:88/admin/'
