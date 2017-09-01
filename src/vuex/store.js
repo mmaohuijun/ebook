@@ -18,7 +18,7 @@ const store = new Vuex.Store({
     SIDEBAR_SELECT: '', // 侧边栏选中项
     CURRENT_PATH: '', // 当前路径名
     loading: false,
-    ifLogin: true, // 账号是否登录
+    ifLogin: false, // 账号是否登录
     ifShowErrorMsg: false,
     msgText: ''
   },

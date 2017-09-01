@@ -70,6 +70,15 @@ export default {
 }
 </script>
 <style lang="less">
+/* 图片上传弹出框宽度 */
+.layout__body .vue-image-crop-upload .vicp-wrap {
+  width: 300px;
+}
+/* 图片上传取消预览效果 */
+.vicp-crop-right {
+  display: none;
+}
+
   .field-box {
     border:1px solid #979797;
     background: #fff;
