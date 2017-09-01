@@ -141,6 +141,9 @@ export default {
           content: '保存成功',
           duration: 3
         })
+        // 新建成功后返回新案场caseId
+        this.$store.commit('initCaseId', response.data)
+        this.initCaseInfo()
       })
     },
     clearAllData() {

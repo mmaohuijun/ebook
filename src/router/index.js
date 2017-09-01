@@ -18,14 +18,14 @@ Vue.use(Router)
 const router = new Router({
   mode: 'history',
   routes: [
-    { path: '/', redirect: '/test/web-admin' },
+    { path: '/', redirect: '/web-admin' },
     {
       path: '/web-admin/login',
       name: 'Login',
       component: Login
     },
     {
-      path: '/test/web-admin',
+      path: '/web-admin',
       component: Layout,
       children: [
         { path: '', name: 'CaseManage', component: CaseManage },
