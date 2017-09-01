@@ -27,11 +27,17 @@ export default {
       searchText: '', // 搜索关键词(显示)
       searchTextCfm: '', // 搜索关键词(查询)
       caseTable: [
+        // {
+        //   type: 'selection',
+        //   width: 60,
+        //   align: 'center',
+        //   ellipsis: true
+        // },
         {
-          type: 'selection',
-          width: 60,
-          align: 'center',
-          ellipsis: true
+          title: 'ID',
+          key: 'id',
+          ellipsis: false
+          // sortable: true // 开启排序
         },
         {
           title: '案场',
@@ -60,6 +66,18 @@ export default {
           width: 150,
           align: 'center',
           render: (h, params) => h('div', [
+            h('i', {
+              class: 'iconfont icon-weidu',
+              style: {
+                cursor: 'pointer'
+              },
+              on: {
+                click: event => {
+                  event.cancelBubble = true
+                  this.$router.push({ name: 'CaseAttrs', params: { caseId: this.caseId } })
+                }
+              }
+            })
             // h('Button', {
             //   props: {
             //     type: 'text',
@@ -72,23 +90,23 @@ export default {
             //     fontSize: '22px'
             //   }
             // }),
-            h('Button', {
-              props: {
-                type: 'text',
-                icon: 'trash-a',
-                size: 'small'
-              },
-              style: {
-                color: '#999',
-                fontSize: '22px'
-              },
-              on: {
-                click: event => {
-                  event.cancelBubble = true
-                  this.deleteItem(params.row)
-                }
-              }
-            })
+            // h('Button', {
+            //   props: {
+            //     type: 'text',
+            //     icon: 'trash-a',
+            //     size: 'small'
+            //   },
+            //   style: {
+            //     color: '#999',
+            //     fontSize: '22px'
+            //   },
+            //   on: {
+            //     click: event => {
+            //       event.cancelBubble = true
+            //       this.deleteItem(params.row)
+            //     }
+            //   }
+            // })
           ])
         }
       ],
@@ -133,7 +151,7 @@ export default {
     // 新建案场
     addCase() {
       console.log('addCase')
-      this.$router.push('/web-admin/caseInfo/0')
+      this.gotoCaseDetails('0')
     },
     // 点击分页
     changePage(pageNo) {
@@ -149,8 +167,12 @@ export default {
     // 点击案场跳转详情页
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
-      this.caseId = item.id
-      this.$router.push(`/web-admin/caseInfo/${this.caseId}`)
+      this.gotoCaseDetails(item.id)
+    },
+    gotoCaseDetails(id) {
+      this.caseId = id
+      this.$store.commit('initCaseId', this.caseId)
+      this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
     },
     // 选中列表
     onSelectCaseItem(item) {

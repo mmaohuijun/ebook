@@ -26,7 +26,8 @@ module.exports = {
       'src': resolve('src'),
       'components': resolve('src/components'),
       'views': resolve('src/views'),
-      'assets': resolve('src/assets')
+      'assets': resolve('src/assets'),
+      'api': resolve('src/api')
     }
   },
   plugins: [

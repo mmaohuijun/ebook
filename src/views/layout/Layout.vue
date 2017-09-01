@@ -414,5 +414,9 @@ export default {
       display: none;
     }
   }
+
+  .ivu-modal .ivu-select-dropdown {
+    position: fixed!important;
+  }
 }
 </style>

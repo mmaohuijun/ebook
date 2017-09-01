@@ -18,10 +18,16 @@ export default {
     ...mapState({
       ifShowLoading: state => state.loading,
       ifShowErrorMsg: state => state.ifShowErrorMsg,
-      msgText: state => state.msgText
+      msgText: state => state.msgText,
+      ifLogin: state => state.ifLogin
     })
   },
   watch: {
+    ifLogin(flag) {
+      if (!flag) {
+        this.$router.push({ name: 'Login' })
+      }
+    },
     ifShowLoading(flag) {
       if (flag) {
         this.msg = this.$Message.loading({
@@ -43,10 +49,18 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="less">
 #app {
   height: 100%;
   overflow: hidden;
 }
-@import 'assets/css/common.css';  
+
+.modal-form {
+  margin: 30px 70px;
+}
+.ivu-modal-body {
+  max-height: 500px;
+  overflow-y: auto;
+}
+@import 'assets/css/common.css';
 </style>

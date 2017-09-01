@@ -10,11 +10,14 @@ import { BaiduMap, BmMarker, BmNavigation } from 'vue-baidu-map'
 export default {
   name: 'CaseMap',
   props: {
-    location: Object
+    location: {
+      type: Object,
+      default: { lng: 121.4806, lat: 31.2408 }
+    }
   },
   data() {
     return {
-      mapCenter: { lng: 121.480652, lat: 31.2408 }
+      mapCenter: { lng: 121.4806, lat: 31.2408 }
     }
   },
   computed: {
