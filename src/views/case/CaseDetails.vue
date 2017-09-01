@@ -48,7 +48,7 @@ export default {
     },
     caseHeaderTitle() {
       if (this.caseId === '0') {
-        return '新建客户'
+        return '新建案场'
       } else {
         return this.caseName
       }
