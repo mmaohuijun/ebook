@@ -90,10 +90,6 @@ export default {
         this.$router.push({ name: 'Login' })
       })
     }
-  },
-  beforeCreate() {
-    // 获取localStorage中的用户信息
-    this.$store.dispatch('getUserInfo')
   }
 }
 </script>

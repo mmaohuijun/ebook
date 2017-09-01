@@ -52,8 +52,6 @@ export default {
         if (_.isNull(response)) return
         console.log('login', response)
 
-        // 登录成功后登记一下login状态
-        this.$store.commit('hasLogin')
         const reData = response.data
         const loginInfo = {
           loginName: reData.loginName,

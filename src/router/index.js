@@ -30,7 +30,6 @@ const router = new Router({
       children: [
         { path: '', name: 'CaseManage', component: CaseManage },
         { path: 'case/:caseId',
-          // name: 'CaseDetails',
           component: CaseDetails,
           children: [
             { path: '', name: 'CaseInfo', component: CaseInfo },
@@ -57,9 +56,11 @@ router.beforeEach((to, from, next) => {
   // 检查route是否有meta信息
   if (to.matched.some(record => record.meta.requiresLogin)) {
     // 检查页面是否需要登录, 若没有登录则跳转登录页
-    if (!store.getters.getLoginStatus) {
+    // if (!store.getters.getLoginStatus) {
+    if (!store.getters.hasUserInfo) {
       next({ path: '/web-admin/login' })
     } else {
+      store.dispatch('getUserInfo')
       // 判断url后面是否带有参数
       if (!_.isEmpty(to.params)) {
         if (to.params.caseId) {
@@ -72,8 +73,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next() // 确保一定要调用 next()
   }
-  /** 这个next要删除的, 加上是方便开发 */
-  // next()
 })
 
 // 路由跳转后记录下当前路径名
