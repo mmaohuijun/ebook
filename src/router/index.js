@@ -20,7 +20,7 @@ const router = new Router({
   routes: [
     { path: '/', redirect: '/test/web-admin' },
     {
-      path: '/web-admin/login',
+      path: '/test/web-admin/login',
       name: 'Login',
       component: Login
     },

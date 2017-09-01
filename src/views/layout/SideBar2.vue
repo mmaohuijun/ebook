@@ -2,7 +2,8 @@
 <aside class="layout__aside">
   <div class="layout__aside_scroll">
     <div class="layout__aside-header">
-      <div class="layout__aside-avatar"><img src="/static/img/avatar.png" alt=""><div class="logout" @click="logout">注销</div></div>
+      <!-- <div class="layout__aside-avatar"><img src="/static/img/avatar.png" alt=""><div class="logout" @click="logout">注销</div></div> -->
+      <div class="layout__aside-avatar"><img src="/test/web-admin/static/img/avatar.png" alt=""><div class="logout" @click="logout">注销</div></div>
       <p class="layout__aside-name">{{name}}</p>
       <ul class="layout__aside-info">
         <li>
@@ -46,9 +47,9 @@ export default {
     return {
       menuDataSource: [
         // { title: '案场', path: '', key: 'case', subMenu: [{ title: '案场管理', path: '/web-admin', key: 'CaseManage' }] },
-        { title: '案场', path: '/web-admin', key: 'CaseManage', subMenu: [] },
-        { title: '组织', path: '/web-admin/organization', key: 'org', subMenu: [] },
-        { title: '用户', path: '', key: 'user', subMenu: [{ title: '内部用户', path: '/web-admin/intUser', key: 'IntUser' }, { title: '外部用户', path: '/web-admin/extUser', key: 'ExtUser' }] }
+        { title: '案场', path: '/test/web-admin', key: 'CaseManage', subMenu: [] },
+        { title: '组织', path: '/test/web-admin/organization', key: 'org', subMenu: [] },
+        { title: '用户', path: '', key: 'user', subMenu: [{ title: '内部用户', path: '/test/web-admin/intUser', key: 'IntUser' }, { title: '外部用户', path: '/test/web-admin/extUser', key: 'ExtUser' }] }
         // { title: '权限', path: '', key: 'auth', subMenu: [] },
         // { title: '客户数据', path: '', key: 'cdata', subMenu: [{ title: '来电记录', path: '/', key: 'call' }, { title: '到访记录', path: '/', key: 'visit' }, { title: '成交记录', path: '/', key: 'deal' }, { title: '未分配客户', path: '/', key: 'unasign' }, { title: '新建客户', path: '/', key: 'newclient' }] },
         // { title: '硬件列表', path: '', key: 'hardw', subMenu: [] }
