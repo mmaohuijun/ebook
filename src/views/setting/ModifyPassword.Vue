@@ -22,7 +22,7 @@
     :closable="false"
     v-model="modalForgetPWD"
     class-name="vertical-center-modal">
-    <p style="font-size:20px; color:#555555; padding: 38px 10px; text-align: center;">忘记密码，请您到电子台账微信公众号的<br>个人中心里重置密码</p>
+    <p style="font-size:20px; color:#555555; padding: 38px 10px; text-align: center;">忘记密码，请联系管理员协助找回，谢谢！</p>
     <Button type="primary" size="large" class="modal-center-btn" @click="modalForgetPWD = false">返回</Button>
   </Modal>
 </div>
@@ -89,8 +89,7 @@ export default {
   .login {
     width: 100%;
     height: 100%;
-    // background: url('/static/img/login_bg.jpg');
-    background: url('/test/web-admin/static/img/login_bg.jpg');
+    background: url('/static/img/login_bg.jpg');
     background-size: cover;
   }
 
