@@ -15,17 +15,21 @@ import Organization from 'views/organization/Organization'
 
 Vue.use(Router)
 
+const path = store.state.NODE_PATH
+
 const router = new Router({
   mode: 'history',
   routes: [
-    { path: '/', redirect: '/test/web-admin' },
+    // { path: '/', redirect: '/test/web-admin' },
+    { path: '/', redirect: `${path}` },
     {
-      path: '/test/web-admin/login',
+      path: `${path}login`,
       name: 'Login',
       component: Login
     },
     {
-      path: '/test/web-admin',
+      // path: '/test/web-admin',
+      path: `${path}`,
       component: Layout,
       children: [
         { path: '', name: 'CaseManage', component: CaseManage },
@@ -47,7 +51,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('router.beforeEach', to, from)
+  console.log('router.beforeEach', to, from, 'path', path)
   store.commit('initSideBar', to.name)
   if (to.name.indexOf('Case') !== -1) { // 包含'Case'的页面
     store.commit('initSideBar', 'CaseManage')
