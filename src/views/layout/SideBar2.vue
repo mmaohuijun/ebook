@@ -45,11 +45,11 @@ export default {
           name: 'CaseManage',
           subMenu: []
         },
-        {
-          title: '组织',
-          name: 'Organization',
-          subMenu: []
-        },
+        // {
+        //   title: '组织',
+        //   name: 'Organization',
+        //   subMenu: []
+        // },
         {
           title: '用户',
           name: 'User',
