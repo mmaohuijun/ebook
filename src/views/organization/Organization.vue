@@ -3,7 +3,7 @@
   <div class="layout__header">
     <h2 class="layout__header-title">组织</h2>
     <div class="layout__header-tool">
-      <Input class="custom__search" icon="search" placeholder="组织" v-model="searchText" @on-click="goSearch"></Input>
+      <!-- <Input class="custom__search" icon="search" placeholder="组织" v-model="searchText" @on-click="goSearch"></Input> -->
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addOrganization"></Button>
     </div>
   </div>
@@ -49,30 +49,7 @@ export default {
         {
           title: '华南区2'
         }
-      ],
-      searchText: '',
-      baseData: [{
-        expand: true,
-        title: 'parent 1',
-        children: [{
-          title: 'parent 1-0',
-          expand: true,
-          disabled: true,
-          children: [{
-            title: 'leaf',
-            disableCheckbox: true
-          }, {
-            title: 'leaf'
-          }]
-        }, {
-          title: 'parent 1-1',
-          expand: true,
-          checked: true,
-          children: [{
-            title: '<span style="color: red">leaf</span> <span class="org_add_btn">+</span>'
-          }]
-        }]
-      }]
+      ]
     }
   },
   methods: {
