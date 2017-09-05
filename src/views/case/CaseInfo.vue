@@ -4,7 +4,7 @@
     <div style="overflow: hidden; margin-bottom: 30px;">
       <div class="field-logo">
         <img v-if="logoUrl !== ''" :src="logoUrl"> 
-        <img v-else src="/static/img/field_logo.png"> 
+        <img v-else :src="`${NODE_PATH}static/img/field_logo.png`"> 
         <Button type="primary" class="custom-btn" @click="toggleUploadShow('logo')">更换logo</Button>
         <!-- url="http://172.18.84.75:88/admin/case/img-upload"  -->
          <img-upload field="file"
@@ -36,7 +36,7 @@
       </div>
       <div class="field-bg">
         <img v-if="bgImgUrl !== ''" :src="bgImgUrl" alt="">
-        <img v-else src="/static/img/field_bg.png" alt="">
+        <img v-else :src="`${NODE_PATH}static/img/field_bg.png`" alt="">
         <Button type="ghost" class="btn-upload-field-bg" @click="toggleUploadShow('bg')">上传图片</Button>
         <img-upload field="file"
           v-model="bgUploadShow"
@@ -87,6 +87,9 @@ export default {
     }
   },
   computed: {
+    NODE_PATH() {
+      return this.$store.state.NODE_PATH
+    },
     caseId() {
       return this.$store.state.CASE_ID
     }
@@ -203,6 +206,7 @@ export default {
     }
   },
   mounted() {
+    console.log('process.env.NODE_PATH', process.env.NODE_PATH)
     if (this.caseId === '0') {
       // 新建案场
       this.clearAllData()
