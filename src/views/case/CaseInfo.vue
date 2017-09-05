@@ -9,9 +9,8 @@
         <!-- url="http://172.18.84.75:88/admin/case/img-upload"  -->
          <img-upload field="file"
           v-model="logoUploadShow"
-          @crop-upload-success="imgUploadSuccess"
-          @crop-upload-fail="imgUploadFail"
-          url="http://172.18.84.75:88/admin/case/img-upload"
+          @crop-success="imgCropSuccess"
+          :headers="headers"
           :width="156"
           :height="156"
           img-format="png"></img-upload>
@@ -42,9 +41,7 @@
         <Button type="ghost" class="btn-upload-field-bg" @click="toggleUploadShow('bg')">上传图片</Button>
         <img-upload field="file"
           v-model="bgUploadShow"
-          @crop-upload-success="imgUploadSuccess"
-          @crop-upload-fail="imgUploadFail"
-          url="http://172.18.84.75:88/admin/case/img-upload"
+          @crop-success="imgCropSuccess"
           :width="450"
           :height="228"
           img-format="png"></img-upload>
@@ -86,7 +83,10 @@ export default {
       initialized: 0,
       displayPane: 'caseInfo', // 选项栏显示栏
       logoUploadShow: false,
-      bgUploadShow: false
+      bgUploadShow: false,
+      headers: {
+        // Cookie: '*_~'
+      }
     }
   },
   computed: {
@@ -169,17 +169,40 @@ export default {
       this.logoUploadShow = false
       this.bgUploadShow = false
     },
-    imgUploadSuccess(response) {
-      console.log('--------imgUploadSuccess 上传成功 --------', response)
-      if (this.logoUploadShow) {
-        this.logoUrl = response.data
-      } else if (this.bgUploadShow) {
-        this.bgImgUrl = response.data
+    /**
+     * database64文件格式转换为2进制
+     *
+     * @param  {[String]} data dataURL 的格式为 “data:image/png;base64,****”,逗号之前都是一些说明性的文字，我们只需要逗号之后的就行了
+     * @return {[blob]}      [description]
+     */
+    data2blob(data) {
+      data = data.split(',')[1]
+      data = window.atob(data)
+      const ia = new Uint8Array(data.length)
+      for (let i = 0; i < data.length; i++) {
+        ia[i] = data.charCodeAt(i)
       }
-      this.hideUpload()
+      // canvas.toDataURL 返回的默认格式就是 image/png
+      return new Blob([ia], {
+        type: 'image/png'
+      })
     },
-    imgUploadFail(status) {
-      console.log('--------imgUploadFail 上传失败 --------', status)
+    imgCropSuccess(imgDataUrl, field) {
+      const fmData = new FormData()
+      fmData.append('file', this.data2blob(imgDataUrl), `${field}.png`)
+      this.imgUpload(fmData)
+    },
+    imgUpload(data) {
+      this.$axios.post('case/img-upload', data).then(response => {
+        if (response === null) return
+        console.log('图片上传 response', response)
+        if (this.logoUploadShow) {
+          this.logoUrl = response.data
+        } else if (this.bgUploadShow) {
+          this.bgImgUrl = response.data
+        }
+        this.hideUpload()
+      })
     }
   },
   mounted() {
