@@ -10,7 +10,6 @@
          <img-upload field="file"
           v-model="logoUploadShow"
           @crop-success="imgCropSuccess"
-          :headers="headers"
           :width="156"
           :height="156"
           img-format="png"></img-upload>
@@ -83,10 +82,7 @@ export default {
       initialized: 0,
       displayPane: 'caseInfo', // 选项栏显示栏
       logoUploadShow: false,
-      bgUploadShow: false,
-      headers: {
-        // Cookie: '*_~'
-      }
+      bgUploadShow: false
     }
   },
   computed: {
@@ -110,7 +106,6 @@ export default {
     },
     // 改变地图坐标点
     changeCaseLocation(point) {
-      console.log('changeCaseLocation', point)
       this.location = point
     },
     getCaseInfoData() {
