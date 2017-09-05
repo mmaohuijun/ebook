@@ -81,6 +81,7 @@ export default {
       appSecret: '', // 公众号密码
       initialized: 0,
       displayPane: 'caseInfo', // 选项栏显示栏
+      uploadMode: '',
       logoUploadShow: false,
       bgUploadShow: false
     }
@@ -154,6 +155,7 @@ export default {
       this.location = { lng: 121.4806, lat: 31.2408 }
     },
     toggleUploadShow(key) {
+      this.uploadMode = key
       if (key === 'logo') {
         this.logoUploadShow = !this.logoUploadShow
       } else if (key === 'bg') {
@@ -191,12 +193,12 @@ export default {
       this.$axios.post('case/img-upload', data).then(response => {
         if (response === null) return
         console.log('图片上传 response', response)
-        if (this.logoUploadShow) {
+        if (this.uploadMode === 'logo') {
           this.logoUrl = response.data
-        } else if (this.bgUploadShow) {
+        } else if (this.uploadMode === 'bg') {
           this.bgImgUrl = response.data
         }
-        this.hideUpload()
+        // this.hideUpload()
       })
     }
   },
