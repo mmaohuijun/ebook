@@ -7,15 +7,9 @@ module.exports = {
     index: path.resolve(__dirname, '../dist/index.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-<<<<<<< HEAD
     // assetsPublicPath: '/web-admin',
     /* test */ 
     assetsPublicPath: '/test/web-admin/',
-=======
-    assetsPublicPath: '/web-admin/',
-    /* test */ 
-    // assetsPublicPath: '/test/web-admin/',
->>>>>>> dev
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
