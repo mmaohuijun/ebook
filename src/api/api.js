@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '../vuex/store'
+import router from '../router'
 import qs from 'qs'
 
 const devURL = 'http://172.18.84.75:88/admin/'
@@ -19,7 +20,6 @@ const $axios = axios.create({
   transformRequest: [function(data) {
     // 对 data 进行转换处理, 如果是FormData(图片上传)则直接返回, 否则处理后返回
     return data instanceof FormData ? data : qs.stringify(data)
-    // return data
   }]
 })
 
@@ -57,6 +57,7 @@ $axios.interceptors.response.use(response => {
     console.log('sessiontimeout')
     store.commit('notLogin')
     store.dispatch('clearUserInfo')
+    router.push({ name: 'Login' })
     return null
   } else { // 请求不成功, 提示错误信息
     store.commit('showErrorMsg', retMsg)
