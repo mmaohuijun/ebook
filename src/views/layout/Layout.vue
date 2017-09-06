@@ -290,6 +290,21 @@ export default {
     }
   }
 
+  .custom-secondary-btn {
+    height: 32px;
+    font-size: 18px;
+    padding: 0 22px;
+    background: #d8d8d8;
+    border-color: #d8d8d8;
+    color: #555;
+
+    &:hover,
+    &:focus {
+      background: #d8d8d8;
+      color: #555;
+    }
+  }
+
   .ivu-form .ivu-form-item-label {
     font-size: 18px;
     padding-top: 5px;
