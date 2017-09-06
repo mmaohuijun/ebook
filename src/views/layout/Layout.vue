@@ -340,6 +340,7 @@ export default {
   }
 
   .ivu-modal-header {
+    border-color: #8189bb;
     p,
     .ivu-modal-header-inner {
       text-align: center;

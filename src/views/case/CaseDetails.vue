@@ -139,8 +139,33 @@ export default {
   }
 
   .field-map {
+    position: relative;
     width: 100%;
     height: 430px;
+  }
+
+  .field-location {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width:130px;
+    height:44px;
+    border-bottom-right-radius: 6px;
+    color:#4bce64;
+    background: rgba(0,0,0,.45);
+    padding-top: 2px;
+    font-size: 14px;
+    padding-left: 15px;
+  }
+
+  .bm-view {
+    position: relative;
+    top: 0;
+    > div {
+      position: absolute !important;
+      top: 0 !important;
+    }
   }
 
   .custom-tabs {
@@ -166,6 +191,7 @@ export default {
       height: 50px;
       line-height: 50px;
       border-color: #ddd;
+      color: #111;
 
       a {
         color: #111;

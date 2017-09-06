@@ -3,8 +3,8 @@
   <Form :label-width="120" label-position="left">
     <div style="overflow: hidden; margin-bottom: 30px;">
       <div class="field-logo">
-        <img v-if="logoUrl !== ''" :src="logoUrl"> 
-        <img v-else :src="`${NODE_PATH}static/img/field_logo.png`"> 
+        <img v-if="logoUrl !== ''" :src="logoUrl">
+        <img v-else :src="`${NODE_PATH}static/img/field_logo.png`">
         <Button type="primary" class="custom-btn" @click="toggleUploadShow('logo')">更换logo</Button>
         <!-- url="http://172.18.84.75:88/admin/case/img-upload"  -->
          <img-upload field="file"
@@ -53,6 +53,7 @@
       <!-- <Button type="primary" class="custom-btn" style="float: right; margin-top: -2px;">确定</Button> -->
     </div>
     <div class="field-map" style="width: 100%; height:430px;">
+      <div class="field-location">北纬N31.2363<br>东经E121.4737</div>
       <case-map v-if="caseDataSource.length !== 0 || caseId === '0'" :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
     </div>
     <div class="field-bottom-btn">
