@@ -53,7 +53,7 @@
       <!-- <Button type="primary" class="custom-btn" style="float: right; margin-top: -2px;">确定</Button> -->
     </div>
     <div class="field-map" style="width: 100%; height:430px;">
-      <div class="field-location">北纬N31.2363<br>东经E121.4737</div>
+      <div class="field-location">北纬N{{location.lat}}<br>东经E{{location.lng}}</div>
       <case-map v-if="caseDataSource.length !== 0 || caseId === '0'" :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
     </div>
     <div class="field-bottom-btn">
