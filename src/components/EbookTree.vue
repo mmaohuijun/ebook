@@ -37,29 +37,12 @@ export default {
       }
     }
   },
-  computed: {
-    // getLevel(obj) {
-    //   const box = []
-    //   for (const i in obj) {
-    //     if (typeof obj[i] == 'number') {
-    //       this.getLevel = getLevel
-    //       box.push(i + ':' + obj[i])
-    //     } else if (typeof obj[i] == 'object') {
-    //       this.getLevel(obj[i])
-    //     }
-    //   }
-    //   console.log(box)
-    // }
-  },
   mounted() {
     console.log('mounted', this.treeData)
-    // this.getLevel(this.treeData)
     for (const i in this.treeData) {
       if (typeof this.treeData[i] == 'number') {
-        console.log(this.treeData[i])
         this.mval = 35
         this.pval = 33 * this.treeData[i]
-        console.log(this.pval)
       }
     }
   }
@@ -69,7 +52,7 @@ export default {
 .ebook-tree {
   border:1px solid #bdbdbd;
   background: #fff;
-z
+
   &:last-child {
     border-top: none;
   }
@@ -116,7 +99,7 @@ z
   display: inline-block;
   height: 44px;
   line-height: 44px;
-  // padding-left: 33px;
+  padding-left: 33px;
   padding-right: 6px;
   border-bottom: 1px dashed #fff;
 }
