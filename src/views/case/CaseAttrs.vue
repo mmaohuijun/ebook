@@ -84,15 +84,20 @@
           <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" @click.stop="attrsEditable ? deleteAttrsOptions(index) : ''"></i>
         </Form-item>
         <Form-item :label="attrsDetailsOptions.length === 0 ? '详细维度：' : ''" v-show="attrsEditable">
+<<<<<<< Updated upstream
           <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText" :maxlength="20"></Input>
-          <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i> 
+          <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i>
+=======
+          <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText"></Input>
+          <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i>
+>>>>>>> Stashed changes
         </Form-item>
       </div>
     </Form>
      <div slot="footer">
       <Button type="text" size="large" @click.stop="hideModal">取消</Button>
       <Button type="primary" size="large" @click.stop="saveAttrsData">完成</Button>
-    </div> 
+    </div>
   </Modal>
 </div>
 </template>
@@ -480,6 +485,6 @@ export default {
 </script>
 <style lang="css">
 .case-attrs .ivu-modal-body {
-    min-height: 400px; 
+    min-height: 400px;
 }
 </style>
