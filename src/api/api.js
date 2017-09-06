@@ -3,7 +3,7 @@ import store from '../vuex/store'
 import router from '../router'
 import qs from 'qs'
 
-const devURL = 'http://172.18.84.75:88/admin/'
+const devURL = 'http://172.18.84.75:98/admin/'
 // const devURL = 'http://172.18.84.75:8801/admin/'
 // const proURL = 'http://zhongnan.masadata.com/admin/'
 const proURL = 'http://zhongnan.masadata.com/admin-test'
