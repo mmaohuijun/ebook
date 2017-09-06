@@ -7,7 +7,7 @@
       <ul class="layout__aside-info">
         <li>
           <p>工号：{{number}}</p>
-          <!-- <router-link to="/">修改密码</router-link> -->
+           <router-link :to="`${NODE_PATH}modpsw`">修改密码</router-link> 
         </li>
         <li>
           <p>联系方式：{{mobile}}</p>
