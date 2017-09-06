@@ -38,7 +38,7 @@
         <Input v-model="userInfo.mobile" placeholder="请您输入..."></Input>
       </Form-item>
       <Form-item label="密码：" prop="password">
-        <Input value="123456" type="password"></Input>
+        <Input value="123456" type="password" disabled></Input>
         <!-- <Input v-model="userInfo.password" placeholder="123456（或随机生成）"></Input> -->
       </Form-item>
       <Form-item label="E-mail：" prop="email">
