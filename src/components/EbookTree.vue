@@ -24,6 +24,11 @@ export default {
       mval: 0
     }
   },
+  computed: {
+    getLevel(obj) {
+      console.log(this.getLevel('string'))
+    }
+  },
   props: {
     treeData: Object
   },

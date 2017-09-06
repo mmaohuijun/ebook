@@ -2,12 +2,12 @@
 <aside class="layout__aside">
   <div class="layout__aside_scroll">
     <div class="layout__aside-header">
-      <div class="layout__aside-avatar"><img src="/static/img/avatar.png" alt=""><div class="logout" @click="logout">注销</div></div>
+      <div class="layout__aside-avatar"><img :src="`${NODE_PATH}static/img/avatar.png`" alt=""><div class="logout" @click="logout">注销</div></div>
       <p class="layout__aside-name">{{name}}</p>
       <ul class="layout__aside-info">
         <li>
           <p>工号：{{number}}</p>
-          <!-- <router-link to="/">修改密码</router-link> -->
+           <router-link :to="`${NODE_PATH}modpsw`">修改密码</router-link> 
         </li>
         <li>
           <p>联系方式：{{mobile}}</p>
@@ -72,6 +72,7 @@ export default {
   },
   computed: {
     ...mapState({
+      NODE_PATH: state => state.NODE_PATH,
       loginName: state => state.LOGIN_NAME,
       name: state => state.NAME,
       mobile: state => state.MOBILE,
@@ -87,6 +88,8 @@ export default {
     logout() {
       this.$axios.post('/logout').then(response => {
         if (response === null) return
+        this.$store.commit('notLogin')
+        this.$store.dispatch('clearUserInfo')
         this.$router.push({ name: 'Login' })
       })
     }

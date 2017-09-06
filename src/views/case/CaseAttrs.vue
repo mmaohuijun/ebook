@@ -28,7 +28,7 @@
       <div class="attrsinfo__card__tool">
         <i class="iconfont icon-xiugai" @click.stop="editAttrsGroup(item)"></i>
         <i class="iconfont icon-shanchu1" @click.stop="deleteAttrsGroup(item)"></i>
-        <i class="iconfont" :class="item.hidden ? 'icon-xiugai' : 'icon-yincang'" @click.stop="displayAttrsGroup(item)"></i>
+        <i class="iconfont" :class="item.hidden ? 'icon-yincang' : 'icon-keshi'" @click.stop="displayAttrsGroup(item)"></i>
       </div>
     </div>
   </div>
@@ -42,7 +42,7 @@
     <p slot="header">{{modalTitle}}</p>
     <Form :label-width="120" class="modal-form" v-if="isAttrsGroup">
       <Form-item label="栏目名称：">
-        <Input placeholder="请输入" v-model="attrsGroupLabel"></Input>
+        <Input placeholder="请输入" v-model="attrsGroupLabel" :maxlength="64"></Input>
       </Form-item>
       <Form-item label="名称序号：">
         <Input placeholder="请输入(数字)" v-model="attrsGroupIndex"></Input>
@@ -80,19 +80,19 @@
       </Form-item>
       <div v-if="attrsDetailsType.indexOf('select') !== -1">
         <Form-item v-for="(item, index) in attrsDetailsOptions" :key="index" :label="index === 0 ? '详细维度：' : ''">
-          <Input placeholder="文本不能超过20个字符" :value="item" :readonly="true"></Input>
+          <Input placeholder="文本不能超过20个字符" :value="item" :readonly="true" :maxlength="20"></Input>
           <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" @click.stop="attrsEditable ? deleteAttrsOptions(index) : ''"></i>
         </Form-item>
         <Form-item :label="attrsDetailsOptions.length === 0 ? '详细维度：' : ''" v-show="attrsEditable">
-          <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText"></Input>
-          <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i> 
+          <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText" :maxlength="20"></Input>
+          <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i>
         </Form-item>
       </div>
     </Form>
      <div slot="footer">
       <Button type="text" size="large" @click.stop="hideModal">取消</Button>
       <Button type="primary" size="large" @click.stop="saveAttrsData">完成</Button>
-    </div> 
+    </div>
   </Modal>
 </div>
 </template>
@@ -138,10 +138,10 @@ export default {
 
     // 初始化维度分栏列表
     initAttrsGroupList() {
-      console.log('initAttrsGroupList')
+      // console.log('initAttrsGroupList')
       this.$axios.post('case-attr/list', { caseId: this.caseId }).then(response => {
         if (_.isNull(response)) return
-        console.log('初始化维度分栏列表', response)
+        // console.log('初始化维度分栏列表', response)
         const responseData = response.data
         this.attrListData = responseData
       })
@@ -264,13 +264,13 @@ export default {
     /** 详细维度(AttrsDetails) */
 
     // 点击'新建维度'
-    addAttrsDetails(item) {
-      console.log('addAttrsDetails', item.label, item.id)
+    addAttrsDetails(group) {
+      console.log('addAttrsDetails', 'groupLabel:', group.label, 'groupId:', group.id)
       this.isAttrsGroup = false
       this.ifNew = true
       this.attrsEditable = true
-      this.modalTitle = `${item.label} - 新建维度`
-      this.attrsGroupId = item.id
+      this.modalTitle = `${group.label} - 新建维度`
+      this.attrsGroupId = group.id
       this.clearAttrsDetailsData()
       this.showModal()
     },
@@ -336,6 +336,7 @@ export default {
     // 详细维度保存（新建、修改）
     saveAttrsDetails() {
       const requestData = this.verifyAttrsDetailsData()
+      console.log('详细维度保存（新建、修改）requestData', requestData)
 
       if (!requestData) {
         this.hideModal()
@@ -344,7 +345,7 @@ export default {
 
       this.$axios.post('case-attr/save', requestData).then(response => {
         if (_.isNull(response)) return
-        console.log('详细维度保存（新建、修改）', response)
+        // console.log('详细维度保存（新建、修改）', response)
         // 刷新List
         this.refreshData()
         this.hideModal()
@@ -445,6 +446,7 @@ export default {
     },
     // 清空详细维度数据
     clearAttrsDetailsData() {
+      this.attrsDetailsId = ''
       this.attrsDetailsLabel = ''
       this.attrsDetailsSort = ''
       this.attrsDetailsRequire = ''
@@ -478,6 +480,6 @@ export default {
 </script>
 <style lang="css">
 .case-attrs .ivu-modal-body {
-    min-height: 400px; 
+    min-height: 400px;
 }
 </style>

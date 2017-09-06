@@ -11,21 +11,24 @@ import CaseAttrs from 'views/case/CaseAttrs'
 import IntUser from 'views/user/IntUser'
 import ExtUser from 'views/user/ExtUser'
 import Login from 'views/setting/Login'
+import ModifyPassword from 'views/setting/ModifyPassword'
 import Organization from 'views/organization/Organization'
 
 Vue.use(Router)
 
+const path = store.state.NODE_PATH
+
 const router = new Router({
   mode: 'history',
   routes: [
-    { path: '/', redirect: '/web-admin' },
+    // { path: '/', redirect: `${path}web-admin` },
     {
-      path: '/web-admin/login',
+      path: `${path}login`,
       name: 'Login',
       component: Login
     },
     {
-      path: '/web-admin',
+      path: `${path}`,
       component: Layout,
       children: [
         { path: '', name: 'CaseManage', component: CaseManage },
@@ -39,7 +42,8 @@ const router = new Router({
         },
         { path: 'organization', name: 'Organization', component: Organization },
         { path: 'intUser', name: 'IntUser', component: IntUser },
-        { path: 'extUser', name: 'ExtUser', component: ExtUser }
+        { path: 'extUser', name: 'ExtUser', component: ExtUser },
+        { path: 'modpsw', name: 'ModifyPassword', component: ModifyPassword }
       ],
       meta: { requiresLogin: true }
     }
@@ -47,7 +51,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('router.beforeEach', to, from)
+  console.log('router.beforeEach', to, from, 'path', path)
   store.commit('initSideBar', to.name)
   if (to.name.indexOf('Case') !== -1) { // 包含'Case'的页面
     store.commit('initSideBar', 'CaseManage')

@@ -1,5 +1,5 @@
 <template>
-<div class="login">
+<div class="login" v-bind:style="bgImg">
   <div class="login-content">
     <h1>金地电子台账</h1>
     <Form label-position="top" class="login-form">
@@ -36,6 +36,16 @@ export default {
       ifRemember: false,
       loading: false,
       modalForgetPWD: false
+    }
+  },
+  computed: {
+    NODE_PATH() {
+      return this.$store.state.NODE_PATH
+    },
+    bgImg() {
+      return {
+        background: `url(${this.NODE_PATH}static/img/login_bg.jpg)`
+      }
     }
   },
   methods: {
@@ -77,10 +87,23 @@ export default {
     checkIfHadRemeber() {
       this.loginName = this.$store.getters.getLoginName
       this.ifRemember = this.$store.getters.getLoginName !== undefined
+    },
+    enterLogin(event) {
+      if (event.key === 'Enter' || event.keyCode === 13) {
+        console.log('按了回车', event)
+        this.goLogin()
+      }
     }
+  },
+  created() {
+    // 绑定按键enter登录
+    document.addEventListener('keyup', this.enterLogin)
   },
   mounted() {
     this.checkIfHadRemeber()
+  },
+  destroyed() {
+    document.removeEventListener('keyup', this.enterLogin)
   }
 }
 </script>
@@ -89,7 +112,6 @@ export default {
   .login {
     width: 100%;
     height: 100%;
-    background: url('/static/img/login_bg.jpg');
     background-size: cover;
   }
 
