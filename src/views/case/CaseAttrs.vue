@@ -84,13 +84,8 @@
           <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" @click.stop="attrsEditable ? deleteAttrsOptions(index) : ''"></i>
         </Form-item>
         <Form-item :label="attrsDetailsOptions.length === 0 ? '详细维度：' : ''" v-show="attrsEditable">
-<<<<<<< Updated upstream
           <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText" :maxlength="20"></Input>
           <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i>
-=======
-          <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText"></Input>
-          <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i>
->>>>>>> Stashed changes
         </Form-item>
       </div>
     </Form>
