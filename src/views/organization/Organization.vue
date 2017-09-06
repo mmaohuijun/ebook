@@ -32,21 +32,25 @@ export default {
     return {
       treeData: [
         {
+          level: 1,
           title: '华东区2',
           children: [
-            { title: '南京市' },
-            { title: '上海市',
+            { level: 2, title: '南京市' },
+            { level: 2,
+              title: '上海市',
               children: [
-                { title: '上海东',
+                { level: 3,
+                  title: '上海东',
                   children: [
-                    { title: '金地艺境1', ifCase: true },
-                    { title: '金地艺境2', ifCase: true }
+                    { level: 4, title: '金地艺境1', ifCase: true },
+                    { level: 4, title: '金地艺境2', ifCase: true }
                   ] },
-                { title: '上海西' }
+                { level: 3, title: '上海西' }
               ] }
           ]
         },
         {
+          level: 1,
           title: '华南区2'
         }
       ]
