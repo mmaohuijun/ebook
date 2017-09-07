@@ -98,7 +98,7 @@ export default {
           { validator: MobileVaild, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
+          // { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
         no: [
           { required: true, message: '工号不能为空', trigger: 'blur' }
@@ -209,6 +209,7 @@ export default {
       for (const item in this.userInfo) {
         this.userInfo[item] = ''
       }
+      this.userInfo.password = '123456'
       this.userInfo.id = 0
       this.modal.title = '新建用户'
       this.modal.show = true
@@ -220,6 +221,7 @@ export default {
         for (const items in response.data) {
           this.userInfo[items] = response.data[items]
         }
+        this.userInfo.password = '123456'
       })
       this.modal.title = '修改用户'
       this.modal.show = true

@@ -124,7 +124,7 @@ export default {
           { validator: MobileVaild, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
+          // { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
         no: [
           { required: true, message: '工号不能为空', trigger: 'blur' }
@@ -252,6 +252,7 @@ export default {
       for (const item in this.userInfo) {
         this.userInfo[item] = ''
       }
+      this.userInfo.password = '123456'
       this.userInfo.adminFlag = false
       this.getCaseList()
       this.userInfo.id = 0
@@ -268,6 +269,7 @@ export default {
         if (this.userInfo.caseId !== 0 && this.userInfo.caseId !== '0') {
           this.userInfo.caseId = String(this.userInfo.caseId)
         }
+        this.userInfo.password = '123456'
       })
       this.getCaseList()
       this.modal.title = '修改用户'
