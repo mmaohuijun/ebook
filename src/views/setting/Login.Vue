@@ -44,7 +44,8 @@ export default {
     },
     bgImg() {
       return {
-        background: `url(${this.NODE_PATH}static/img/login_bg.jpg)`
+        background: `url(${this.NODE_PATH}static/img/login_bg.jpg)`,
+        backgroundSize: 'cover'
       }
     }
   },
@@ -112,8 +113,6 @@ export default {
   .login {
     width: 100%;
     height: 100%;
-    // background: url('/test/web-admin/static/img/login_bg.jpg');
-    background-size: cover;
   }
 
   .vertical-center-modal{
