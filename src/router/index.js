@@ -21,13 +21,15 @@ const path = store.state.NODE_PATH
 const router = new Router({
   mode: 'history',
   routes: [
-    // { path: '/', redirect: `${path}web-admin` },
+    // { path: '/', redirect: '/test/web-admin' },
+    { path: '/', redirect: `${path}` },
     {
       path: `${path}login`,
       name: 'Login',
       component: Login
     },
     {
+      // path: '/test/web-admin',
       path: `${path}`,
       component: Layout,
       children: [
