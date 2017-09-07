@@ -35,7 +35,8 @@
         <Input v-model="userInfo.mobile" placeholder="请您输入..."></Input>
       </Form-item>
       <Form-item label="密码：" prop="password">
-        <Input v-model="userInfo.password" placeholder="123456（或随机生成）"></Input>
+        <Input v-model="userInfo.password" type="password" disabled></Input>
+        <!-- <Input v-model="userInfo.password" placeholder="123456（或随机生成）"></Input> -->
       </Form-item>
       <Form-item label="E-mail：" prop="email">
         <Input v-model="userInfo.email" placeholder="请您输入"></Input>
@@ -100,7 +101,7 @@ export default {
         gender: '',       // 性别
         mobile: '',       // 电话
         email: '',        // 邮箱
-        password: '',     // 密码
+        password: '123456',     // 密码
         no: '',           // 工号
         caseId: '',       // 案场ID
         caseName: '',     // 案场名称

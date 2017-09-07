@@ -11,6 +11,7 @@ import CaseAttrs from 'views/case/CaseAttrs'
 import IntUser from 'views/user/IntUser'
 import ExtUser from 'views/user/ExtUser'
 import Login from 'views/setting/Login'
+import ModifyPassword from 'views/setting/ModifyPassword'
 import Organization from 'views/organization/Organization'
 
 Vue.use(Router)
@@ -43,7 +44,8 @@ const router = new Router({
         },
         { path: 'organization', name: 'Organization', component: Organization },
         { path: 'intUser', name: 'IntUser', component: IntUser },
-        { path: 'extUser', name: 'ExtUser', component: ExtUser }
+        { path: 'extUser', name: 'ExtUser', component: ExtUser },
+        { path: 'modpsw', name: 'ModifyPassword', component: ModifyPassword }
       ],
       meta: { requiresLogin: true }
     }

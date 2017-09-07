@@ -1,226 +1,75 @@
 <template>
-<div class="login">
-  <div class="login-content">
-    <h1>金地电子台账</h1>
-    <Form label-position="top" class="login-form">
-      <Form-item label="账号">
-        <div class="login-link">
-          <Checkbox class="login-checkbox" v-model="ifRemember">记住账号</Checkbox>
-        </div>
-        <Input placeholder="请输入您的账号" v-model="loginName"></Input>
-      </Form-item>
-      <Form-item label="密码">
-        <a href="javascript:;" class="login-link" @click="modalForgetPWD = true">忘记密码？</a>
-        <Input placeholder="请输入您的密码" type="password" v-model="password"></Input>
-      </Form-item>
-      <Button class="login-btn" long :loading="loading" @click="goLogin">登录</Button>
-    </Form>
+<div class="layout__content">
+  <div class="layout__header">
+    <h2 class="layout__header-title">修改密码</h2>
   </div>
-  <Modal
-    class="forget-modal"
-    width="600"
-    :closable="false"
-    v-model="modalForgetPWD"
-    class-name="vertical-center-modal">
-    <p style="font-size:20px; color:#555555; padding: 38px 10px; text-align: center;">忘记密码，请联系管理员协助找回，谢谢！</p>
-    <Button type="primary" size="large" class="modal-center-btn" @click="modalForgetPWD = false">返回</Button>
-  </Modal>
+  <div class="layout__body">
+    <div class="forget-pwd">
+      <div class="forget-pwd__title">修改密码</div>
+      <Form :label-width="120" label-position="right" style="width: 350px; margin: 0 auto;">
+        <Form-item label="旧密码">
+          <Input type="password" placeholder="" v-model="oldPwd"></Input>
+        </Form-item>
+        <Form-item label="新密码">
+          <Input type="password" placeholder="" v-model="newPwd"></Input>
+        </Form-item>
+        <Form-item label="确认密码">
+          <Input type="password" placeholder="" v-model="confirmPwd"></Input>
+        </Form-item>
+        <Form-item label="">
+          <Button type="primary" class="custom-secondary-btn" @click="cancel">取消</Button>
+          <Button type="primary" class="custom-btn" @click="save" style="float: right;">保存</Button>
+        </Form-item>
+      </Form>
+    </div>
+  </div>
 </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      loginName: '', // 账号
-      password: '', // 密码
-      ifRemember: false,
-      loading: false,
-      modalForgetPWD: false
+      oldPwd: '',
+      newPwd: '',
+      confirmPwd: ''
     }
   },
   methods: {
-    goLogin() {
-      console.log('goLogin', this.loginName, this.password, this.ifRemember)
-      this.loading = true
+    save() {
+      if (this.newPwd !== this.confirmPwd) {
+        this.$Message.error('两次密码不相同')
+        return
+      }
 
-      this.$axios.post('login', {
-        loginName: this.loginName,
-        password: this.password
-      }).then(response => {
-        this.loading = false
-
-        if (_.isNull(response)) return
-        console.log('login', response)
-
-        this.$store.commit('hasLogin')
-        const reData = response.data
-        const loginInfo = {
-          loginName: reData.loginName,
-          name: reData.name,
-          mobile: reData.mobile,
-          no: reData.no
-        }
-        // 保存用户信息到全局
-        this.$store.dispatch('initUserInfo', loginInfo)
-
-        // 是否记住账号
-        if (this.ifRemember) {
-          this.$store.dispatch('remeberLoginName', reData.loginName)
-        } else {
-          this.$store.dispatch('clearLoginName')
-        }
-
-        /** 应该根据用户权限跳转对应的菜单 */
-        this.$router.push({ name: 'CaseManage' })
+      if (this.newPwd === null || this.confirmPwd === null) {
+        this.$Message.error('密码不能为空')
+        return
+      }
+      this.$axios.post('/chg-passwd', { password: this.oldPwd, newPassword: this.newPwd }).then(response => {
+        if (response === null) return
+        this.$router.push({ name: 'Login' })
       })
     },
-    checkIfHadRemeber() {
-      this.loginName = this.$store.getters.getLoginName
-      this.ifRemember = this.$store.getters.getLoginName !== undefined
+    cancel() {
+      this.$router.go(-1)
     }
-  },
-  mounted() {
-    this.checkIfHadRemeber()
   }
 }
 </script>
 <style lang="less">
-.custom{
-  .login {
-    width: 100%;
-    height: 100%;
-    background: url('/static/img/login_bg.jpg');
-    background-size: cover;
-  }
-
-  .vertical-center-modal{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .ivu-modal{
-      top: 0;
-    }
-  }
-
-  .forget-modal {
-    .ivu-modal-footer {
-      display: none;
-    }
-  }
-
-  .modal-center-btn {
-    display: block;
-    margin: 30px auto 30px;
-  }
-
-  .login-link {
-    position: absolute;
-    right: 0;
-    top: -34px;
-    font-size:14px;
-    color:#1c93ea;
-
-    &:hover,
-    &:active {
-      color:#1c93ea;
-    }
-
-    .login-checkbox {
-      font-size: 14px !important;
-
-      .ivu-checkbox-inner {
-        border: 1px solid #1c93ea !important;
-        background: none !important;
-      }
-      .ivu-checkbox-checked .ivu-checkbox-inner::after {
-        display: block;
-      }
-    }
-  }
-
-  .login-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -160px;
-    margin-left: -190px;
-    width:380px;
-    height:320px;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      background-image:linear-gradient(-180deg, #ffffff 29%, rgba(255,255,255,0.00) 95%);
-      border-radius:6px;
-      opacity:0.6;
-    }
-
-    h1 {
-      position: relative;
-      z-index: 2;
-      height: 77px;
-      line-height: 70px;
-      font-size:26px;
-      color:#4e546c;
-      text-align:center;
-      font-weight: 400;
-    }
-  }
-
-  .ivu-form.login-form {
-    position: relative;
-    z-index: 2;
-    margin: 0 60px;
-    .ivu-form-item-label {
-      padding: 0 0 10px;
-      color: #fff;
-      font-size: 16px;
-    }
-
-    .ivu-input {
-      height: 32px;
-      border: none;
-      font-size: 14px;
-
-      &:focus {
-        box-shadow: none;
-      }
-    }
-  }
-
-  .ivu-btn.login-btn {
-    background:#4e546c;
+  .forget-pwd {
+    background:#ffffff;
+    border:1px solid #979797;
     border-radius:4px;
-    width:260px;
-    height:36px;
-    border: none;
-    color: #fff;
-    font-size: 16px;
-    margin-top: 12px;
-
-    &:hover,
-    &:active {
-      background:#4e546c;
-      color: #fff;
-    }
-
-    &[disabled] {
-      background:#4e546c;
-      opacity: .8;
-
-      &:hover,
-      &:active {
-        background:#4e546c;
-        opacity: .8;
-        color: #fff;
-      }
-    }
+    width:698px;
+    height:298px;
+    margin: 10px auto 0;
   }
-}
+
+  .forget-pwd__title {
+    font-size:20px;
+    color:#555555;
+    padding: 20px 0 25px;
+    text-align: center;
+  }
 </style>

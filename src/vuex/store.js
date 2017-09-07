@@ -37,7 +37,6 @@ const store = new Vuex.Store({
   },
   mutations: {
     initCaseId(state, id) {
-      console.log('process.env.NODE_ENV', process.env.NODE_ENV)
       state.CASE_ID = id
     },
     initCaseName(state, name) {

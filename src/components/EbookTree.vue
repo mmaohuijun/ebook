@@ -1,8 +1,8 @@
 <template>
   <li>
-    <p class="ebook-tree__item">
-      <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.ifCase" style="padding-left: 33px;"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
-      <a href="#" v-if="treeData.ifCase" class="ebook-tree__item--title">{{treeData.title}}</a>
+    <p class="ebook-tree__item" >
+      <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.ifCase" :style="{paddingLeft: pval + 'px'}"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
+      <a href="#" v-if="treeData.ifCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}">{{treeData.title}}</a>
       <span class="ebook-tree__item--title" v-else>{{treeData.title}}</span>
       <span class="ebook-tree__item--add iconfont icon-tianjia"></span>
     </p>
@@ -19,7 +19,14 @@ export default {
   data() {
     return {
       isCase: false,
-      open: false
+      open: false,
+      pval: 0,
+      mval: 0
+    }
+  },
+  computed: {
+    getLevel(obj) {
+      console.log(this.getLevel('string'))
     }
   },
   props: {
@@ -37,6 +44,12 @@ export default {
   },
   mounted() {
     console.log('mounted', this.treeData)
+    for (const i in this.treeData) {
+      if (typeof this.treeData[i] == 'number') {
+        this.mval = 35
+        this.pval = 33 * this.treeData[i]
+      }
+    }
   }
 }
 </script>
