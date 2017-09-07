@@ -24,6 +24,7 @@ export default {
       pageSize: 20, // 页面大小
       total: 0,
       ifClickIcon: false, // 是否点击'维度信息'
+      ifClickAddCase: false, // 是否点击'新建案场'
       selectId: [], // 已选择项
       searchText: '', // 搜索关键词(显示)
       searchTextCfm: '', // 搜索关键词(查询)
@@ -125,7 +126,8 @@ export default {
     // 新建案场
     addCase() {
       console.log('addCase')
-      this.gotoCaseDetails('0')
+      this.ifClickAddCase = true
+      this.gotoCaseDetails()
     },
     // 点击分页
     changePage(pageNo) {
@@ -141,6 +143,7 @@ export default {
     // 点击案场跳转详情页
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
+      this.ifClickAddCase = false
       this.caseId = item.id
       this.$store.commit('initCaseId', this.caseId)
       this.$store.commit('initCaseName', item.projectName)
@@ -151,8 +154,13 @@ export default {
         this.gotoCaseDetails()
       }
     },
-    gotoCaseDetails() {
-      this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
+    gotoCaseDetails(id) {
+      if (this.ifClickAddCase) {
+        this.$store.commit('initCaseId', '0')
+        this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
+      } else {
+        this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
+      }
     },
     gotoCaseAttrs() {
       this.$router.push({ name: 'CaseAttrs', params: { caseId: this.caseId } })
