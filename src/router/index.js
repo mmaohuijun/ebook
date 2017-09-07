@@ -2,17 +2,29 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../vuex/store'
 
-import Layout from 'views/layout/Layout'
-import CaseManage from 'views/case/CaseManage'
-import CaseDetails from 'views/case/CaseDetails'
-import CaseInfo from 'views/case/CaseInfo'
-import CaseProject from 'views/case/CaseProject'
-import CaseAttrs from 'views/case/CaseAttrs'
-import IntUser from 'views/user/IntUser'
-import ExtUser from 'views/user/ExtUser'
-import Login from 'views/setting/Login'
-import ModifyPassword from 'views/setting/ModifyPassword'
-import Organization from 'views/organization/Organization'
+// import Login from 'views/setting/Login'
+// import Layout from 'views/layout/Layout'
+// import CaseManage from 'views/case/CaseManage'
+// import CaseDetails from 'views/case/CaseDetails'
+// import CaseInfo from 'views/case/CaseInfo'
+// import CaseProject from 'views/case/CaseProject'
+// import CaseAttrs from 'views/case/CaseAttrs'
+// import IntUser from 'views/user/IntUser'
+// import ExtUser from 'views/user/ExtUser'
+// import ModifyPassword from 'views/setting/ModifyPassword'
+// import Organization from 'views/organization/Organization'
+
+const Login = () => import('views/setting/Login')
+const Layout = () => import('views/layout/Layout')
+const CaseManage = () => import('views/case/CaseManage')
+const CaseDetails = () => import('views/case/CaseDetails')
+const CaseInfo = () => import('views/case/CaseInfo')
+const CaseProject = () => import('views/case/CaseProject')
+const CaseAttrs = () => import('views/case/CaseAttrs')
+const IntUser = () => import('views/user/IntUser')
+const ExtUser = () => import('views/user/ExtUser')
+const ModifyPassword = () => import('views/setting/ModifyPassword')
+const Organization = () => import('views/organization/Organization')
 
 Vue.use(Router)
 
@@ -21,25 +33,23 @@ const path = store.state.NODE_PATH
 const router = new Router({
   mode: 'history',
   routes: [
-    // { path: '/', redirect: '/test/web-admin' },
-    { path: '/', redirect: `${path}` },
+    { path: '/', redirect: `${path}case` },
     {
       path: `${path}login`,
       name: 'Login',
       component: Login
     },
     {
-      // path: '/test/web-admin',
       path: `${path}`,
       component: Layout,
       children: [
-        { path: '', name: 'CaseManage', component: CaseManage },
-        { path: 'case/:caseId',
+        { path: 'case', name: 'CaseManage', component: CaseManage },
+        { path: ':caseId',
           component: CaseDetails,
           children: [
-            { path: '', name: 'CaseInfo', component: CaseInfo },
-            { path: 'caseProject', name: 'CaseProject', component: CaseProject },
-            { path: 'caseAttrs', name: 'CaseAttrs', component: CaseAttrs }
+            { path: 'info', name: 'CaseInfo', component: CaseInfo },
+            { path: 'project', name: 'CaseProject', component: CaseProject },
+            { path: 'attrs', name: 'CaseAttrs', component: CaseAttrs }
           ]
         },
         { path: 'organization', name: 'Organization', component: Organization },
