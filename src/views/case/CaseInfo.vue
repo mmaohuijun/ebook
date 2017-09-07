@@ -5,7 +5,7 @@
       <div class="field-logo">
         <img v-if="logoUrl !== ''" :src="logoUrl">
         <img v-else :src="`${NODE_PATH}static/img/field_logo.png`">
-        <Button type="primary" class="custom-btn" @click="toggleUploadShow('logo')">更换logo</Button>
+        <Button type="primary" class="custom-btn" @click="toggleUploadShow('logo')">更换LOGO</Button>
         <!-- url="http://172.18.84.75:88/admin/case/img-upload"  -->
          <img-upload field="file"
           v-model="logoUploadShow"
@@ -35,15 +35,18 @@
         </Form-item>
       </div>
       <div class="field-bg">
-        <img v-if="bgImgUrl !== ''" :src="bgImgUrl" alt="">
-        <img v-else :src="`${NODE_PATH}static/img/field_bg.png`" alt="">
-        <Button type="ghost" class="btn-upload-field-bg" @click="toggleUploadShow('bg')">上传图片</Button>
-        <img-upload field="file"
-          v-model="bgUploadShow"
-          @crop-success="imgCropSuccess"
-          :width="450"
-          :height="228"
-          img-format="png"></img-upload>
+        <div class="field-bg__title">案场图片：</div>
+        <div class="field-bg__img">
+          <img v-if="bgImgUrl !== ''" :src="bgImgUrl" alt="">
+          <img v-else :src="`${NODE_PATH}static/img/field_bg.png`" alt="">
+          <Button type="ghost" class="btn-upload-field-bg" @click="toggleUploadShow('bg')">上传图片</Button>
+          <img-upload field="file"
+            v-model="bgUploadShow"
+            @crop-success="imgCropSuccess"
+            :width="450"
+            :height="228"
+            img-format="png"></img-upload>
+        </div>
       </div>
     </div>
     <div style="width: 540px; height: 43px;">

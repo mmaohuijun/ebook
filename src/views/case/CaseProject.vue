@@ -212,6 +212,11 @@ export default {
     addProperty() {
       const apartTypes = `${this.inputModel.apartTypes1}室${this.inputModel.apartTypes2}厅 ${this.inputModel.apartTypes3}-${this.inputModel.apartTypes4}㎡`
       const propertyType = this.inputModel.propertyType
+
+      if (!this.inputModel.apartTypes1 || !this.inputModel.apartTypes2 || !this.inputModel.apartTypes3 || !this.inputModel.apartTypes4) {
+        this.$Message.error('户型信息不完整')
+        return
+      }
       switch (propertyType) {
         case '01':
           this.caseProject.propertys[0].apartTypes.push(apartTypes)
@@ -246,10 +251,10 @@ export default {
     },
     saveProject() {
       const data = this.getSaveData()
-      console.log('dataname:' + data.name)
-      if (data.name.length <= 0) {
+      console.log('dataname:' + !_.trim(data.name))
+      if (!_.trim(data.name)) {
         this.$Message.error('项目名称不能为空')
-        return false
+        return
       }
       console.log('saveProject', data)
       this.$axios.post('/case-project/save', data).then(response => {

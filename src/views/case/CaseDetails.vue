@@ -109,6 +109,16 @@ export default {
   .field-bg {
     position: relative;
     float: right;
+  }
+
+  .field-bg__title {
+    float: left;
+    font-size: 18px;
+    margin-right: 4px;
+  }
+
+  .field-bg__img {
+    float: left;
     background: #eee;
 
     img {
@@ -192,6 +202,7 @@ export default {
       line-height: 50px;
       border-color: #ddd;
       color: #111;
+      font-weight: 700;
 
       a {
         color: #111;

@@ -79,6 +79,13 @@
 <script>
 export default {
   data() {
+    const MobileVaild = (rule, value, callback) => {
+      if (!/^1(?:3|5|7|8)\d{9}$/.test(value)) {
+        callback(new Error('电话号码格式不正确'))
+      } else {
+        callback()
+      }
+    }
     return {
       modal: {
         show: false,        // 是否显示编辑和查看modal
@@ -113,7 +120,8 @@ export default {
           { required: true, message: '姓名不能为空', trigger: 'blur' }
         ],
         mobile: [
-          { required: true, message: '电话号码不能为空', trigger: 'blur' }
+          { required: true, message: '电话号码不能为空', trigger: 'blur' },
+          { validator: MobileVaild, trigger: 'blur' }
         ],
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' }
