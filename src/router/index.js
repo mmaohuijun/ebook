@@ -40,6 +40,7 @@ const router = new Router({
   mode: 'history',
   routes: [
     { path: '/', redirect: `${path}case` },
+    { path: `${path}`, redirect: `${path}case` },
     {
       path: `${path}login`,
       name: 'Login',
