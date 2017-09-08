@@ -16,7 +16,7 @@
         </div>
         <div class="case-project__tool">
           <i class="iconfont icon-xiugai" @click="modifyCase(items)"></i>
-          <i class="iconfont icon-shanchu1"@click="deleteCase(items.id)"></i>
+          <i class="iconfont icon-shanchu1"@click="deleteProject(items.id)"></i>
         </div>
       </div>
     </Col>
@@ -201,8 +201,16 @@ export default {
       this.caseProject.propertys = _.cloneDeep(item.propertys)
       this.modal('编辑项目')
     },
-    deleteCase(caseId) {
-      this.$axios.post('/case-project/del', { id: parseInt(caseId) }).then(response => {
+    deleteProject(projectId) {
+      this.$Modal.confirm({
+        content: '此操作不可恢复，确认删除项目？',
+        onOk: () => {
+          this.sendDeleteProjectRequest(projectId)
+        }
+      })
+    },
+    sendDeleteProjectRequest(projectId) {
+      this.$axios.post('/case-project/del', { id: parseInt(projectId) }).then(response => {
         if (response === null) return
         console.log(response)
         this.getList()

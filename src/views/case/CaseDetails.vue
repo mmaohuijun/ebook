@@ -159,7 +159,7 @@ export default {
     top: 0;
     left: 0;
     z-index: 99;
-    width:130px;
+    width:150px;
     height:44px;
     border-bottom-right-radius: 6px;
     color:#4bce64;

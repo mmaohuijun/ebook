@@ -66,8 +66,8 @@
       </Form-item>
       <Form-item label="类型：">
         <Select placeholder="请选择" v-model="attrsDetailsType" :disabled="!attrsEditable">
-          <Option value="text">单行文本框</Option>
-          <Option value="textarea">多行文本框</Option>
+          <!-- <Option value="text">单行文本框</Option> -->
+          <!-- <Option value="textarea">多行文本框</Option> -->
           <Option value="select">单选</Option>
           <Option value="selectbox">多选</Option>
         </Select>
@@ -330,7 +330,7 @@ export default {
         return requestData
       } else {
         // 和备份数据做比较, 如果一样则表示没有改动, 返回false
-        return _.isMatch(requestData, this.backupData) ? false : requestData
+        return _.isMatch(this.backupData, requestData) ? false : requestData
       }
     },
     // 详细维度保存（新建、修改）
@@ -339,6 +339,10 @@ export default {
       console.log('详细维度保存（新建、修改）requestData', requestData)
 
       if (!requestData) {
+        // 编辑状态下点击'完成', 没有更改则隐藏modal
+        if (this.ifNew) return
+        // if (!this.ifNew) {
+        // }
         this.hideModal()
         return
       }

@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import store from '../vuex/store'
 
 // import Login from 'views/setting/Login'
-// import Layout from 'views/layout/Layout'
+import Layout from 'views/layout/Layout'
 // import CaseManage from 'views/case/CaseManage'
 // import CaseDetails from 'views/case/CaseDetails'
 // import CaseInfo from 'views/case/CaseInfo'
@@ -14,17 +14,23 @@ import store from '../vuex/store'
 // import ModifyPassword from 'views/setting/ModifyPassword'
 // import Organization from 'views/organization/Organization'
 
+/* 设置 */
 const Login = () => import('views/setting/Login')
-const Layout = () => import('views/layout/Layout')
+const ModifyPassword = () => import('views/setting/ModifyPassword')
+
+/* 案场 */
 const CaseManage = () => import('views/case/CaseManage')
 const CaseDetails = () => import('views/case/CaseDetails')
 const CaseInfo = () => import('views/case/CaseInfo')
 const CaseProject = () => import('views/case/CaseProject')
 const CaseAttrs = () => import('views/case/CaseAttrs')
+
+/* 组织 */
+const Organization = () => import('views/organization/Organization')
+
+/* 用户 */
 const IntUser = () => import('views/user/IntUser')
 const ExtUser = () => import('views/user/ExtUser')
-const ModifyPassword = () => import('views/setting/ModifyPassword')
-const Organization = () => import('views/organization/Organization')
 
 Vue.use(Router)
 

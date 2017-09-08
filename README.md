@@ -39,6 +39,16 @@
 
 ### 5.页面
 
-- 登录 -- `Login.Vue`
-- 案场管理 -- `CaseManage.vue`
-- 案场详情 -- `CaseInfo.vue`
+- 设置
+  - 登录 -- `Login.Vue`
+  - 修改密码 -- `ModifyPassword.Vue`
+  
+- 案场
+  - 案场管理 -- `CaseManage.vue`
+  - 案场信息 -- `CaseInfo.vue`
+  - 项目信息 -- `CaseProject.vue`
+  - 维度信息 -- `CaseAttrs.vue`
+
+- 用户
+  - 内部用户 -- `IntUser.vue`
+  - 外部用户 -- `ExtUser.vue`

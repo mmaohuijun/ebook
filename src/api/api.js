@@ -3,15 +3,8 @@ import store from '../vuex/store'
 import router from '../router'
 import qs from 'qs'
 
-const devURL = 'http://172.18.84.75:88/admin/'
-// const devURL = 'http://172.18.84.75:8801/admin/'
-// const proURL = 'http://zhongnan.masadata.com/admin/'
-const proURL = 'http://zhongnan.masadata.com/admin-test'
-
-const ajaxUrl = process.env.NODE_ENV === 'production' ? proURL : devURL
-
 const $axios = axios.create({
-  baseURL: ajaxUrl,
+  baseURL: process.env.BASE_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
