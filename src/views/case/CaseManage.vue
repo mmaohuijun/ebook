@@ -155,9 +155,9 @@ export default {
       }
     },
     gotoCaseDetails(id) {
-      if (this.ifClickAddCase) {
+      if (this.ifClickAddCase) { // 新建案场
         this.$store.commit('initCaseId', '0')
-        this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
+        this.$router.push({ name: 'CaseInfo', params: { caseId: '0' } })
       } else {
         this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
       }

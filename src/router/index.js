@@ -35,7 +35,7 @@ const ExtUser = () => import('views/user/ExtUser')
 Vue.use(Router)
 
 const path = store.state.NODE_PATH
-
+console.log('path', path)
 const router = new Router({
   mode: 'history',
   routes: [
@@ -51,7 +51,7 @@ const router = new Router({
       component: Layout,
       children: [
         { path: 'case', name: 'CaseManage', component: CaseManage },
-        { path: ':caseId',
+        { path: 'case/:caseId',
           component: CaseDetails,
           children: [
             { path: 'info', name: 'CaseInfo', component: CaseInfo },
