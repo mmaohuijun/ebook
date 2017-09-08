@@ -14,7 +14,7 @@ const store = new Vuex.Store({
     MOBILE: '',
     NUMBER: '',
     CASE_ID: '', // 案场id
-    CASE_NAME: '', // 案场名称
+    CASE_NAME: $storage.sessionStorage.getItem('CASE_NAME'), // 案场名称
     SIDEBAR_SELECT: '', // 侧边栏选中项
     CURRENT_PATH: '', // 当前路径名
     HAS_LOGIN: false, // 是否登录
@@ -41,6 +41,7 @@ const store = new Vuex.Store({
     },
     initCaseName(state, name) {
       state.CASE_NAME = name
+      $storage.sessionStorage.setItem('CASE_NAME', name)
     },
     initSideBar(state, str) {
       state.SIDEBAR_SELECT = str
