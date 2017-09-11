@@ -330,7 +330,7 @@ export default {
         return requestData
       } else {
         // 和备份数据做比较, 如果一样则表示没有改动, 返回false
-        return _.isMatch(this.backupData, requestData) ? false : requestData
+        return _.isEqual(this.backupData, requestData) ? false : requestData
       }
     },
     // 详细维度保存（新建、修改）

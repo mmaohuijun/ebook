@@ -70,7 +70,8 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    initUserInfo({ state }, json) {
+    initUserInfo({ state, dispatch }, json) {
+      dispatch('clearUserInfo')
       state.NAME = json.name
       state.LOGIN_NAME = json.loginName
       state.MOBILE = json.mobile
@@ -88,7 +89,8 @@ const store = new Vuex.Store({
     clearUserInfo() {
       $storage.sessionStorage.removeItem('USER_INFO')
     },
-    remeberLoginName({ state }, name) {
+    remeberLoginName({ state, dispatch }, name) {
+      dispatch('clearLoginName')
       $storage.localStorage.setItem('USER_LOGIN_NAME', name)
     },
     clearLoginName() {
