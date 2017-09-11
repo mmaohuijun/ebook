@@ -44,7 +44,8 @@ const router = new Router({
         { path: 'case/:caseId',
           component: CaseDetails,
           children: [
-            { path: 'info', name: 'CaseInfo', component: CaseInfo },
+            // { path: 'info', name: 'CaseInfo', component: CaseInfo },
+            { path: 'info', name: '案场详情', component: CaseInfo },
             { path: 'project', name: 'CaseProject', component: CaseProject },
             { path: 'attrs', name: 'CaseAttrs', component: CaseAttrs }
           ]
@@ -67,7 +68,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   console.log('router.beforeEach', to, from, 'path', path)
   store.commit('initSideBar', to.name)
-  if (to.name.indexOf('Case') !== -1) { // 包含'Case'的页面
+  if (to.path.indexOf('case') !== -1) { // 包含'Case'的页面
     store.commit('initSideBar', 'CaseManage')
   }
 

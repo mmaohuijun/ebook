@@ -19,12 +19,10 @@
 export default {
   data() {
     return {
-      // caseId: '',
       pageNo: 1, // 页码
       pageSize: 20, // 页面大小
       total: 0,
       ifClickIcon: false, // 是否点击'维度信息'
-      ifClickAddCase: false, // 是否点击'新建案场'
       selectId: [], // 已选择项
       searchText: '', // 搜索关键词(显示)
       searchTextCfm: '', // 搜索关键词(查询)
@@ -94,6 +92,9 @@ export default {
       return this.$store.state.CASE_ID
     }
   },
+  mounted() {
+    this.initCaseList()
+  },
   methods: {
     initCaseList(searchText) {
       this.$axios.get('case/list', { params: {
@@ -131,10 +132,9 @@ export default {
     // 新建案场
     addCase() {
       console.log('addCase')
-      this.ifClickAddCase = true
       // 设置案场id为0
       this.$store.commit('initCaseId', '0')
-      this.gotoCaseDetails()
+      this.gotoCaseInfo()
     },
     // 点击分页
     changePage(pageNo) {
@@ -150,22 +150,18 @@ export default {
     // 点击案场跳转详情页
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
-      this.ifClickAddCase = false
       this.$store.commit('initCaseId', item.id)
       this.$store.commit('initCaseName', item.projectName)
 
       if (this.ifClickIcon) {
         this.gotoCaseAttrs()
       } else {
-        this.gotoCaseDetails()
+        this.gotoCaseInfo()
       }
     },
-    gotoCaseDetails(id) {
-      if (this.ifClickAddCase) { // 新建案场
-        this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
-      } else {
-        this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
-      }
+    gotoCaseInfo(id) {
+      // this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
+      this.$router.push({ name: '案场详情', params: { caseId: this.caseId } })
     },
     gotoCaseAttrs() {
       this.$router.push({ name: 'CaseAttrs', params: { caseId: this.caseId } })
@@ -198,9 +194,6 @@ export default {
     //     this.initCaseList()
     //   })
     // }
-  },
-  mounted() {
-    this.initCaseList()
   }
 }
 </script>

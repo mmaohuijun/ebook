@@ -66,8 +66,8 @@
       </Form-item>
       <Form-item label="类型：">
         <Select placeholder="请选择" v-model="attrsDetailsType" :disabled="!attrsEditable">
-          <!-- <Option value="text">单行文本框</Option> -->
-          <!-- <Option value="textarea">多行文本框</Option> -->
+          <Option v-if="!attrsEditable" value="text">单行文本框</Option> 
+          <Option v-if="!attrsEditable" value="textarea">多行文本框</Option> 
           <Option value="select">单选</Option>
           <Option value="selectbox">多选</Option>
         </Select>
@@ -81,7 +81,7 @@
       <div v-if="attrsDetailsType.indexOf('select') !== -1">
         <Form-item v-for="(item, index) in attrsDetailsOptions" :key="index" :label="index === 0 ? '详细维度：' : ''">
           <Input placeholder="文本不能超过20个字符" :value="item" :readonly="true" :maxlength="20"></Input>
-          <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" @click.stop="attrsEditable ? deleteAttrsOptions(index) : ''"></i>
+          <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" v-if="attrsEditable" @click.stop="attrsEditable ? deleteAttrsOptions(index) : ''"></i>
         </Form-item>
         <Form-item :label="attrsDetailsOptions.length === 0 ? '详细维度：' : ''" v-show="attrsEditable">
           <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText" :maxlength="20"></Input>
@@ -169,14 +169,17 @@ export default {
     },
     // 验证维度分栏的data
     verifyAttrsGroupData() {
-      if (this.attrsGroupLabel === '') {
+      if (_.trim(this.attrsGroupLabel) === '') {
         this.$store.commit('showErrorMsg', '请输入栏目名称')
+        this.attrsGroupLabel = ''
         return
-      } else if (this.attrsGroupIndex === '') {
+      } else if (_.trim(this.attrsGroupIndex) === '') {
         this.$store.commit('showErrorMsg', '请输入名称序号')
+        this.attrsGroupIndex = ''
         return
       } else if (!_.isFinite(parseInt(this.attrsGroupIndex))) {
         this.$store.commit('showErrorMsg', '名称序号请输入数字')
+        this.attrsGroupIndex = ''
         return
       }
 
@@ -188,19 +191,15 @@ export default {
         hidden: this.attrsGroupIfHide
       }
 
-      // 判断是新建还是编辑
-      if (this.ifNew) {
-        return requestData
-      } else {
-        // 和备份数据做比较, 如果一样则表示没有改动, 返回false
-        return _.isMatch(requestData, this.backupData) ? false : requestData
-      }
+      // 和备份数据做比较, 如果一样则表示没有改动, 返回false
+      return _.isEqual(requestData, this.backupData) ? false : requestData
     },
     // 栏目信息保存（新建、修改）
     saveAttrsGroup() {
       const requestData = this.verifyAttrsGroupData()
+
       if (!requestData) {
-        this.hideModal()
+        if (!this.ifNew) this.hideModal() // 判断是新建还是编辑
         return
       }
       console.log('saveAttrsGroup', requestData)
@@ -276,25 +275,31 @@ export default {
     },
     // 验证维度详情的data
     verifyAttrsDetailsData() {
-      if (this.attrsDetailsLabel === '') {
+      if (_.trim(this.attrsDetailsLabel) === '') {
         this.$store.commit('showErrorMsg', '请输入维度名称')
+        this.attrsDetailsLabel = ''
         return
-      } else if (this.attrsDetailsSort === '') {
+      } else if (_.trim(this.attrsDetailsSort) === '') {
         this.$store.commit('showErrorMsg', '请输入名称序号')
+        this.attrsDetailsSort = ''
         return
       } else if (!_.isFinite(parseInt(this.attrsDetailsSort))) {
         this.$store.commit('showErrorMsg', '名称序号请输入数字')
+        this.attrsDetailsSort = ''
         return
-      } else if (this.attrsDetailsRequire === '') {
+      } else if (_.trim(this.attrsDetailsRequire) === '') {
         this.$store.commit('showErrorMsg', '请选择填写要求')
+        this.attrsDetailsRequire = ''
         return
-      } else if (this.attrsDetailsType === '') {
+      } else if (_.trim(this.attrsDetailsType) === '') {
         this.$store.commit('showErrorMsg', '请选择类型')
+        this.attrsDetailsType = ''
         return
       }
       if (this.attrsDetailsType.indexOf('text') !== -1) {
-        if (this.attrsDetailsTextType === '') {
+        if (_.trim(this.attrsDetailsTextType) === '') {
           this.$store.commit('showErrorMsg', '请选择文本类型')
+          this.attrsDetailsTextType = ''
           return
         }
       } else {
@@ -403,7 +408,7 @@ export default {
     // 添加详细维度options
     addAttrsOptions() {
       console.log('addAttrsOptions')
-      if (this.attrsDetailsOptionsText === '') return
+      if (_.trim(this.attrsDetailsOptionsText) === '') return
       this.attrsDetailsOptions.push(this.attrsDetailsOptionsText)
       this.attrsDetailsOptionsText = ''
     },
