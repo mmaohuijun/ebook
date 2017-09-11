@@ -37,6 +37,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     initCaseId(state, id) {
+      console.log('initCaseId', typeof id, id)
       state.CASE_ID = id
     },
     initCaseName(state, name) {

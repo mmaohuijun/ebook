@@ -19,7 +19,7 @@
 export default {
   data() {
     return {
-      caseId: '',
+      // caseId: '',
       pageNo: 1, // 页码
       pageSize: 20, // 页面大小
       total: 0,
@@ -89,6 +89,11 @@ export default {
       afterSearch: false // 点击搜索后
     }
   },
+  computed: {
+    caseId() {
+      return this.$store.state.CASE_ID
+    }
+  },
   methods: {
     initCaseList(searchText) {
       this.$axios.get('case/list', { params: {
@@ -127,6 +132,8 @@ export default {
     addCase() {
       console.log('addCase')
       this.ifClickAddCase = true
+      // 设置案场id为0
+      this.$store.commit('initCaseId', '0')
       this.gotoCaseDetails()
     },
     // 点击分页
@@ -144,8 +151,7 @@ export default {
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
       this.ifClickAddCase = false
-      this.caseId = item.id
-      this.$store.commit('initCaseId', this.caseId)
+      this.$store.commit('initCaseId', item.id)
       this.$store.commit('initCaseName', item.projectName)
 
       if (this.ifClickIcon) {
@@ -156,8 +162,7 @@ export default {
     },
     gotoCaseDetails(id) {
       if (this.ifClickAddCase) { // 新建案场
-        this.$store.commit('initCaseId', '0')
-        this.$router.push({ name: 'CaseInfo', params: { caseId: '0' } })
+        this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
       } else {
         this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
       }

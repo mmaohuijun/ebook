@@ -210,7 +210,6 @@ export default {
     }
   },
   mounted() {
-    console.log('process.env.NODE_PATH', process.env.NODE_PATH)
     if (this.caseId === '0') {
       // 新建案场
       this.clearAllData()

@@ -41,9 +41,6 @@ export default {
       this.$emit('changeMarkerPoint', event.point)
     }
   },
-  mounted() {
-    console.log('MAP markerPoint', this.markerPoint)
-  },
   components: {
     BaiduMap,
     BmMarker,
