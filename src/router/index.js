@@ -2,17 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../vuex/store'
 
-// import Login from 'views/setting/Login'
 import Layout from 'views/layout/Layout'
-// import CaseManage from 'views/case/CaseManage'
-// import CaseDetails from 'views/case/CaseDetails'
-// import CaseInfo from 'views/case/CaseInfo'
-// import CaseProject from 'views/case/CaseProject'
-// import CaseAttrs from 'views/case/CaseAttrs'
-// import IntUser from 'views/user/IntUser'
-// import ExtUser from 'views/user/ExtUser'
-// import ModifyPassword from 'views/setting/ModifyPassword'
-// import Organization from 'views/organization/Organization'
 
 /* 设置 */
 const Login = () => import('views/setting/Login')
@@ -35,7 +25,7 @@ const ExtUser = () => import('views/user/ExtUser')
 Vue.use(Router)
 
 const path = store.state.NODE_PATH
-console.log('path', path)
+
 const router = new Router({
   mode: 'history',
   routes: [
@@ -65,6 +55,11 @@ const router = new Router({
         { path: 'modpsw', name: 'ModifyPassword', component: ModifyPassword }
       ],
       meta: { requiresLogin: true }
+    },
+    {
+      path: '*',
+      name: 'Login',
+      component: Login
     }
   ]
 })
