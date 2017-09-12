@@ -50,14 +50,28 @@ export default {
     }
   },
   methods: {
-    goLogin() {
-      console.log('goLogin', this.loginName, this.password, this.ifRemember)
-      this.loading = true
-
-      this.$axios.post('login', {
+    verifyAccountData() {
+      if (_.trim(this.loginName) === '') {
+        this.$store.commit('showErrorMsg', '请输入账号')
+        this.loginName = ''
+        return false
+      } else if (_.trim(this.password) === '') {
+        this.$store.commit('showErrorMsg', '请输入密码')
+        this.password = ''
+        return false
+      }
+      const data = {
         loginName: this.loginName,
         password: this.password
-      }).then(response => {
+      }
+      return data
+    },
+    goLogin() {
+      console.log('goLogin', this.loginName, this.password, this.ifRemember)
+      const data = this.verifyAccountData()
+      if (!data) return
+      this.loading = true
+      this.$axios.post('login', data).then(response => {
         this.loading = false
 
         if (_.isNull(response)) return
@@ -72,8 +86,9 @@ export default {
           no: reData.no
         }
         // 保存用户信息到全局
-        this.$store.dispatch('initUserInfo', loginInfo)
-
+        // this.$store.dispatch('initUserInfo', loginInfo)
+        this.$store.dispatch('setUserInfo', loginInfo)
+        console.log('保存用户信息到全局', this.$store.getters.hasUserInfo)
         // 是否记住账号
         if (this.ifRemember) {
           this.$store.dispatch('remeberLoginName', reData.loginName)
@@ -86,8 +101,10 @@ export default {
       })
     },
     checkIfHadRemeber() {
-      this.loginName = this.$store.getters.getLoginName
-      this.ifRemember = this.$store.getters.getLoginName !== undefined
+      // this.loginName = this.$store.getters.getLoginName
+      // this.ifRemember = this.$store.getters.getLoginName !== undefined
+      this.loginName = this.$store.getters.loginName
+      this.ifRemember = this.$store.getters.loginName !== undefined
     },
     enterLogin(event) {
       if (event.key === 'Enter' || event.keyCode === 13) {
@@ -101,6 +118,8 @@ export default {
     document.addEventListener('keyup', this.enterLogin)
   },
   mounted() {
+    console.log('LOGIN', this.$store.getters.hasUserInfo)
+    // this.$store.dispatch('clearLoginName')
     this.checkIfHadRemeber()
   },
   destroyed() {

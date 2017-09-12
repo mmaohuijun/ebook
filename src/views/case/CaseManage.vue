@@ -90,9 +90,11 @@ export default {
   computed: {
     caseId() {
       return this.$store.state.CASE_ID
+      // return this.$store.state.caseId
     }
   },
   mounted() {
+    console.log('案场管理', this.caseId)
     this.initCaseList()
   },
   methods: {
@@ -160,8 +162,8 @@ export default {
       }
     },
     gotoCaseInfo(id) {
-      // this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
-      this.$router.push({ name: '案场详情', params: { caseId: this.caseId } })
+      this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
+      // this.$router.push({ name: '案场详情', params: { caseId: this.caseId } })
     },
     gotoCaseAttrs() {
       this.$router.push({ name: 'CaseAttrs', params: { caseId: this.caseId } })

@@ -26,43 +26,74 @@ Vue.use(Router)
 
 const path = store.state.NODE_PATH
 
-const router = new Router({
-  mode: 'history',
-  routes: [
-    { path: '/', redirect: `${path}case` },
-    { path: `${path}`, redirect: `${path}case` },
-    {
-      path: `${path}login`,
-      name: 'Login',
-      component: Login
-    },
-    {
-      path: `${path}`,
-      component: Layout,
-      children: [
-        { path: 'case', name: 'CaseManage', component: CaseManage },
-        { path: 'case/:caseId',
-          component: CaseDetails,
-          children: [
-            // { path: 'info', name: 'CaseInfo', component: CaseInfo },
-            { path: 'info', name: '案场详情', component: CaseInfo },
+const routesMap = [
+  { path: '/', redirect: `${path}case` },
+  { path: `${path}`, redirect: `${path}case` },
+  {
+    path: `${path}login`,
+    component: Login,
+    name: 'Login'
+  },
+  {
+    path: `${path}case`,
+    component: Layout,
+    redirect: `${path}case/index`,
+    name: '案场',
+    children: [
+        { path: 'index', name: 'CaseManage', component: CaseManage },
+      { path: ':caseId',
+        component: CaseDetails,
+        children: [
+            { path: 'info', name: 'CaseInfo', component: CaseInfo },
             { path: 'project', name: 'CaseProject', component: CaseProject },
             { path: 'attrs', name: 'CaseAttrs', component: CaseAttrs }
-          ]
-        },
-        { path: 'organization', name: 'Organization', component: Organization },
+        ]
+      }
+    ],
+    meta: { requiresLogin: true }
+  },
+  {
+    path: `${path}organization`,
+    component: Layout,
+    redirect: `${path}organization/index`,
+    name: '组织',
+    children: [
+        { path: 'index', name: 'Organization', component: Organization }
+    ],
+    meta: { requiresLogin: true }
+  },
+  {
+    path: `${path}user`,
+    component: Layout,
+    redirect: `${path}user/intUser`,
+    name: '用户',
+    children: [
         { path: 'intUser', name: 'IntUser', component: IntUser },
-        { path: 'extUser', name: 'ExtUser', component: ExtUser },
+        { path: 'extUser', name: 'ExtUser', component: ExtUser }
+    ],
+    meta: { requiresLogin: true }
+  },
+  {
+    path: `${path}setting`,
+    component: Layout,
+    redirect: `${path}setting/modpsw`,
+    name: '设置',
+    children: [
         { path: 'modpsw', name: 'ModifyPassword', component: ModifyPassword }
-      ],
-      meta: { requiresLogin: true }
-    },
-    {
-      path: '*',
-      name: 'Login',
-      component: Login
-    }
-  ]
+    ],
+    meta: { requiresLogin: true }
+  },
+  {
+    path: '*',
+    name: 'Login',
+    component: Login
+  }
+]
+
+const router = new Router({
+  mode: 'history',
+  scrollBehavior: () => ({ y: 0 }),
+  routes: routesMap
 })
 
 router.beforeEach((to, from, next) => {
@@ -76,7 +107,8 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresLogin)) {
     // 若没有登录或没有用户信息则跳转登录页
     if (store.getters.getLoginStatus || store.getters.hasUserInfo) {
-      store.dispatch('getUserInfo')
+      // store.dispatch('getUserInfo')
+      store.dispatch('getUserInfoFromStorage')
       // 判断url后面是否带有参数
       if (!_.isEmpty(to.params)) {
         if (to.params.caseId) {

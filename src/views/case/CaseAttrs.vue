@@ -45,7 +45,7 @@
         <Input placeholder="请输入" v-model="attrsGroupLabel" :maxlength="64"></Input>
       </Form-item>
       <Form-item label="名称序号：">
-        <Input placeholder="请输入(数字)" v-model="attrsGroupIndex"></Input>
+        <Input placeholder="请输入(数字)" v-model="attrsGroupIndex" :maxlength="5"></Input>
       </Form-item>
       <Form-item label="是否隐藏：">
         <i-switch v-model="attrsGroupIfHide"></i-switch>
@@ -53,10 +53,10 @@
     </Form>
     <Form :label-width="120" class="modal-form" v-else>
       <Form-item label="维度名称：">
-        <Input placeholder="请输入" v-model="attrsDetailsLabel" :readonly="!attrsEditable"></Input>
+        <Input placeholder="请输入" v-model="attrsDetailsLabel" :readonly="!attrsEditable" :maxlength="64"></Input>
       </Form-item>
       <Form-item label="名称序号：">
-        <Input placeholder="请输入" v-model="attrsDetailsSort" :readonly="!attrsEditable"></Input>
+        <Input placeholder="请输入" v-model="attrsDetailsSort" :readonly="!attrsEditable" :maxlength="5"></Input>
       </Form-item>
       <Form-item label="填写要求：">
         <Select placeholder="请选择" v-model="attrsDetailsRequire" :disabled="!attrsEditable">

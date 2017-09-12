@@ -6,8 +6,8 @@
       <p class="layout__aside-name">{{name}}</p>
       <ul class="layout__aside-info">
         <li>
-          <p>工号：{{number}}</p>
-           <router-link :to="`${NODE_PATH}modpsw`">修改密码</router-link> 
+          <p>工号：{{no}}</p>
+           <router-link :to="`${NODE_PATH}setting/modpsw`">修改密码</router-link> 
         </li>
         <li>
           <p>联系方式：{{mobile}}</p>
@@ -32,7 +32,7 @@
 </aside>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'SideBar2',
@@ -71,12 +71,15 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'hasUserInfo',
+      'name',
+      'mobile',
+      'no',
+      'loginName'
+    ]),
     ...mapState({
       NODE_PATH: state => state.NODE_PATH,
-      loginName: state => state.LOGIN_NAME,
-      name: state => state.NAME,
-      mobile: state => state.MOBILE,
-      number: state => state.NUMBER,
       selectMenu: state => state.SIDEBAR_SELECT
     }) },
   methods: {
@@ -93,6 +96,9 @@ export default {
         this.$router.push({ name: 'Login' })
       })
     }
+  },
+  mounted() {
+    console.log('SideBar', this.hasUserInfo)
   }
 }
 </script>

@@ -2,17 +2,21 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import $storage from 'api/storage'
+
+import user from './modules/user'
+import cases from './modules/case'
+import getters from './getters'
 // import $axios from '../api/api' // 后台接口api
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+  modules: {
+    user,
+    cases
+  },
   // 定义状态
   state: {
-    LOGIN_NAME: '',
-    NAME: '',
-    MOBILE: '',
-    NUMBER: '',
     CASE_ID: '', // 案场id
     CASE_NAME: $storage.sessionStorage.getItem('CASE_NAME'), // 案场名称
     SIDEBAR_SELECT: '', // 侧边栏选中项
@@ -24,20 +28,12 @@ const store = new Vuex.Store({
     NODE_PATH: process.env.NODE_PATH
   },
   getters: {
+    ...getters,
     getCaseId: state => state.CASE_ID,
-    getLoginName: state => {
-      const loginName = $storage.localStorage.getItem('USER_LOGIN_NAME')
-      return loginName
-    },
-    getLoginStatus: state => state.HAS_LOGIN,
-    hasUserInfo: state => {
-      const userInfo = $storage.sessionStorage.getItem('USER_INFO')
-      return userInfo !== undefined
-    }
+    getLoginStatus: state => state.HAS_LOGIN
   },
   mutations: {
     initCaseId(state, id) {
-      console.log('initCaseId', typeof id, id)
       state.CASE_ID = id
     },
     initCaseName(state, name) {
@@ -68,34 +64,6 @@ const store = new Vuex.Store({
     },
     notLogin(state) {
       state.HAS_LOGIN = false
-    }
-  },
-  actions: {
-    initUserInfo({ state, dispatch }, json) {
-      dispatch('clearUserInfo')
-      state.NAME = json.name
-      state.LOGIN_NAME = json.loginName
-      state.MOBILE = json.mobile
-      state.NUMBER = json.no
-      $storage.sessionStorage.setItem('USER_INFO', json)
-    },
-    getUserInfo({ state }) {
-      const info = $storage.sessionStorage.getItem('USER_INFO')
-      if (!info) return
-      state.NAME = info.name
-      state.LOGIN_NAME = info.loginName
-      state.MOBILE = info.mobile
-      state.NUMBER = info.no
-    },
-    clearUserInfo() {
-      $storage.sessionStorage.removeItem('USER_INFO')
-    },
-    remeberLoginName({ state, dispatch }, name) {
-      dispatch('clearLoginName')
-      $storage.localStorage.setItem('USER_LOGIN_NAME', name)
-    },
-    clearLoginName() {
-      $storage.localStorage.removeItem('USER_LOGIN_NAME')
     }
   }
 })
