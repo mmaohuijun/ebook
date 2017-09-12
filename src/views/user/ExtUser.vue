@@ -306,6 +306,7 @@ export default {
       this.$axios.get('/ext-user/save', { params: data }).then(response => {
         if (response === null) return
         this.$Message.success(successText)
+        this.name = ''
         this.userList()
       })
       this.modal.show = false
