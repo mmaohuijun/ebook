@@ -29,20 +29,20 @@
     </p>
     <Form ref="userInfo" :model="userInfo" :rules="ruleValidate" :label-width="120" class="modal-form">
       <Form-item label="姓名：" prop="name">
-        <Input v-model="userInfo.name" placeholder="请您输入..."></Input>
+        <Input v-model="userInfo.name" placeholder="请您输入..." :maxlength="64"></Input>
       </Form-item>
       <Form-item label="电话号码：" prop="mobile">
-        <Input v-model="userInfo.mobile" placeholder="请您输入..."></Input>
+        <Input v-model="userInfo.mobile" placeholder="请您输入..." :maxlength="11"></Input>
       </Form-item>
       <Form-item label="密码：" prop="password">
         <Input v-model="userInfo.password" type="password" disabled></Input>
         <!-- <Input v-model="userInfo.password" placeholder="123456（或随机生成）"></Input> -->
       </Form-item>
       <Form-item label="E-mail：" prop="email">
-        <Input v-model="userInfo.email" placeholder="请您输入"></Input>
+        <Input v-model="userInfo.email" placeholder="请您输入" :maxlength="64"></Input>
       </Form-item>
       <Form-item label="工号：" prop="no">
-        <Input v-model="userInfo.no" placeholder="请您输入"></Input>
+        <Input v-model="userInfo.no" placeholder="请您输入" :maxlength="10"></Input>
       </Form-item>
       <Form-item label="案场：" prop="caseId">
         <Select v-model="userInfo.caseId" placeholder="请您选择..." @on-change="onChangeCaseId">
@@ -86,6 +86,17 @@ export default {
         callback()
       }
     }
+    const EmailVaild = (rule, value, callback) => {
+      if (!value) {
+        callback()
+        return
+      }
+      if (!/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(value)) {
+        callback(new Error('邮箱格式不正确'))
+      } else {
+        callback()
+      }
+    }
     return {
       modal: {
         show: false,        // 是否显示编辑和查看modal
@@ -122,6 +133,9 @@ export default {
         mobile: [
           { required: true, message: '电话号码不能为空', trigger: 'blur' },
           { validator: MobileVaild, trigger: 'blur' }
+        ],
+        email: [
+          { validator: EmailVaild, trigger: 'blur' }
         ],
         password: [
           // { required: true, message: '密码不能为空', trigger: 'blur' }

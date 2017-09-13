@@ -89,8 +89,7 @@ export default {
   },
   computed: {
     caseId() {
-      return this.$store.state.CASE_ID
-      // return this.$store.state.caseId
+      return this.$store.state.cases.caseId
     }
   },
   mounted() {
@@ -135,7 +134,7 @@ export default {
     addCase() {
       console.log('addCase')
       // 设置案场id为0
-      this.$store.commit('initCaseId', '0')
+      this.$store.dispatch('setCaseId', '0')
       this.gotoCaseInfo()
     },
     // 点击分页
@@ -152,18 +151,18 @@ export default {
     // 点击案场跳转详情页
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
-      this.$store.commit('initCaseId', item.id)
-      this.$store.commit('initCaseName', item.projectName)
+      this.$store.dispatch('setCaseId', item.id)
+      this.$store.dispatch('setCaseName', item.projectName)
 
+      // 判断是否点击'查看维度'按钮
       if (this.ifClickIcon) {
         this.gotoCaseAttrs()
       } else {
         this.gotoCaseInfo()
       }
     },
-    gotoCaseInfo(id) {
+    gotoCaseInfo() {
       this.$router.push({ name: 'CaseInfo', params: { caseId: this.caseId } })
-      // this.$router.push({ name: '案场详情', params: { caseId: this.caseId } })
     },
     gotoCaseAttrs() {
       this.$router.push({ name: 'CaseAttrs', params: { caseId: this.caseId } })

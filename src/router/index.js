@@ -106,14 +106,13 @@ router.beforeEach((to, from, next) => {
   // 检查页面是否需要登录
   if (to.matched.some(record => record.meta.requiresLogin)) {
     // 若没有登录或没有用户信息则跳转登录页
-    if (store.getters.getLoginStatus || store.getters.hasUserInfo) {
-      // store.dispatch('getUserInfo')
+    if (store.getters.loginStatus || store.getters.hasUserInfo) {
       store.dispatch('getUserInfoFromStorage')
       // 判断url后面是否带有参数
       if (!_.isEmpty(to.params)) {
         if (to.params.caseId) {
           const caseId = to.params.caseId
-          store.commit('initCaseId', caseId)
+          store.dispatch('setCaseId', caseId)
         }
       }
       next()

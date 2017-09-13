@@ -95,7 +95,7 @@ export default {
       return this.$store.state.NODE_PATH
     },
     caseId() {
-      return this.$store.state.CASE_ID
+      return this.$store.state.cases.caseId
     }
   },
   methods: {
@@ -109,7 +109,8 @@ export default {
           this[key] = reData[key]
         }
         // 全局设置案场名称
-        this.$store.commit('initCaseName', this.name)
+        // this.$store.commit('initCaseName', this.name)
+        this.$store.dispatch('setCaseName', this.name)
       })
     },
     // 改变地图坐标点
@@ -145,7 +146,8 @@ export default {
           duration: 3
         })
         // 新建成功后返回新案场caseId
-        this.$store.commit('initCaseId', response.data)
+        // this.$store.commit('initCaseId', response.data)
+        this.$store.dispatch('setCaseId', response.data)
         this.initCaseInfo()
       })
     },

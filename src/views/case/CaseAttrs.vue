@@ -127,7 +127,7 @@ export default {
   },
   computed: {
     caseId() {
-      return this.$store.state.CASE_ID
+      return this.$store.getters.caseId
     }
   },
   mounted() {

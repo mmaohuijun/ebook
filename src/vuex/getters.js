@@ -16,7 +16,8 @@ const getters = {
   caseName: () => {
     const caseName = $storage.sessionStorage.getItem('CASE_NAME')
     return caseName
-  }
+  },
+  loginStatus: state => state.app.hasLogin
 }
 
 export default getters

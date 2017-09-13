@@ -14,10 +14,12 @@ const cases = {
     }
   },
   actions: {
-    setCaseId({ commit, dispatch }, id) {
+    setCaseId({ commit }, id) {
+      console.log('setCaseId', id)
       commit('SET_CASE_ID', id)
     },
     setCaseName({ commit, dispatch }, name) {
+      console.log('setCaseName', name)
       dispatch('clearCaseName')
       commit('SET_CASE_NAME', name)
       $storage.sessionStorage.setItem('CASE_NAME', name)

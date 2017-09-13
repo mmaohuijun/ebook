@@ -77,7 +77,8 @@ export default {
         if (_.isNull(response)) return
         console.log('login', response)
 
-        this.$store.commit('hasLogin')
+        // this.$store.commit('hasLogin')
+        this.$store.dispatch('toggleLoginStatus', true)
         const reData = response.data
         const loginInfo = {
           loginName: reData.loginName,
@@ -86,9 +87,7 @@ export default {
           no: reData.no
         }
         // 保存用户信息到全局
-        // this.$store.dispatch('initUserInfo', loginInfo)
         this.$store.dispatch('setUserInfo', loginInfo)
-        console.log('保存用户信息到全局', this.$store.getters.hasUserInfo)
         // 是否记住账号
         if (this.ifRemember) {
           this.$store.dispatch('remeberLoginName', reData.loginName)
@@ -101,14 +100,11 @@ export default {
       })
     },
     checkIfHadRemeber() {
-      // this.loginName = this.$store.getters.getLoginName
-      // this.ifRemember = this.$store.getters.getLoginName !== undefined
       this.loginName = this.$store.getters.loginName
       this.ifRemember = this.$store.getters.loginName !== undefined
     },
     enterLogin(event) {
       if (event.key === 'Enter' || event.keyCode === 13) {
-        console.log('按了回车', event)
         this.goLogin()
       }
     }
@@ -118,8 +114,6 @@ export default {
     document.addEventListener('keyup', this.enterLogin)
   },
   mounted() {
-    console.log('LOGIN', this.$store.getters.hasUserInfo)
-    // this.$store.dispatch('clearLoginName')
     this.checkIfHadRemeber()
   },
   destroyed() {

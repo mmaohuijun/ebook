@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import $storage from 'api/storage'
+// import $storage from 'api/storage'
 
 import user from './modules/user'
 import cases from './modules/case'
+import app from './modules/app'
 import getters from './getters'
 // import $axios from '../api/api' // 后台接口api
 
@@ -13,12 +14,11 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   modules: {
     user,
-    cases
+    cases,
+    app
   },
   // 定义状态
   state: {
-    CASE_ID: '', // 案场id
-    CASE_NAME: $storage.sessionStorage.getItem('CASE_NAME'), // 案场名称
     SIDEBAR_SELECT: '', // 侧边栏选中项
     CURRENT_PATH: '', // 当前路径名
     HAS_LOGIN: false, // 是否登录
@@ -29,17 +29,10 @@ const store = new Vuex.Store({
   },
   getters: {
     ...getters,
-    getCaseId: state => state.CASE_ID,
+    // getCaseId: state => state.CASE_ID,
     getLoginStatus: state => state.HAS_LOGIN
   },
   mutations: {
-    initCaseId(state, id) {
-      state.CASE_ID = id
-    },
-    initCaseName(state, name) {
-      state.CASE_NAME = name
-      $storage.sessionStorage.setItem('CASE_NAME', name)
-    },
     initSideBar(state, str) {
       state.SIDEBAR_SELECT = str
     },

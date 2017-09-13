@@ -91,14 +91,12 @@ export default {
     logout() {
       this.$axios.post('/logout').then(response => {
         if (response === null) return
-        this.$store.commit('notLogin')
+        // this.$store.commit('notLogin')
+        this.$store.dispatch('toggleLoginStatus', false)
         this.$store.dispatch('clearUserInfo')
         this.$router.push({ name: 'Login' })
       })
     }
-  },
-  mounted() {
-    console.log('SideBar', this.hasUserInfo)
   }
 }
 </script>

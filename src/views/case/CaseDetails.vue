@@ -31,7 +31,6 @@ export default {
   name: 'CaseDetails',
   data() {
     return {
-      // caseName: '',
       tabsList: [
         { title: '案场信息', pathName: 'CaseInfo' },
         { title: '项目信息', pathName: 'CaseProject' },
@@ -41,10 +40,10 @@ export default {
   },
   computed: {
     caseId() {
-      return this.$store.state.CASE_ID
+      return this.$store.state.cases.caseId
     },
     caseName() {
-      return this.$store.state.CASE_NAME
+      return this.$store.state.cases.caseName
     },
     caseHeaderTitle() {
       if (this.caseId === '0') {
@@ -65,7 +64,7 @@ export default {
     }
   },
   mounted() {
-    console.log('mounted', this.caseName)
+    console.log('案场详情mounted', this.caseName, this.caseId)
   }
 }
 </script>
