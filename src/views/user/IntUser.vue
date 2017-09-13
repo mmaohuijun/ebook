@@ -32,20 +32,20 @@
     </p>
     <Form ref="userInfo" :model="userInfo" :rules="ruleValidate" :label-width="120" class="modal-form">
       <Form-item label="姓名：" prop="name">
-        <Input v-model="userInfo.name" placeholder="请您输入..."></Input>
+        <Input v-model="userInfo.name" placeholder="请您输入..." :maxlength="64"></Input>
       </Form-item>
       <Form-item label="电话号码：" prop="mobile">
-        <Input v-model="userInfo.mobile" placeholder="请您输入..."></Input>
+        <Input v-model="userInfo.mobile" placeholder="请您输入..." :maxlength="11"></Input>
       </Form-item>
       <Form-item label="密码：" prop="password">
         <Input v-model="userInfo.password" type="password" disabled></Input>
         <!-- <Input v-model="userInfo.password" placeholder="123456（或随机生成）"></Input> -->
       </Form-item>
       <Form-item label="E-mail：" prop="email">
-        <Input v-model="userInfo.email" placeholder="请您输入"></Input>
+        <Input v-model="userInfo.email" placeholder="请您输入" :maxlength="64"></Input>
       </Form-item>
       <Form-item label="工号：" prop="no">
-        <Input v-model="userInfo.no" placeholder="请您输入"></Input>
+        <Input v-model="userInfo.no" placeholder="请您输入" :maxlength="10"></Input>
       </Form-item>
     </Form>
     <div slot="footer">
@@ -269,6 +269,7 @@ export default {
       this.$axios.get('/int-user/save', { params: data }).then(response => {
         if (response === null) return
         this.$Message.success(successText)
+        this.name = ''
         this.userList()
       })
       this.modal.show = false
