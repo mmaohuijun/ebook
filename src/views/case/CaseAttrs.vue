@@ -175,15 +175,15 @@ export default {
     // 验证维度分栏的data
     verifyAttrsGroupData() {
       if (_.trim(this.attrsGroupLabel) === '') {
-        this.$store.commit('showErrorMsg', '请输入栏目名称')
+        this.$store.dispatch('showErrorMsg', '请输入栏目名称')
         this.attrsGroupLabel = ''
         return
       } else if (_.trim(this.attrsGroupIndex) === '') {
-        this.$store.commit('showErrorMsg', '请输入名称序号')
+        this.$store.dispatch('showErrorMsg', '请输入名称序号')
         this.attrsGroupIndex = ''
         return
       } else if (!_.isFinite(parseInt(this.attrsGroupIndex))) {
-        this.$store.commit('showErrorMsg', '名称序号请输入数字')
+        this.$store.dispatch('showErrorMsg', '名称序号请输入数字')
         this.attrsGroupIndex = ''
         return
       }
@@ -281,35 +281,35 @@ export default {
     // 验证维度详情的data
     verifyAttrsDetailsData() {
       if (_.trim(this.attrsDetailsLabel) === '') {
-        this.$store.commit('showErrorMsg', '请输入维度名称')
+        this.$store.dispatch('showErrorMsg', '请输入维度名称')
         this.attrsDetailsLabel = ''
         return
       } else if (_.trim(this.attrsDetailsSort) === '') {
-        this.$store.commit('showErrorMsg', '请输入名称序号')
+        this.$store.dispatch('showErrorMsg', '请输入名称序号')
         this.attrsDetailsSort = ''
         return
       } else if (!_.isFinite(parseInt(this.attrsDetailsSort))) {
-        this.$store.commit('showErrorMsg', '名称序号请输入数字')
+        this.$store.dispatch('showErrorMsg', '名称序号请输入数字')
         this.attrsDetailsSort = ''
         return
       } else if (_.trim(this.attrsDetailsRequire) === '') {
-        this.$store.commit('showErrorMsg', '请选择填写要求')
+        this.$store.dispatch('showErrorMsg', '请选择填写要求')
         this.attrsDetailsRequire = ''
         return
       } else if (_.trim(this.attrsDetailsType) === '') {
-        this.$store.commit('showErrorMsg', '请选择类型')
+        this.$store.dispatch('showErrorMsg', '请选择类型')
         this.attrsDetailsType = ''
         return
       }
       if (this.attrsDetailsType.indexOf('text') !== -1) {
         if (_.trim(this.attrsDetailsTextType) === '') {
-          this.$store.commit('showErrorMsg', '请选择文本类型')
+          this.$store.dispatch('showErrorMsg', '请选择文本类型')
           this.attrsDetailsTextType = ''
           return
         }
       } else {
         if (_.isEmpty(this.attrsDetailsOptions)) {
-          this.$store.commit('showErrorMsg', '请填写详细维度')
+          this.$store.dispatch('showErrorMsg', '请填写详细维度')
           return
         }
       }

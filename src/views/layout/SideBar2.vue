@@ -81,19 +81,16 @@ export default {
     ]),
     ...mapState({
       NODE_PATH: state => state.NODE_PATH
-      // selectMenu: state => state.app.sideBarSelect
     }) },
   methods: {
     onClickMenu(name) {
       console.log('onClickMenu', name)
-      // this.$store.commit('initSideBar', name)
       this.$store.dispatch('setSideBarSelect', name)
       this.$router.push({ name })
     },
     logout() {
       this.$axios.post('/logout').then(response => {
         if (response === null) return
-        // this.$store.commit('notLogin')
         this.$store.dispatch('toggleLoginStatus', false)
         this.$store.dispatch('clearUserInfo')
         this.$router.push({ name: 'Login' })

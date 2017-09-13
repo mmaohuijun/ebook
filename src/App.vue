@@ -1,11 +1,9 @@
 <template>
-  <!-- <div id="app"> -->
-    <router-view></router-view>
-  <!-- </div> -->
+  <router-view></router-view>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'app',
@@ -15,30 +13,37 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'loadingStatus',
+      'ifShowErrorMsg',
+      'errorMsgText'
+    ]),
     ...mapState({
-      ifShowLoading: state => state.loading,
-      ifShowErrorMsg: state => state.ifShowErrorMsg,
-      msgText: state => state.msgText
+      // ifShowErrorMsg: state => state.ifShowErrorMsg,
+      // msgText: state => state.msgText
     })
   },
   watch: {
-    ifShowLoading(flag) {
-      if (flag) {
-        this.msg = this.$Message.loading({
-          content: '正在加载中...',
-          duration: 0
-        })
-      } else {
-        this.msg()
-      }
+    loadingStatus(flag) {
+      if (!flag) return
+      // if (flag) {
+      this.msg = this.$Message.loading({
+        content: '正在加载中...',
+        duration: 0
+      })
+      _.delay(this.msg, 500)
+      // }
     },
     ifShowErrorMsg(flag) {
       if (!flag) return
       this.$Message.error({
-        content: this.msgText,
+        content: this.errorMsgText,
         duration: 3
       })
     }
+  },
+  mounted() {
+    console.log('APP', this.loadingStatus)
   }
 }
 </script>

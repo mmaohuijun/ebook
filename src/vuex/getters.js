@@ -18,7 +18,10 @@ const getters = {
     return caseName
   },
   loginStatus: state => state.app.hasLogin,
-  selectMenu: state => state.app.sideBarSelect
+  loadingStatus: state => state.app.isLoading,
+  selectMenu: state => state.app.sideBarSelect,
+  ifShowErrorMsg: state => state.app.ifShowErrorMsg,
+  errorMsgText: state => state.app.errorMsgText
 }
 
 export default getters

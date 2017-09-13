@@ -77,7 +77,6 @@ export default {
         if (_.isNull(response)) return
         console.log('login', response)
 
-        // this.$store.commit('hasLogin')
         this.$store.dispatch('toggleLoginStatus', true)
         const reData = response.data
         const loginInfo = {

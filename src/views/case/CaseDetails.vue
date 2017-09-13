@@ -53,18 +53,14 @@ export default {
       }
     },
     currentTabsName() {
-      return this.$store.state.CURRENT_PATH
+      return this.$store.state.app.currentPathName
     }
   },
   methods: {
     // 点击tab栏切换
     onClickTabs(pathName) {
-      console.log('onClickTabs', pathName)
       this.$router.push({ name: pathName, params: { caseId: this.caseId } })
     }
-  },
-  mounted() {
-    console.log('案场详情mounted', this.caseName, this.caseId)
   }
 }
 </script>
