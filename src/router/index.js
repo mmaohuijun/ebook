@@ -98,9 +98,9 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   console.log('router.beforeEach', to, from, 'path', path)
-  store.commit('initSideBar', to.name)
+  store.dispatch('setSideBarSelect', to.name)
   if (to.path.indexOf('case') !== -1) { // 包含'Case'的页面
-    store.commit('initSideBar', 'CaseManage')
+    store.dispatch('setSideBarSelect', 'CaseManage')
   }
 
   // 检查页面是否需要登录
