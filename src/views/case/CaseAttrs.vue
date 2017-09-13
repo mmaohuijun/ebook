@@ -40,11 +40,11 @@
     width="560"
     class-name="case-attrs">
     <p slot="header">{{modalTitle}}</p>
-    <Form :label-width="120" class="modal-form" v-if="isAttrsGroup">
-      <Form-item label="栏目名称：">
+    <Form :label-width="120" class="modal-form" v-if="isAttrsGroup" :rules="ruleValidate">
+      <Form-item label="栏目名称：" prop="attrsGroupLabel">
         <Input placeholder="请输入" v-model="attrsGroupLabel" :maxlength="64"></Input>
       </Form-item>
-      <Form-item label="名称序号：">
+      <Form-item label="名称序号：" prop="attrsGroupIndex">
         <Input placeholder="请输入(数字)" v-model="attrsGroupIndex" :maxlength="5"></Input>
       </Form-item>
       <Form-item label="是否隐藏：">
@@ -122,7 +122,12 @@ export default {
       attrsDetailsOptions: [], // 详细维度选择项
       attrsDetailsOptionsText: '', // 详细维度新建选择项
       ifNew: false, // 新建还是编辑
-      backupData: {}
+      backupData: {},
+      ruleValidate: {
+        attrsGroupLabel: [
+          { required: true, message: '请输入栏目名称', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {

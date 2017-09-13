@@ -17,7 +17,8 @@ const getters = {
     const caseName = $storage.sessionStorage.getItem('CASE_NAME')
     return caseName
   },
-  loginStatus: state => state.app.hasLogin
+  loginStatus: state => state.app.hasLogin,
+  selectMenu: state => state.app.sideBarSelect
 }
 
 export default getters

@@ -76,16 +76,18 @@ export default {
       'name',
       'mobile',
       'no',
-      'loginName'
+      'loginName',
+      'selectMenu'
     ]),
     ...mapState({
-      NODE_PATH: state => state.NODE_PATH,
-      selectMenu: state => state.SIDEBAR_SELECT
+      NODE_PATH: state => state.NODE_PATH
+      // selectMenu: state => state.app.sideBarSelect
     }) },
   methods: {
     onClickMenu(name) {
       console.log('onClickMenu', name)
-      this.$store.commit('initSideBar', name)
+      // this.$store.commit('initSideBar', name)
+      this.$store.dispatch('setSideBarSelect', name)
       this.$router.push({ name })
     },
     logout() {
