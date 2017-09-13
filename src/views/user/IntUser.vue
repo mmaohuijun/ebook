@@ -65,6 +65,17 @@ export default {
         callback()
       }
     }
+    const EmailVaild = (rule, value, callback) => {
+      if (!value) {
+        callback()
+        return
+      }
+      if (!/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(value)) {
+        callback(new Error('邮箱格式不正确'))
+      } else {
+        callback()
+      }
+    }
     return {
       modal: {
         show: false,        // 是否显示编辑和查看modal
@@ -96,6 +107,9 @@ export default {
         mobile: [
           { required: true, message: '电话号码不能为空', trigger: 'blur' },
           { validator: MobileVaild, trigger: 'blur' }
+        ],
+        email: [
+          { validator: EmailVaild, trigger: 'blur' }
         ],
         password: [
           // { required: true, message: '密码不能为空', trigger: 'blur' }
