@@ -1,11 +1,12 @@
 const app = {
   state: {
-    sideBarSelect: '',
-    currentPathName: '',
-    hasLogin: false,
-    isLoading: false,
+    sideBarSelect: '', // 侧边栏当前选择
+    currentPathName: '', // 当前路径
+    hasLogin: false, // 是否登录
+    isLoading: false, // 加载中...
     ifShowErrorMsg: false,
-    errorMsgText: ''
+    errorMsgText: '',
+    BASE_PATH: process.env.BASE_PATH // 全局路径
   },
   mutations: {
     SET_SIDEBAR_SELECT(state, str) {

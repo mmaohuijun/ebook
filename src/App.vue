@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'app',
@@ -17,22 +17,16 @@ export default {
       'loadingStatus',
       'ifShowErrorMsg',
       'errorMsgText'
-    ]),
-    ...mapState({
-      // ifShowErrorMsg: state => state.ifShowErrorMsg,
-      // msgText: state => state.msgText
-    })
+    ])
   },
   watch: {
     loadingStatus(flag) {
       if (!flag) return
-      // if (flag) {
       this.msg = this.$Message.loading({
         content: '正在加载中...',
         duration: 0
       })
       _.delay(this.msg, 500)
-      // }
     },
     ifShowErrorMsg(flag) {
       if (!flag) return
@@ -41,9 +35,6 @@ export default {
         duration: 3
       })
     }
-  },
-  mounted() {
-    console.log('APP', this.loadingStatus)
   }
 }
 </script>

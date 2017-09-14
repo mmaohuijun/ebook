@@ -4,7 +4,7 @@
     <div style="overflow: hidden; margin-bottom: 30px;">
       <div class="field-logo">
         <img v-if="logoUrl !== ''" :src="logoUrl">
-        <img v-else :src="`${NODE_PATH}static/img/field_logo.png`">
+        <img v-else :src="`${BASE_PATH}static/img/field_logo.png`">
         <Button type="primary" class="custom-btn" @click="toggleUploadShow('logo')">更换LOGO</Button>
         <!-- url="http://172.18.84.75:88/admin/case/img-upload"  -->
          <img-upload field="file"
@@ -38,7 +38,7 @@
         <div class="field-bg__title">案场图片：</div>
         <div class="field-bg__img">
           <img v-if="bgImgUrl !== ''" :src="bgImgUrl" alt="">
-          <img v-else :src="`${NODE_PATH}static/img/field_bg.png`" alt="">
+          <img v-else :src="`${BASE_PATH}static/img/field_bg.png`" alt="">
           <Button type="ghost" class="btn-upload-field-bg" @click="toggleUploadShow('bg')">上传图片</Button>
           <img-upload field="file"
             v-model="bgUploadShow"
@@ -68,6 +68,7 @@
 <script>
 import CaseMap from 'components/CaseMap'
 import imgUpload from 'vue-image-crop-upload'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -83,20 +84,16 @@ export default {
       appName: '', // 公众号名称
       appID: '', // 公众号id
       appSecret: '', // 公众号密码
-      initialized: 0,
-      displayPane: 'caseInfo', // 选项栏显示栏
-      uploadMode: '',
+      uploadMode: '', // 上传标识 logo或者bg
       logoUploadShow: false,
       bgUploadShow: false
     }
   },
   computed: {
-    NODE_PATH() {
-      return this.$store.state.NODE_PATH
-    },
-    caseId() {
-      return this.$store.state.cases.caseId
-    }
+    ...mapGetters([
+      'caseId',
+      'BASE_PATH'
+    ])
   },
   methods: {
     initCaseInfo() {
@@ -109,7 +106,6 @@ export default {
           this[key] = reData[key]
         }
         // 全局设置案场名称
-        // this.$store.commit('initCaseName', this.name)
         this.$store.dispatch('setCaseName', this.name)
       })
     },
@@ -146,7 +142,6 @@ export default {
           duration: 3
         })
         // 新建成功后返回新案场caseId
-        // this.$store.commit('initCaseId', response.data)
         this.$store.dispatch('setCaseId', response.data)
         this.initCaseInfo()
       })
@@ -207,7 +202,6 @@ export default {
         } else if (this.uploadMode === 'bg') {
           this.bgImgUrl = response.data
         }
-        // this.hideUpload()
       })
     }
   },

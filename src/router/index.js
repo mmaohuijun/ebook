@@ -24,7 +24,7 @@ const ExtUser = () => import('views/user/ExtUser')
 
 Vue.use(Router)
 
-const path = store.state.NODE_PATH
+const path = store.getters.BASE_PATH
 
 const routesMap = [
   { path: '/', redirect: `${path}case` },

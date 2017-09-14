@@ -39,12 +39,12 @@ export default {
     }
   },
   computed: {
-    NODE_PATH() {
-      return this.$store.state.NODE_PATH
+    BASE_PATH() {
+      return this.$store.getters.BASE_PATH
     },
     bgImg() {
       return {
-        background: `url(${this.NODE_PATH}static/img/login_bg.jpg)`,
+        background: `url(${this.BASE_PATH}static/img/login_bg.jpg)`,
         backgroundSize: 'cover'
       }
     }

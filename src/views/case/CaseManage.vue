@@ -89,11 +89,10 @@ export default {
   },
   computed: {
     caseId() {
-      return this.$store.state.cases.caseId
+      return this.$store.getters.caseId
     }
   },
   mounted() {
-    console.log('案场管理', this.caseId)
     this.initCaseList()
   },
   methods: {

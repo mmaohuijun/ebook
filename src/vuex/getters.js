@@ -13,15 +13,22 @@ const getters = {
     return userInfo !== undefined
   },
   caseId: state => state.cases.caseId,
-  caseName: () => {
-    const caseName = $storage.sessionStorage.getItem('CASE_NAME')
-    return caseName
+  caseName: state => {
+    const caseName = state.cases.caseName
+    const caseNameFromStorage = $storage.sessionStorage.getItem('CASE_NAME')
+    if (state.cases.caseId !== '0') {
+      return caseName || caseNameFromStorage
+    } else {
+      return '新建案场'
+    }
   },
   loginStatus: state => state.app.hasLogin,
   loadingStatus: state => state.app.isLoading,
   selectMenu: state => state.app.sideBarSelect,
   ifShowErrorMsg: state => state.app.ifShowErrorMsg,
-  errorMsgText: state => state.app.errorMsgText
+  errorMsgText: state => state.app.errorMsgText,
+  currentPathName: state => state.app.currentPathName,
+  BASE_PATH: state => state.app.BASE_PATH
 }
 
 export default getters

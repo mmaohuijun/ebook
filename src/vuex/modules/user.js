@@ -2,10 +2,10 @@ import $storage from 'api/storage'
 
 const user = {
   state: {
-    loginName: '',
-    name: '',
-    mobile: '',
-    no: ''
+    loginName: '', // 登录账号
+    name: '', // 姓名
+    mobile: '', // 手机
+    no: '' // 工号
   },
   mutations: {
     SET_USERINFO(state, json) {
@@ -20,7 +20,6 @@ const user = {
   },
   actions: {
     setUserInfo({ commit, dispatch }, json) {
-      console.log('setUserInfo', json)
       dispatch('clearUserInfo')
       commit('SET_USERINFO', json)
       $storage.sessionStorage.setItem('USER_INFO', json)

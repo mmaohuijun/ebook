@@ -2,12 +2,12 @@
 <aside class="layout__aside">
   <div class="layout__aside_scroll">
     <div class="layout__aside-header">
-      <div class="layout__aside-avatar"><img :src="`${NODE_PATH}static/img/avatar.png`" alt=""><div class="logout" @click="logout">注销</div></div>
+      <div class="layout__aside-avatar"><img :src="`${BASE_PATH}static/img/avatar.png`" alt=""><div class="logout" @click="logout">注销</div></div>
       <p class="layout__aside-name">{{name}}</p>
       <ul class="layout__aside-info">
         <li>
           <p>工号：{{no}}</p>
-           <router-link :to="`${NODE_PATH}setting/modpsw`">修改密码</router-link> 
+           <router-link :to="`${BASE_PATH}setting/modpsw`">修改密码</router-link> 
         </li>
         <li>
           <p>联系方式：{{mobile}}</p>
@@ -32,7 +32,7 @@
 </aside>
 </template>
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'SideBar2',
@@ -77,11 +77,10 @@ export default {
       'mobile',
       'no',
       'loginName',
-      'selectMenu'
-    ]),
-    ...mapState({
-      NODE_PATH: state => state.NODE_PATH
-    }) },
+      'selectMenu',
+      'BASE_PATH'
+    ])
+  },
   methods: {
     onClickMenu(name) {
       console.log('onClickMenu', name)
