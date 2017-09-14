@@ -50,6 +50,11 @@ export default {
           children: []
         },
         {
+          title: '权限',
+          name: 'Authority',
+          children: []
+        },
+        {
           title: '用户',
           name: 'User',
           path: '',
@@ -64,7 +69,6 @@ export default {
             }
           ]
         }
-        // { title: '权限', path: '', key: 'auth', children: [] },
         // { title: '客户数据', path: '', key: 'cdata', children: [{ title: '来电记录', path: '/', key: 'call' }, { title: '到访记录', path: '/', key: 'visit' }, { title: '成交记录', path: '/', key: 'deal' }, { title: '未分配客户', path: '/', key: 'unasign' }, { title: '新建客户', path: '/', key: 'newclient' }] },
         // { title: '硬件列表', path: '', key: 'hardw', children: [] }
       ]

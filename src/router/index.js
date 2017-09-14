@@ -18,6 +18,9 @@ const CaseAttrs = () => import('views/case/CaseAttrs')
 /* 组织 */
 const Organization = () => import('views/organization/Organization')
 
+/* 权限 */
+const Authority = () => import('views/authority/Authority')
+
 /* 用户 */
 const IntUser = () => import('views/user/IntUser')
 const ExtUser = () => import('views/user/ExtUser')
@@ -59,6 +62,16 @@ const routesMap = [
     name: '组织',
     children: [
         { path: 'index', name: 'Organization', component: Organization }
+    ],
+    meta: { requiresLogin: true }
+  },
+  {
+    path: `${path}authority`,
+    component: Layout,
+    redirect: `${path}authority/index`,
+    name: '权限',
+    children: [
+        { path: 'index', name: 'Authority', component: Authority }
     ],
     meta: { requiresLogin: true }
   },
