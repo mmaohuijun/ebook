@@ -435,4 +435,14 @@ export default {
     position: fixed!important;
   }
 }
+
+.ivu-table-sort {
+  top: -2px;
+  width: 14px;
+  height: 16px;
+
+  i {
+    height: 7px;
+  }
+}
 </style>
