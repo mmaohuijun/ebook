@@ -164,6 +164,8 @@ export default {
       font-size: 14px !important;
 
       .ivu-checkbox-inner {
+        width: 14px;
+        height: 14px;
         border: 1px solid #1c93ea !important;
         background: none !important;
       }

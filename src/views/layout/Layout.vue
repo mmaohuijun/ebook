@@ -190,9 +190,10 @@ export default {
 
   .ivu-checkbox {
     &-inner {
-      width: 14px;
-      height: 14px;
-      background: #e5e5e5;
+      width: 18px;
+      height: 18px;
+      background: #d2e9fb;
+      border-radius: 4px;
       border: none;
 
       &:after {
@@ -202,9 +203,9 @@ export default {
 
     &-checked {
       .ivu-checkbox-inner {
-        width: 14px;
-        heigth: 14px;
-        background: #4e546c;
+        width: 18px;
+        heigth: 18px;
+        background: #1c93ea;
         &:after{
           display: none;
         }
@@ -443,6 +444,21 @@ export default {
 
   i {
     height: 7px;
+  }
+}
+
+.ivu-checkbox-indeterminate .ivu-checkbox-inner {
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 9px;
+    width: 18px;
+    border-radius: 0 0 4px 4px;
+    background: #1c93ea;
   }
 }
 </style>

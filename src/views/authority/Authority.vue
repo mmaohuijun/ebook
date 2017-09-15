@@ -17,7 +17,7 @@
           <div class="authority-check-all"><Checkbox>组织</Checkbox></div>
         </td>
         <td>
-          <div class="authority-check-all"><Checkbox>内部用户</Checkbox></div>
+          <div class="authority-check-all"><Checkbox>用户</Checkbox></div>
           <div class="authority-check-items">
             <div class="authority-check-item"><Checkbox>内部用户</Checkbox></div>
             <div class="authority-check-item"><Checkbox>外部用户</Checkbox></div>
@@ -47,7 +47,7 @@
           <div class="authority-check-all"><Checkbox>组织</Checkbox></div>
         </td>
         <td>
-          <div class="authority-check-all"><Checkbox>内部用户</Checkbox></div>
+          <div class="authority-check-all"><Checkbox :indeterminate="true">内部用户</Checkbox></div>
           <div class="authority-check-items">
             <div class="authority-check-item"><Checkbox>内部用户</Checkbox></div>
             <div class="authority-check-item"><Checkbox>外部用户</Checkbox></div>
