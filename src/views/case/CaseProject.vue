@@ -124,7 +124,17 @@ export default {
           },
           {
             propertyType: '02',
-            propertyTypeName: '别墅',
+            propertyTypeName: '别墅联排',
+            apartTypes: []
+          },
+          {
+            propertyType: '04',
+            propertyTypeName: '别墅叠加',
+            apartTypes: []
+          },
+          {
+            propertyType: '05',
+            propertyTypeName: '别墅独栋',
             apartTypes: []
           },
           {
@@ -150,7 +160,17 @@ export default {
         },
         {
           propertyType: '02',
-          propertyTypeName: '别墅',
+          propertyTypeName: '别墅联排',
+          apartTypes: []
+        },
+        {
+          propertyType: '04',
+          propertyTypeName: '别墅叠加',
+          apartTypes: []
+        },
+        {
+          propertyType: '05',
+          propertyTypeName: '别墅独栋',
           apartTypes: []
         },
         {

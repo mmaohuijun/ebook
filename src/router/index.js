@@ -43,13 +43,13 @@ const routesMap = [
     redirect: `${path}case/index`,
     name: '案场',
     children: [
-        { path: 'index', name: 'CaseManage', component: CaseManage },
+      { path: 'index', name: 'CaseManage', component: CaseManage },
       { path: ':caseId',
         component: CaseDetails,
         children: [
-            { path: 'info', name: 'CaseInfo', component: CaseInfo },
-            { path: 'project', name: 'CaseProject', component: CaseProject },
-            { path: 'attrs', name: 'CaseAttrs', component: CaseAttrs }
+          { path: 'info', name: 'CaseInfo', component: CaseInfo },
+          { path: 'project', name: 'CaseProject', component: CaseProject },
+          { path: 'attrs', name: 'CaseAttrs', component: CaseAttrs }
         ]
       }
     ],
@@ -61,7 +61,7 @@ const routesMap = [
     redirect: `${path}organization/index`,
     name: '组织',
     children: [
-        { path: 'index', name: 'Organization', component: Organization }
+      { path: 'index', name: 'Organization', component: Organization }
     ],
     meta: { requiresLogin: true }
   },
@@ -71,7 +71,7 @@ const routesMap = [
     redirect: `${path}authority/index`,
     name: '权限',
     children: [
-        { path: 'index', name: 'Authority', component: Authority }
+      { path: 'index', name: 'Authority', component: Authority }
     ],
     meta: { requiresLogin: true }
   },
@@ -81,8 +81,8 @@ const routesMap = [
     redirect: `${path}user/intUser`,
     name: '用户',
     children: [
-        { path: 'intUser', name: 'IntUser', component: IntUser },
-        { path: 'extUser', name: 'ExtUser', component: ExtUser }
+      { path: 'intUser', name: 'IntUser', component: IntUser },
+      { path: 'extUser', name: 'ExtUser', component: ExtUser }
     ],
     meta: { requiresLogin: true }
   },
@@ -92,7 +92,7 @@ const routesMap = [
     redirect: `${path}setting/modpsw`,
     name: '设置',
     children: [
-        { path: 'modpsw', name: 'ModifyPassword', component: ModifyPassword }
+      { path: 'modpsw', name: 'ModifyPassword', component: ModifyPassword }
     ],
     meta: { requiresLogin: true }
   },

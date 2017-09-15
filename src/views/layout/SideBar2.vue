@@ -57,7 +57,6 @@ export default {
         {
           title: '用户',
           name: 'User',
-          path: '',
           children: [
             {
               title: '内部用户',
