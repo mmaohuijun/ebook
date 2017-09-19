@@ -5,7 +5,8 @@ const user = {
     loginName: '', // 登录账号
     name: '', // 姓名
     mobile: '', // 手机
-    no: '' // 工号
+    no: '', // 工号
+    auth: ['CaseManage', 'Organization', 'IntUser', 'ExtUser'] // 权限
   },
   mutations: {
     SET_USERINFO(state, json) {
@@ -13,6 +14,7 @@ const user = {
       state.name = json.name
       state.mobile = json.mobile
       state.no = json.no
+      // state.auth = json.auth
     },
     SET_LOGIN_NAME(state, name) {
       state.loginName = name

@@ -37,7 +37,9 @@
           <Form-item label="物业选择：">
             <Select style="width: 180px;" @on-change="changeProperty" v-model="inputModel.propertyType">
               <Option value="01">住宅</Option>
-              <Option value="02">别墅</Option>
+              <Option value="02">别墅联排</Option>
+              <Option value="04">别墅叠加</Option>
+              <Option value="05">别墅独栋</Option>
               <Option value="03">酒店式公寓</Option>
             </Select>
           </Form-item>
@@ -52,17 +54,17 @@
             <span style="font-size: 16px; vertical-align: middle;">厅</span>
           </Form-item>
           <Form-item>
-            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType === '02'" v-model="inputModel.apartTypes3">
+            <Select placeholder="" style="width: 74px;" v-show="isVilla" v-model="inputModel.apartTypes3">
               <Option v-for="n in (1000 / 50)" :value="(n * 50)" :key="n">{{n * 50}}</Option>
             </Select>
-            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType !== '02'" v-model="inputModel.apartTypes3">
+            <Select placeholder="" style="width: 74px;" v-show="!isVilla" v-model="inputModel.apartTypes3">
               <Option v-for="n in (300 / 10)" :value="(n * 10)" :key="n">{{n * 10}}</Option>
             </Select>
             <span style="margin: 0 10px; font-size: 16px; vertical-align: middle;">-</span>
-            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType === '02'" v-model="inputModel.apartTypes4">
+            <Select placeholder="" style="width: 74px;" v-show="isVilla" v-model="inputModel.apartTypes4">
               <Option v-for="n in (1000 / 50)" :value="(n * 50)" :key="n">{{n * 50}}</Option>
             </Select>
-            <Select placeholder="" style="width: 74px;" v-show="inputModel.propertyType !== '02'" v-model="inputModel.apartTypes4">
+            <Select placeholder="" style="width: 74px;" v-show="!isVilla" v-model="inputModel.apartTypes4">
               <Option v-for="n in (300 / 10)" :value="(n * 10)" :key="n">{{n * 10}}</Option>
             </Select>
             <span style="font-size: 16px; vertical-align: middle;">㎡</span>
@@ -93,26 +95,7 @@ export default {
     return {
       modalShow: false,
       modalTitle: '',
-      caseList: [
-        // {
-        //   id: '1',
-        //   name: '中南一期1',
-        //   propertys: [
-        //     {
-        //       propertyTypeName: '别墅',
-        //       apartTypes: ['1室1厅 50-70㎡', '1室1厅 70-90㎡']
-        //     },
-        //     {
-        //       propertyTypeName: '住宅',
-        //       apartTypes: ['1室1厅 50-70㎡', '1室1厅 70-90㎡']
-        //     },
-        //     {
-        //       propertyTypeName: '酒店式公寓',
-        //       apartTypes: ['1室1厅 50-70㎡', '1室1厅 70-90㎡']
-        //     }
-        //   ]
-        // }
-      ],
+      caseList: [],
       caseProject: {
         id: '',
         name: '',
@@ -182,6 +165,10 @@ export default {
     }
   },
   computed: {
+    // 是否别墅
+    isVilla() {
+      return this.inputModel.propertyType !== '01' && this.inputModel.propertyType !== '03'
+    },
     caseId() {
       return this.$store.state.cases.caseId
     }
@@ -205,6 +192,7 @@ export default {
     addProject() {
       this.caseProject.id = '0'
       this.inputModel.name = ''
+      this.inputModel.propertyType = ''
       this.inputModel.apartTypes1 = ''
       this.inputModel.apartTypes2 = ''
       this.inputModel.apartTypes3 = ''
@@ -246,14 +234,20 @@ export default {
         return
       }
       switch (propertyType) {
-        case '01':
+        case '01': // 住宅
           this.caseProject.propertys[0].apartTypes.push(apartTypes)
           break
-        case '02':
+        case '02': // 别墅联排
           this.caseProject.propertys[1].apartTypes.push(apartTypes)
           break
-        case '03':
+        case '04': // 别墅叠加
           this.caseProject.propertys[2].apartTypes.push(apartTypes)
+          break
+        case '05': // 别墅独栋
+          this.caseProject.propertys[3].apartTypes.push(apartTypes)
+          break
+        case '03': // 酒店式公寓
+          this.caseProject.propertys[4].apartTypes.push(apartTypes)
           break
       }
     },

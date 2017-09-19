@@ -42,7 +42,7 @@
 - 设置
   - 登录 -- `Login.Vue`
   - 修改密码 -- `ModifyPassword.Vue`
-  
+
 - 案场
   - 案场管理 -- `CaseManage.vue`
   - 案场信息 -- `CaseInfo.vue`
@@ -52,3 +52,23 @@
 - 用户
   - 内部用户 -- `IntUser.vue`
   - 外部用户 -- `ExtUser.vue`
+
+/* 案场 */
+CaseManage
+
+/* 组织 */
+Organization
+
+/* 用户 */
+IntUser // 内部用户
+ExtUser // 外部用户
+
+/* 权限 */
+Authority
+
+/* 客户 */
+CallClient // 来电客户
+VisitClient // 到访客户
+DealClient // 成交客户
+UnassignedClient // 未分配客户
+AddClient // 新建客户

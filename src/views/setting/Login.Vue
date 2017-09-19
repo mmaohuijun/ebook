@@ -28,6 +28,8 @@
 </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -39,9 +41,13 @@ export default {
     }
   },
   computed: {
-    BASE_PATH() {
-      return this.$store.getters.BASE_PATH
-    },
+    ...mapGetters([
+      'BASE_PATH',
+      'firstRoute'
+    ]),
+    // BASE_PATH() {
+    //   return this.$store.getters.BASE_PATH
+    // },
     bgImg() {
       return {
         background: `url(${this.BASE_PATH}static/img/login_bg.jpg)`,
@@ -95,7 +101,9 @@ export default {
         }
 
         /** 应该根据用户权限跳转对应的菜单 */
-        this.$router.push({ name: 'CaseManage' })
+        // const auth = ['CaseManage', 'Organization', 'IntUser', 'ExtUser']
+        // this.$store.dispatch('setUserAuth', auth)
+        this.$router.push({ name: this.firstRoute })
       })
     },
     checkIfHadRemeber() {

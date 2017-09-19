@@ -16,14 +16,15 @@
       </ul>
     </div>
     <ul class="laylout__aside-menu">
-      <li class="menu__item" v-for="(ele, index) in menuDataSource" :key="index">
+      <!-- <li class="menu__item" v-for="(ele, index) in menuDataSource" :key="index"> -->
+      <li class="menu__item" v-for="(ele, index) in sideBarMenu" :key="index">
         <ul>
           <li @click="ele.children.length === 0 ? onClickMenu(ele.name) : ''">
-            <a href="javascript:;" v-if="ele.children.length === 0" :class="selectMenu === ele.name ? 'menu__link menu__link--current' : 'menu__link'">{{ele.title}}</a>
-            <p v-else :class="selectMenu === ele.name ? 'menu__link menu__link--current' : 'menu__link'">{{ele.title}}</p>
+            <a href="javascript:;" v-if="ele.children.length === 0" :class="sideBarSelect === ele.name ? 'menu__link menu__link--current' : 'menu__link'">{{ele.title}}</a>
+            <p v-else :class="sideBarSelect === ele.name ? 'menu__link menu__link--current' : 'menu__link'">{{ele.title}}</p>
           </li>
           <li class="menu__child" v-for="(item, index) in ele.children" :key="index" @click="onClickMenu(item.name)">
-            <a href="javascript:;" :class="selectMenu === item.name ? 'menu__link menu__link--current' : 'menu__link'">{{item.title}}</a>
+            <a href="javascript:;" :class="sideBarSelect === item.name ? 'menu__link menu__link--current' : 'menu__link'">{{item.title}}</a>
           </li>
         </ul>
       </li>
@@ -68,7 +69,7 @@ export default {
             }
           ]
         }
-        // { title: '客户数据', path: '', key: 'cdata', children: [{ title: '来电记录', path: '/', key: 'call' }, { title: '到访记录', path: '/', key: 'visit' }, { title: '成交记录', path: '/', key: 'deal' }, { title: '未分配客户', path: '/', key: 'unasign' }, { title: '新建客户', path: '/', key: 'newclient' }] },
+        // { title: '客户数据', path: '', key: 'cdata', children: [{ title: '来电客户', path: '/', key: 'call' }, { title: '到访客户', path: '/', key: 'visit' }, { title: '成交客户', path: '/', key: 'deal' }, { title: '未分配客户', path: '/', key: 'unasign' }, { title: '新建客户', path: '/', key: 'newclient' }] },
         // { title: '硬件列表', path: '', key: 'hardw', children: [] }
       ]
     }
@@ -79,8 +80,11 @@ export default {
       'name',
       'mobile',
       'no',
+      'auth',
       'loginName',
-      'selectMenu',
+      'sideBarMenuMap',
+      'sideBarMenu',
+      'sideBarSelect',
       'BASE_PATH'
     ])
   },
@@ -97,7 +101,30 @@ export default {
         this.$store.dispatch('clearUserInfo')
         this.$router.push({ name: 'Login' })
       })
+    },
+    initSideBar() {
+      const menu = []
+      let hasSameMenu = false
+      _.each(this.auth, key => {
+        _.each(menu, menuItem => {
+          if (menuItem.name === this.sideBarMenuMap[key].name) {
+            _.mergeWith(menuItem, this.sideBarMenuMap[key], (objValue, srcValue) => {
+              if (_.isArray(objValue)) {
+                return objValue.concat(srcValue)
+              }
+            })
+            hasSameMenu = true
+          }
+        })
+        if (hasSameMenu) return
+        menu.push(this.sideBarMenuMap[key])
+      })
+      this.$store.dispatch('setSideBarMenu', menu)
     }
+  },
+  mounted() {
+    console.log('this.auth', this.auth)
+    this.initSideBar()
   }
 }
 </script>
