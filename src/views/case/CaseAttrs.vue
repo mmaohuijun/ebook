@@ -122,6 +122,13 @@ export default {
         callback()
       }
     }
+    const validateOptions = (rule, value, callback) => {
+      if (_.isEmpty(this.attrsDetails.options)) {
+        callback(new Error('请填写详细维度'))
+      } else {
+        callback()
+      }
+    }
     return {
       attrsDetailsModal: false,
       attrsGroupModal: false,
@@ -164,8 +171,8 @@ export default {
         ],
         require: [{ required: true, message: '请选择填写要求', trigger: 'blur' }],
         type: [{ required: true, message: '请选择类型', trigger: 'blur' }],
-        textType: [{ required: true, message: '请选择文本类型', trigger: 'blur' }]
-        // optionsText: [{ required: true, message: '请填写详细维度', trigger: 'blur' }]
+        textType: [{ required: true, message: '请选择文本类型', trigger: 'blur' }],
+        optionsText: [{ validator: validateOptions, trigger: 'blur' }]
       }
     }
   },
@@ -316,39 +323,6 @@ export default {
     },
     // 验证维度详情的data
     verifyAttrsDetailsData() {
-      if (_.trim(this.attrsDetails.label) === '') {
-        this.showErrorMsg('请输入维度名称')
-        this.attrsDetails.label = ''
-        return
-      } else if (_.trim(this.attrsDetails.sort) === '') {
-        this.showErrorMsg('请输入名称序号')
-        this.attrsDetails.sort = ''
-        return
-      } else if (!_.isFinite(parseInt(this.attrsDetails.sort))) {
-        this.showErrorMsg('名称序号请输入数字')
-        this.attrsDetails.sort = ''
-        return
-      } else if (_.trim(this.attrsDetails.require) === '') {
-        this.showErrorMsg('请选择填写要求')
-        this.attrsDetails.require = ''
-        return
-      } else if (_.trim(this.attrsDetails.type) === '') {
-        this.showErrorMsg('请选择类型')
-        this.attrsDetails.type = ''
-        return
-      }
-      if (this.attrsDetails.type.indexOf('text') !== -1) {
-        if (_.trim(this.attrsDetails.textType) === '') {
-          this.showErrorMsg('请选择文本类型')
-          this.attrsDetails.textType = ''
-          return
-        }
-      } else {
-        if (_.isEmpty(this.attrsDetails.options)) {
-          this.showErrorMsg('请填写详细维度')
-          return
-        }
-      }
       const requestData = {
         id: this.attrsDetails.id,
         groupId: this.attrsGroup.id,
@@ -371,27 +345,23 @@ export default {
       }
       console.log('详细维度保存', requestData)
 
-      // 判断是新建还是编辑
-      if (this.ifNew) {
-        return requestData
-      } else {
-        // 和备份数据做比较, 如果一样则表示没有改动, 返回false
-        return _.isEqual(this.backupData, requestData) ? false : requestData
-      }
+      let vFlag = false
+      this.$refs.attrsDetails.validate(flag => {
+        console.log('attrsDetails validate', flag)
+        vFlag = flag
+      })
+
+      // 和备份数据做比较, 如果一样则表示没有改动, 返回false
+      return _.isEqual(this.backupData, requestData) || !vFlag ? false : requestData
     },
     // 详细维度保存（新建、修改）
     saveAttrsDetails() {
       const requestData = this.verifyAttrsDetailsData()
       console.log('详细维度保存（新建、修改）requestData', requestData)
 
-      this.$refs.attrsDetails.validate(flag => {
-        console.log('attrsDetails validate', flag)
-      })
-
       if (!requestData) {
         // 编辑状态下点击'完成', 没有更改则隐藏modal
-        if (this.ifNew) return
-        this.hideModal()
+        if (!this.ifNew) this.hideModal()
         return
       }
 
@@ -508,9 +478,6 @@ export default {
       this.attrsDetails.options = []
       this.attrsDetails.optionsText = ''
       this.backupData = {}
-    },
-    showErrorMsg(text) {
-      this.$store.dispatch('showErrorMsg', text)
     },
     // 鼠标移入分栏高亮显示编辑
     onEnterAttrs(item) {

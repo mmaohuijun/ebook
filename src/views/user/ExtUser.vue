@@ -2,7 +2,7 @@
 </style>
 <template>
 <div class="layout__content">
-  <div class="layout__header">
+  <!-- <div class="layout__header">
     <h2 class="layout__header-title">用户 - 外部用户</h2>
     <div class="layout__header-tool">
       <span style="font-size:16px; color:#fff; padding: 0 10px;">时间</span>
@@ -13,7 +13,20 @@
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="removeUser(selectedId)"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addModal"></Button>
     </div>
-  </div>
+  </div> -->
+
+  <ebook-header
+    header-title="用户 - 外部用户"
+    :dateSearch="true"
+    :textSearch="true"
+    placeholder="姓名／手机号"
+    :addBtn="true"
+    :deleteBtn="isTrash"
+    @onDateSearch="dateSearch"
+    @onTextSearch="textSearch"
+    @onAdd="addModal"
+    @onDelete="removeUser(selectedId)"></ebook-header>
+
   <div class="layout__body">
     <Table class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
     <Spin size="large" fix v-if="false"></Spin>
@@ -77,6 +90,8 @@
 </div>
 </template>
 <script>
+import EbookHeader from 'components/EbookHeader'
+
 export default {
   data() {
     const MobileVaild = (rule, value, callback) => {
@@ -356,14 +371,17 @@ export default {
       }
     },
     // 时间段搜索
-    dateSearch() {
+    dateSearch(starDate, endDate) {
+      this.startDate = starDate
+      this.endDate = endDate
       this.name = ''
       this.isSearch = true
       this.pageNo = 1
       this.userList()
     },
     // 文本搜索
-    textSearch() {
+    textSearch(seachText) {
+      this.name = seachText
       this.startDate = ''
       this.endDate = ''
       this.isSearch = true
@@ -408,6 +426,9 @@ export default {
         this.resetFields('userInfo')
       }
     }
+  },
+  components: {
+    EbookHeader
   }
 }
 </script>
