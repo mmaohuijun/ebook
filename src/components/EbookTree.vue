@@ -1,19 +1,16 @@
 <template>
   <li>
     <p class="ebook-tree__item" >
-      <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.ifCase" :style="{paddingLeft: pval + 'px'}"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
-      <a href="#" v-if="treeData.ifCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}">{{treeData.title}}</a>
-      <span class="ebook-tree__item--title" v-else>{{treeData.title}}</span>
-      <span class="ebook-tree__item--add iconfont icon-tianjia" @click="addNewChild"></span>
+      <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.isCase" :style="{paddingLeft: pval + 'px'}"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
+      <a href="#" v-if="treeData.isCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}">{{treeData.name}}</a>
+      <span class="ebook-tree__item--title" @click="eidtNewChild" v-model="isEdit"  v-else>{{treeData.name}}</span>
+      <span class="ebook-tree__item--add iconfont icon-tianjia" @click="addNewChild" v-model="isEdit"></span>
     </p>
     <ul v-if="treeData.children" class="ebook-tree__item--children">
-      <ebook-tree v-show="open" v-for="(item, index) in treeData.children" :key="index" :tree-data="item"></ebook-tree>
+      <ebook-tree v-show="open" v-for="(item, index) in treeData.children" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree>
     </ul>
   </li>
-
 </template>
-
-
 <script>
 import EbookTree from 'components/EbookTree'
 
@@ -25,14 +22,9 @@ export default {
       open: false,
       pval: 0,
       mval: 0,
-      myAddModal: false
+      isEdit: false //  状态  编辑/添加
     }
   },
-  // computed: {
-  //   getLevel(obj) {
-  //     console.log(this.getLevel('string'))
-  //   }
-  // },
   props: {
     treeData: Object
   },
@@ -40,23 +32,35 @@ export default {
     EbookTree
   },
   methods: {
+    addNewOrg(ele, edit) {  // 触发自定义方法的事件
+      this.$emit('openModal', ele, edit)
+    },
     toggle() {
       if (!this.isCase) {
         this.open = !this.open
       }
     },
-    addNewChild() {
+    addNewChild() {  // 定义点击事件 自定义方法 并传递参数
       console.log('here to create a new child')
-      // this.myAddModal = true
-      this.$emit('openModal')
+      this.isEdit = false
+      this.$emit('openModal', this.treeData, this.isEdit)
+      // console.log(this.isEdit)
+    },
+    eidtNewChild() {  // 编辑 与 修改 区分
+      console.log('here to edit an old child')
+      this.isEdit = true
+      this.$emit('openModal', this.treeData, this.isEdit)
     }
   },
-  mounted() {
+  mounted() { //  按层级 缩进
     console.log('mounted', this.treeData)
     for (const i in this.treeData) {
       if (typeof this.treeData[i] == 'number') {
-        this.mval = 35
-        this.pval = 33 * this.treeData[i]
+        if (this.treeData[i] !== (0 && null && undefined && false)) {
+          console.log(this.treeData[i])
+          this.mval = 35
+          this.pval = 33 * this.treeData[i]
+        }
       }
     }
   }
