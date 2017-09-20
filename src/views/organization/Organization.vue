@@ -10,17 +10,16 @@
     <div class="ebook-tree">
       <div class="ebook-tree__root"><h2 class="ebook-tree__root--title">金地集团</h2><i class="iconfont icon-tianjia ebook-tree__root--add"></i></div>
       <ul class="ebook-tree__children">
-        <ebook-tree v-for="(item, index) in treeData" :key="index" :tree-data="item"></ebook-tree>
+        <ebook-tree v-for="(item, index) in treeData" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree>
       </ul>
     </div>
     <div class="ebook-tree">
       <div class="ebook-tree__root"><h2 class="ebook-tree__root--title">金地集团</h2><i class="iconfont icon-tianjia ebook-tree__root--add"></i></div>
       <ul class="ebook-tree__children">
-        <ebook-tree v-for="(item, index) in treeData" :key="index" :tree-data="item"></ebook-tree>
+        <ebook-tree v-for="(item, index) in treeData" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree>
       </ul>
     </div>
   </div>
-
   <Modal
     v-model="modalShow"
     :closable="false"
@@ -50,7 +49,6 @@
 </template>
 <script>
 import EbookTree from 'components/EbookTree'
-
 export default {
   name: 'Organization',
   data() {
@@ -83,6 +81,10 @@ export default {
     }
   },
   methods: {
+    addNewOrg() {
+      console.log('addNewOrg')
+      this.modalShow = true
+    },
     onClickTreeItem(event) {
       console.log('onClickTreeItem', event)
     },
@@ -100,5 +102,4 @@ export default {
 }
 </script>
 <style lang="less">
-
 </style>

@@ -213,19 +213,6 @@ export default {
     },
     // 验证维度分栏的data
     verifyAttrsGroupData() {
-      // if (_.trim(this.attrsGroup.label) === '') {
-      //   // this.showErrorMsg('请输入栏目名称')
-      //   this.attrsGroup.label = ''
-      //   return
-      // } else if (_.trim(this.attrsGroup.index) === '') {
-      //   // this.showErrorMsg('请输入名称序号')
-      //   this.attrsGroup.index = ''
-      //   return
-      // } else if (!_.isFinite(parseInt(this.attrsGroup.index))) {
-      //   // this.showErrorMsg('名称序号请输入数字')
-      //   this.attrsGroup.index = ''
-      //   return
-      // }
       const requestData = {
         caseId: this.caseId,
         id: this.attrsGroup.id,
@@ -234,9 +221,8 @@ export default {
         hidden: this.attrsGroup.ifHide
       }
 
+      // 验证标识
       let flagV = false
-
-      console.log('backupData', this.backupData)
 
       this.$refs.attrsGroup.validate(flag => {
         console.log('validate', flag)

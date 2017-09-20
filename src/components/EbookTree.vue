@@ -4,13 +4,16 @@
       <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.ifCase" :style="{paddingLeft: pval + 'px'}"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
       <a href="#" v-if="treeData.ifCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}">{{treeData.title}}</a>
       <span class="ebook-tree__item--title" v-else>{{treeData.title}}</span>
-      <span class="ebook-tree__item--add iconfont icon-tianjia"></span>
+      <span class="ebook-tree__item--add iconfont icon-tianjia" @click="addNewChild"></span>
     </p>
     <ul v-if="treeData.children" class="ebook-tree__item--children">
       <ebook-tree v-show="open" v-for="(item, index) in treeData.children" :key="index" :tree-data="item"></ebook-tree>
     </ul>
   </li>
+
 </template>
+
+
 <script>
 import EbookTree from 'components/EbookTree'
 
@@ -21,14 +24,15 @@ export default {
       isCase: false,
       open: false,
       pval: 0,
-      mval: 0
+      mval: 0,
+      myAddModal: false
     }
   },
-  computed: {
-    getLevel(obj) {
-      console.log(this.getLevel('string'))
-    }
-  },
+  // computed: {
+  //   getLevel(obj) {
+  //     console.log(this.getLevel('string'))
+  //   }
+  // },
   props: {
     treeData: Object
   },
@@ -40,6 +44,11 @@ export default {
       if (!this.isCase) {
         this.open = !this.open
       }
+    },
+    addNewChild() {
+      console.log('here to create a new child')
+      // this.myAddModal = true
+      this.$emit('openModal')
     }
   },
   mounted() {
