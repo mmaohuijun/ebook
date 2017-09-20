@@ -25,18 +25,26 @@ const Authority = () => import('views/authority/Authority')
 const IntUser = () => import('views/user/IntUser')
 const ExtUser = () => import('views/user/ExtUser')
 
+/* 客户数据 */
+const CallClient = () => import('views/clientData/CallClient')
+const VisitClient = () => import('views/clientData/VisitClient')
+const DealClient = () => import('views/clientData/DealClient')
+const UnassignedClient = () => import('views/clientData/UnassignedClient')
+const AddClient = () => import('views/clientData/AddClient')
+
 Vue.use(Router)
 
 // 全局路径
 const path = store.getters.BASE_PATH
 // 用户权限
 const auth = store.getters.auth
-
+// 根据用户权限配置的第一个路由地址(登录后跳转)
 const firstRoute = auth[0]
 store.dispatch('setFirstRoute', firstRoute)
 
 // 路由索引
 const asyncRouterMap = {
+  /** 案场 */
   CaseManage: {
     path: `${path}case`,
     component: Layout,
@@ -55,6 +63,7 @@ const asyncRouterMap = {
     ],
     meta: { requiresLogin: true }
   },
+  /** 组织 */
   Organization: {
     path: `${path}organization`,
     component: Layout,
@@ -65,6 +74,7 @@ const asyncRouterMap = {
     ],
     meta: { requiresLogin: true }
   },
+  /** 权限 */
   Authority: {
     path: `${path}authority`,
     component: Layout,
@@ -75,6 +85,7 @@ const asyncRouterMap = {
     ],
     meta: { requiresLogin: true }
   },
+  /** 内部用户 */
   IntUser: {
     path: `${path}user`,
     component: Layout,
@@ -85,6 +96,7 @@ const asyncRouterMap = {
     ],
     meta: { requiresLogin: true }
   },
+  /** 外部用户 */
   ExtUser: {
     path: `${path}user`,
     component: Layout,
@@ -92,6 +104,61 @@ const asyncRouterMap = {
     name: '用户',
     children: [
       { path: 'extUser', name: 'ExtUser', component: ExtUser }
+    ],
+    meta: { requiresLogin: true }
+  },
+  /** 来电客户 */
+  CallClient: {
+    path: `${path}client`,
+    component: Layout,
+    redirect: `${path}client/call`,
+    name: '客户数据',
+    children: [
+      { path: 'call', name: 'CallClient', component: CallClient }
+    ],
+    meta: { requiresLogin: true }
+  },
+  /** 到访客户 */
+  VisitClient: {
+    path: `${path}client`,
+    component: Layout,
+    redirect: `${path}client/visit`,
+    name: '客户数据',
+    children: [
+      { path: 'visit', name: 'VisitClient', component: VisitClient }
+    ],
+    meta: { requiresLogin: true }
+  },
+  /** 成交客户 */
+  DealClient: {
+    path: `${path}client`,
+    component: Layout,
+    redirect: `${path}client/deal`,
+    name: '客户数据',
+    children: [
+      { path: 'deal', name: 'DealClient', component: DealClient }
+    ],
+    meta: { requiresLogin: true }
+  },
+  /** 未分配客户 */
+  UnassignedClient: {
+    path: `${path}client`,
+    component: Layout,
+    redirect: `${path}client/unassigned`,
+    name: '客户数据',
+    children: [
+      { path: 'unassigned', name: 'UnassignedClient', component: UnassignedClient }
+    ],
+    meta: { requiresLogin: true }
+  },
+  /** 新建客户 */
+  AddClient: {
+    path: `${path}client`,
+    component: Layout,
+    redirect: `${path}client/add`,
+    name: '客户数据',
+    children: [
+      { path: 'add', name: 'AddClient', component: AddClient }
     ],
     meta: { requiresLogin: true }
   }
@@ -126,14 +193,15 @@ const constantRouterMap = [
 let routesMap = []
 let hasSameRouter = false
 
-  // 根据用户权限配置路由
+// 根据用户权限配置路由
 _.each(auth, key => {
   _.each(routesMap, routeItem => {
-      // 如果路由的name相同则合并子路由
+    hasSameRouter = false
+    // 如果路由的name相同则合并子路由
     if (routeItem.name === asyncRouterMap[key].name) {
       _.mergeWith(routeItem, asyncRouterMap[key], (objValue, srcValue) => {
         if (_.isArray(objValue)) {
-          return objValue.concat(srcValue)
+          return _.uniq(objValue.concat(srcValue))
         }
       })
       hasSameRouter = true
@@ -144,8 +212,6 @@ _.each(auth, key => {
 })
 
 routesMap = _.concat(routesMap, constantRouterMap)
-
-console.log('routesMap[0]', routesMap[0])
 
 const router = new Router({
   mode: 'history',
@@ -159,7 +225,6 @@ router.beforeEach((to, from, next) => {
   if (to.path.indexOf('case') !== -1) { // 包含'Case'的页面
     store.dispatch('setSideBarSelect', 'CaseManage')
   }
-  console.log(auth, to.name)
 
   // 检查页面是否需要登录
   if (to.matched.some(record => record.meta.requiresLogin)) {

@@ -53,6 +53,13 @@
   - 内部用户 -- `IntUser.vue`
   - 外部用户 -- `ExtUser.vue`
 
+- 客户
+  - 来电客户 -- `CallClient.vue`
+  - 到访客户 -- `VisitClient.vue`
+  - 成交客户 -- `DealClient.vue`
+  - 未分配客户 -- `UnassignedClient.vue`
+  - 新建客户 -- `AddClient.vue`
+
 /* 案场 */
 CaseManage
 

@@ -6,7 +6,7 @@ const user = {
     name: '', // 姓名
     mobile: '', // 手机
     no: '', // 工号
-    auth: ['CaseManage', 'Organization', 'IntUser', 'ExtUser'] // 权限
+    auth: ['CaseManage', 'Organization', 'IntUser', 'ExtUser', 'CallClient', 'VisitClient', 'DealClient', 'UnassignedClient', 'AddClient'] // 权限
   },
   mutations: {
     SET_USERINFO(state, json) {

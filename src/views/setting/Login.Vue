@@ -58,11 +58,11 @@ export default {
   methods: {
     verifyAccountData() {
       if (_.trim(this.loginName) === '') {
-        this.$store.commit('showErrorMsg', '请输入账号')
+        this.$store.dispatch('showErrorMsg', '请输入账号')
         this.loginName = ''
         return false
       } else if (_.trim(this.password) === '') {
-        this.$store.commit('showErrorMsg', '请输入密码')
+        this.$store.dispatch('showErrorMsg', '请输入密码')
         this.password = ''
         return false
       }
@@ -100,9 +100,7 @@ export default {
           this.$store.dispatch('clearLoginName')
         }
 
-        /** 应该根据用户权限跳转对应的菜单 */
-        // const auth = ['CaseManage', 'Organization', 'IntUser', 'ExtUser']
-        // this.$store.dispatch('setUserAuth', auth)
+        /** 根据用户权限跳转对应的菜单 */
         this.$router.push({ name: this.firstRoute })
       })
     },

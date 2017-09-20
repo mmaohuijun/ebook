@@ -16,7 +16,6 @@
       </ul>
     </div>
     <ul class="laylout__aside-menu">
-      <!-- <li class="menu__item" v-for="(ele, index) in menuDataSource" :key="index"> -->
       <li class="menu__item" v-for="(ele, index) in sideBarMenu" :key="index">
         <ul>
           <li @click="ele.children.length === 0 ? onClickMenu(ele.name) : ''">
@@ -38,41 +37,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SideBar2',
   data() {
-    return {
-      menuDataSource: [
-        {
-          title: '案场',
-          name: 'CaseManage',
-          children: []
-        },
-        {
-          title: '组织',
-          name: 'Organization',
-          children: []
-        },
-        {
-          title: '权限',
-          name: 'Authority',
-          children: []
-        },
-        {
-          title: '用户',
-          name: 'User',
-          children: [
-            {
-              title: '内部用户',
-              name: 'IntUser'
-            },
-            {
-              title: '外部用户',
-              name: 'ExtUser'
-            }
-          ]
-        }
-        // { title: '客户数据', path: '', key: 'cdata', children: [{ title: '来电客户', path: '/', key: 'call' }, { title: '到访客户', path: '/', key: 'visit' }, { title: '成交客户', path: '/', key: 'deal' }, { title: '未分配客户', path: '/', key: 'unasign' }, { title: '新建客户', path: '/', key: 'newclient' }] },
-        // { title: '硬件列表', path: '', key: 'hardw', children: [] }
-      ]
-    }
+    return {}
   },
   computed: {
     ...mapGetters([
@@ -101,30 +66,10 @@ export default {
         this.$store.dispatch('clearUserInfo')
         this.$router.push({ name: 'Login' })
       })
-    },
-    initSideBar() {
-      const menu = []
-      let hasSameMenu = false
-      _.each(this.auth, key => {
-        _.each(menu, menuItem => {
-          if (menuItem.name === this.sideBarMenuMap[key].name) {
-            _.mergeWith(menuItem, this.sideBarMenuMap[key], (objValue, srcValue) => {
-              if (_.isArray(objValue)) {
-                return objValue.concat(srcValue)
-              }
-            })
-            hasSameMenu = true
-          }
-        })
-        if (hasSameMenu) return
-        menu.push(this.sideBarMenuMap[key])
-      })
-      this.$store.dispatch('setSideBarMenu', menu)
     }
   },
   mounted() {
-    console.log('this.auth', this.auth)
-    this.initSideBar()
+    this.$store.dispatch('setSideBarMenu')
   }
 }
 </script>

@@ -32,66 +32,81 @@
       </div>
     </div>
   </div>
-  <Modal
-    v-model="ifShowModal"
+
+    <Modal
+    v-model="attrsGroupModal"
     :closable="false"
     :mask-closable="false"
     :loading="ifShowLoading"
     width="560"
     class-name="case-attrs">
-    <p slot="header">{{modalTitle}}</p>
-    <Form :label-width="120" class="modal-form" v-if="isAttrsGroup" :rules="ruleValidate">
-      <Form-item label="栏目名称：" prop="attrsGroupLabel">
-        <Input placeholder="请输入" v-model="attrsGroupLabel" :maxlength="64"></Input>
-      </Form-item>
-      <Form-item label="名称序号：" prop="attrsGroupIndex">
-        <Input placeholder="请输入(数字)" v-model="attrsGroupIndex" :maxlength="5"></Input>
-      </Form-item>
-      <Form-item label="是否隐藏：">
-        <i-switch v-model="attrsGroupIfHide"></i-switch>
-      </Form-item>
-    </Form>
-    <Form :label-width="120" class="modal-form" v-else>
-      <Form-item label="维度名称：">
-        <Input placeholder="请输入" v-model="attrsDetailsLabel" :readonly="!attrsEditable" :maxlength="64"></Input>
-      </Form-item>
-      <Form-item label="名称序号：">
-        <Input placeholder="请输入" v-model="attrsDetailsSort" :readonly="!attrsEditable" :maxlength="5"></Input>
-      </Form-item>
-      <Form-item label="填写要求：">
-        <Select placeholder="请选择" v-model="attrsDetailsRequire" :disabled="!attrsEditable">
-          <Option value="0">选填</Option>
-          <Option value="1">必填</Option>
-        </Select>
-      </Form-item>
-      <Form-item label="类型：">
-        <Select placeholder="请选择" v-model="attrsDetailsType" :disabled="!attrsEditable">
-          <Option v-if="!attrsEditable" value="text">单行文本框</Option> 
-          <Option v-if="!attrsEditable" value="textarea">多行文本框</Option> 
-          <Option value="select">单选</Option>
-          <Option value="selectbox">多选</Option>
-        </Select>
-      </Form-item>
-      <Form-item label="文本类型：" v-if="attrsDetailsType.indexOf('text') !== -1">
-        <Select placeholder="请选择" v-model="attrsDetailsTextType" :disabled="!attrsEditable">
-          <Option value="00">文字</Option>
-          <Option value="01">数字</Option>
-        </Select>
-      </Form-item>
-      <div v-if="attrsDetailsType.indexOf('select') !== -1">
-        <Form-item v-for="(item, index) in attrsDetailsOptions" :key="index" :label="index === 0 ? '详细维度：' : ''">
-          <Input placeholder="文本不能超过20个字符" :value="item" :readonly="true" :maxlength="20"></Input>
-          <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" v-if="attrsEditable" @click.stop="attrsEditable ? deleteAttrsOptions(index) : ''"></i>
+      <p slot="header">{{modalTitle}}</p>
+      <Form ref="attrsGroup" :model="attrsGroup" :rules="attrsGroupRules" :label-width="120" class="modal-form">
+        <Form-item label="栏目名称：" prop="label">
+          <Input v-model="attrsGroup.label" placeholder="请输入栏目名称" :maxlength="64"></Input>
         </Form-item>
-        <Form-item :label="attrsDetailsOptions.length === 0 ? '详细维度：' : ''" v-show="attrsEditable">
-          <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText" :maxlength="20"></Input>
-          <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i>
+        <Form-item label="名称序号：" prop="index">
+          <Input v-model="attrsGroup.index" placeholder="请输入名称序号(数字)" :maxlength="5"></Input>
         </Form-item>
-      </div>
-    </Form>
+        <Form-item label="是否隐藏：" prop="ifHide">
+          <i-switch v-model="attrsGroup.ifHide"></i-switch>
+        </Form-item> 
+      </Form>
      <div slot="footer">
       <Button type="text" size="large" @click.stop="hideModal">取消</Button>
-      <Button type="primary" size="large" @click.stop="saveAttrsData">完成</Button>
+      <Button type="primary" size="large" @click.stop="saveAttrsData('attrsGroup')">完成</Button>
+    </div>
+  </Modal>
+
+    <Modal
+    v-model="attrsDetailsModal"
+    :closable="false"
+    :mask-closable="false"
+    :loading="ifShowLoading"
+    width="560"
+    class-name="case-attrs">
+      <p slot="header">{{modalTitle}}</p>
+      <Form ref="attrsDetails" :model="attrsDetails" :rules="attrsDetailsRules" :label-width="120" class="modal-form">
+        <Form-item label="维度名称：" prop="label">
+          <Input placeholder="请输入维度名称" v-model="attrsDetails.label" :readonly="!attrsEditable" :maxlength="64"></Input>
+        </Form-item>
+        <Form-item label="名称序号：" prop="sort">
+          <Input placeholder="请输入维度序号" v-model="attrsDetails.sort" :readonly="!attrsEditable" :maxlength="5"></Input>
+        </Form-item>
+        <Form-item label="填写要求：" prop="require">
+          <Select placeholder="请选择填写要求" v-model="attrsDetails.require" :disabled="!attrsEditable">
+            <Option value="0">选填</Option>
+            <Option value="1">必填</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="类型：" prop="type">
+          <Select placeholder="请选择类型" v-model="attrsDetails.type" :disabled="!attrsEditable">
+            <Option v-if="!attrsEditable" value="text">单行文本框</Option> 
+            <Option v-if="!attrsEditable" value="textarea">多行文本框</Option> 
+            <Option value="select">单选</Option>
+            <Option value="selectbox">多选</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="文本类型：" v-if="attrsDetails.type.indexOf('text') !== -1" prop="textType">
+          <Select placeholder="请选择文本类型" v-model="attrsDetails.textType" :disabled="!attrsEditable">
+            <Option value="00">文字</Option>
+            <Option value="01">数字</Option>
+          </Select>
+        </Form-item>
+        <div v-if="attrsDetails.type.indexOf('select') !== -1">
+          <Form-item v-for="(item, index) in attrsDetails.options" :key="index" :label="index === 0 ? '详细维度：' : ''">
+            <Input placeholder="文本不能超过20个字符" :value="item" :readonly="true" :maxlength="20"></Input>
+            <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" v-if="attrsEditable" @click.stop="attrsEditable ? deleteAttrsOptions(index) : ''"></i>
+          </Form-item>
+          <Form-item :label="attrsDetails.options.length === 0 ? '详细维度：' : ''" v-show="attrsEditable" prop="optionsText">
+            <Input placeholder="文本不能超过20个字符" v-model="attrsDetails.optionsText" :maxlength="20"></Input>
+            <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i>
+          </Form-item>
+        </div>
+      </Form>
+     <div slot="footer">
+      <Button type="text" size="large" @click.stop="hideModal">取消</Button>
+      <Button type="primary" size="large" @click.stop="saveAttrsData('attrsDetails')">完成</Button>
     </div>
   </Modal>
 </div>
@@ -100,33 +115,57 @@
 export default {
   name: 'CaseAttrs',
   data() {
+    const validateNumber = (rule, value, callback) => {
+      if (!_.isFinite(parseInt(value))) {
+        callback(new Error('请输入数字'))
+      } else {
+        callback()
+      }
+    }
     return {
+      attrsDetailsModal: false,
+      attrsGroupModal: false,
       attrListData: [], // 数据列表
       hoverAttrId: '',
-      ifShowModal: false,
       ifShowLoading: false,
-      isAttrsGroup: false, // 是否打开维度分栏(AttrsGroup)
       attrsEditable: true,
       modalTitle: '',
-      attrsGroupId: '', // 维度分栏id
-      attrsGroupLabel: '', // 维度分栏名称
-      attrsGroupIndex: '', // 维度分栏序号
-      attrsGroupIfHide: false, // 维度分栏是否隐藏
-      attrsDetailsId: '', // 详细维度id
-      attrsDetailsLabel: '', // 详细维度名称
-      attrsDetailsSort: '', // 详细维度序号
-      attrsDetailsRequire: '', // 详细维度是否必填
-      attrsDetailsType: '', // 详细维度类型(文本, 选择)
-      attrsDetailsTextType: '', // 详细维度文本类型
-      attrsDetailsConfig: {}, // 详细维度文本config
-      attrsDetailsOptions: [], // 详细维度选择项
-      attrsDetailsOptionsText: '', // 详细维度新建选择项
+      attrsGroup: {
+        id: '', // 维度分栏id
+        label: '', // 维度分栏名称
+        index: 0, // 维度分栏序号
+        ifHide: false // 维度分栏是否隐藏
+      },
+      attrsDetails: {
+        id: '', // 详细维度id
+        label: '', // 详细维度名称
+        sort: '', // 详细维度序号
+        require: '', // 详细维度是否必填
+        type: '', // 详细维度类型(文本, 选择)
+        textType: '', // 详细维度文本类型
+        config: {}, // 详细维度文本config
+        options: [], // 详细维度选择项
+        optionsText: '' // 详细维度新建选择项
+      },
       ifNew: false, // 新建还是编辑
       backupData: {},
-      ruleValidate: {
-        attrsGroupLabel: [
-          { required: true, message: '请输入栏目名称', trigger: 'blur' }
+      attrsGroupRules: {
+        label: [{ required: true, message: '请输入栏目名称', trigger: 'blur' }],
+        index: [
+          { required: true, message: '请输入栏目序号', trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
         ]
+      },
+      attrsDetailsRules: {
+        label: [{ required: true, message: '请输入维度名称', trigger: 'blur' }],
+        sort: [
+          { required: true, message: '请输入维度序号', trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
+        ],
+        require: [{ required: true, message: '请选择填写要求', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择类型', trigger: 'blur' }],
+        textType: [{ required: true, message: '请选择文本类型', trigger: 'blur' }]
+        // optionsText: [{ required: true, message: '请填写详细维度', trigger: 'blur' }]
       }
     }
   },
@@ -153,56 +192,65 @@ export default {
     },
     // 点击'新建栏目'
     addAttrsGroup() {
-      this.showModal()
+      this.showAttrsGroupModal()
       this.clearAttrsGroupData()
-      this.isAttrsGroup = true
       this.ifNew = true
       this.modalTitle = '新建栏目'
     },
     // 保存分栏/保存维度更改
-    saveAttrsData() {
+    saveAttrsData(name) {
       if (!this.attrsEditable) { // 不可编辑的详细维度
         this.hideModal()
         return
       }
+      console.log('this.attrsGroup.index', typeof this.attrsGroup.index, this.attrsGroup.index)
       this.ifShowLoading = true
-      if (this.isAttrsGroup) {
+      if (name === 'attrsGroup') {
         this.saveAttrsGroup()
-      } else {
+      } else if (name === 'attrsDetails') {
         this.saveAttrsDetails()
       }
     },
     // 验证维度分栏的data
     verifyAttrsGroupData() {
-      if (_.trim(this.attrsGroupLabel) === '') {
-        this.$store.dispatch('showErrorMsg', '请输入栏目名称')
-        this.attrsGroupLabel = ''
-        return
-      } else if (_.trim(this.attrsGroupIndex) === '') {
-        this.$store.dispatch('showErrorMsg', '请输入名称序号')
-        this.attrsGroupIndex = ''
-        return
-      } else if (!_.isFinite(parseInt(this.attrsGroupIndex))) {
-        this.$store.dispatch('showErrorMsg', '名称序号请输入数字')
-        this.attrsGroupIndex = ''
-        return
-      }
-
+      // if (_.trim(this.attrsGroup.label) === '') {
+      //   // this.showErrorMsg('请输入栏目名称')
+      //   this.attrsGroup.label = ''
+      //   return
+      // } else if (_.trim(this.attrsGroup.index) === '') {
+      //   // this.showErrorMsg('请输入名称序号')
+      //   this.attrsGroup.index = ''
+      //   return
+      // } else if (!_.isFinite(parseInt(this.attrsGroup.index))) {
+      //   // this.showErrorMsg('名称序号请输入数字')
+      //   this.attrsGroup.index = ''
+      //   return
+      // }
       const requestData = {
         caseId: this.caseId,
-        id: this.attrsGroupId,
-        label: this.attrsGroupLabel,
-        sort: this.attrsGroupIndex,
-        hidden: this.attrsGroupIfHide
+        id: this.attrsGroup.id,
+        label: this.attrsGroup.label,
+        sort: this.attrsGroup.index,
+        hidden: this.attrsGroup.ifHide
       }
 
+      let flagV = false
+
+      console.log('backupData', this.backupData)
+
+      this.$refs.attrsGroup.validate(flag => {
+        console.log('validate', flag)
+        flagV = flag
+      })
+
+      console.log('flagV', flagV)
       // 和备份数据做比较, 如果一样则表示没有改动, 返回false
-      return _.isEqual(requestData, this.backupData) ? false : requestData
+      return _.isEqual(requestData, this.backupData) || !flagV ? false : requestData
     },
     // 栏目信息保存（新建、修改）
     saveAttrsGroup() {
       const requestData = this.verifyAttrsGroupData()
-
+      console.log('saveAttrsGroup', requestData)
       if (!requestData) {
         if (!this.ifNew) this.hideModal() // 判断是新建还是编辑
         return
@@ -219,9 +267,9 @@ export default {
     // 维度分栏隐藏与显现
     displayAttrsGroup(item) {
       console.log('displayAttrsGroup', item)
-      this.attrsGroupId = item.id
+      this.attrsGroup.id = item.id
       /** 发送 栏目隐藏与显现 请求 */
-      this.$axios.post('case-attr/group-hidden', { id: this.attrsGroupId }).then(response => {
+      this.$axios.post('case-attr/group-hidden', { id: this.attrsGroup.id }).then(response => {
         if (_.isNull(response)) return
         console.log('栏目隐藏与显现', response)
         item.hidden = !item.hidden
@@ -230,14 +278,13 @@ export default {
     // 点击'编辑栏目'
     editAttrsGroup(item) {
       console.log('editAttrsGroup', item)
-      this.showModal()
-      this.isAttrsGroup = true
+      this.showAttrsGroupModal()
       this.ifNew = false
       this.modalTitle = `${item.label} - 编辑栏目`
-      this.attrsGroupId = item.id
-      this.attrsGroupLabel = item.label
-      this.attrsGroupIndex = item.sort
-      this.attrsGroupIfHide = item.hidden
+      this.attrsGroup.id = item.id
+      this.attrsGroup.label = item.label
+      this.attrsGroup.index = item.sort
+      this.attrsGroup.ifHide = item.hidden
 
       // 备份数据
       this.backupData = {
@@ -250,7 +297,7 @@ export default {
     // 删除维度分栏
     deleteAttrsGroup(item) {
       console.log('deleteAttrsGroup', item)
-      this.attrsGroupId = item.id
+      this.attrsGroup.id = item.id
       this.$Modal.confirm({
         content: '此操作不可恢复，确认删除分栏？',
         onOk: this.sendDeleteAttrsGroupRequest
@@ -258,9 +305,13 @@ export default {
     },
     sendDeleteAttrsGroupRequest() {
       console.log('sendDeleteAttrsGroupRequest')
-      this.$axios.post('case-attr/group-del', { id: this.attrsGroupId }).then(response => {
+      this.$axios.post('case-attr/group-del', { id: this.attrsGroup.id }).then(response => {
         if (_.isNull(response)) return
         console.log('删除栏目', response)
+        this.$Message.success({
+          content: response.retMsg,
+          duration: 3
+        })
         this.refreshData()
       })
     },
@@ -270,65 +321,64 @@ export default {
     // 点击'新建维度'
     addAttrsDetails(group) {
       console.log('addAttrsDetails', 'groupLabel:', group.label, 'groupId:', group.id)
-      this.isAttrsGroup = false
       this.ifNew = true
       this.attrsEditable = true
       this.modalTitle = `${group.label} - 新建维度`
-      this.attrsGroupId = group.id
+      this.attrsGroup.id = group.id
       this.clearAttrsDetailsData()
-      this.showModal()
+      this.showAttrsDetailsModal()
     },
     // 验证维度详情的data
     verifyAttrsDetailsData() {
-      if (_.trim(this.attrsDetailsLabel) === '') {
-        this.$store.dispatch('showErrorMsg', '请输入维度名称')
-        this.attrsDetailsLabel = ''
+      if (_.trim(this.attrsDetails.label) === '') {
+        this.showErrorMsg('请输入维度名称')
+        this.attrsDetails.label = ''
         return
-      } else if (_.trim(this.attrsDetailsSort) === '') {
-        this.$store.dispatch('showErrorMsg', '请输入名称序号')
-        this.attrsDetailsSort = ''
+      } else if (_.trim(this.attrsDetails.sort) === '') {
+        this.showErrorMsg('请输入名称序号')
+        this.attrsDetails.sort = ''
         return
-      } else if (!_.isFinite(parseInt(this.attrsDetailsSort))) {
-        this.$store.dispatch('showErrorMsg', '名称序号请输入数字')
-        this.attrsDetailsSort = ''
+      } else if (!_.isFinite(parseInt(this.attrsDetails.sort))) {
+        this.showErrorMsg('名称序号请输入数字')
+        this.attrsDetails.sort = ''
         return
-      } else if (_.trim(this.attrsDetailsRequire) === '') {
-        this.$store.dispatch('showErrorMsg', '请选择填写要求')
-        this.attrsDetailsRequire = ''
+      } else if (_.trim(this.attrsDetails.require) === '') {
+        this.showErrorMsg('请选择填写要求')
+        this.attrsDetails.require = ''
         return
-      } else if (_.trim(this.attrsDetailsType) === '') {
-        this.$store.dispatch('showErrorMsg', '请选择类型')
-        this.attrsDetailsType = ''
+      } else if (_.trim(this.attrsDetails.type) === '') {
+        this.showErrorMsg('请选择类型')
+        this.attrsDetails.type = ''
         return
       }
-      if (this.attrsDetailsType.indexOf('text') !== -1) {
-        if (_.trim(this.attrsDetailsTextType) === '') {
-          this.$store.dispatch('showErrorMsg', '请选择文本类型')
-          this.attrsDetailsTextType = ''
+      if (this.attrsDetails.type.indexOf('text') !== -1) {
+        if (_.trim(this.attrsDetails.textType) === '') {
+          this.showErrorMsg('请选择文本类型')
+          this.attrsDetails.textType = ''
           return
         }
       } else {
-        if (_.isEmpty(this.attrsDetailsOptions)) {
-          this.$store.dispatch('showErrorMsg', '请填写详细维度')
+        if (_.isEmpty(this.attrsDetails.options)) {
+          this.showErrorMsg('请填写详细维度')
           return
         }
       }
       const requestData = {
-        id: this.attrsDetailsId,
-        groupId: this.attrsGroupId,
-        label: this.attrsDetailsLabel,
-        sort: this.attrsDetailsSort,
-        required: this.attrsDetailsRequire,
-        type: this.attrsDetailsType
+        id: this.attrsDetails.id,
+        groupId: this.attrsGroup.id,
+        label: this.attrsDetails.label,
+        sort: this.attrsDetails.sort,
+        required: this.attrsDetails.require,
+        type: this.attrsDetails.type
       }
 
-      if (this.attrsDetailsType.indexOf('text') !== -1) { // 维度类型为文本
-        if (this.attrsDetailsTextType !== '') {
-          requestData['config.textType'] = this.attrsDetailsTextType
+      if (this.attrsDetails.type.indexOf('text') !== -1) { // 维度类型为文本
+        if (this.attrsDetails.textType !== '') {
+          requestData['config.textType'] = this.attrsDetails.textType
         }
       } else { // 维度类型为选择
-        if (!_.isEmpty(this.attrsDetailsOptions)) {
-          _.each(this.attrsDetailsOptions, (ele, index) => {
+        if (!_.isEmpty(this.attrsDetails.options)) {
+          _.each(this.attrsDetails.options, (ele, index) => {
             requestData[`options[${index}]`] = ele
           })
         }
@@ -348,11 +398,13 @@ export default {
       const requestData = this.verifyAttrsDetailsData()
       console.log('详细维度保存（新建、修改）requestData', requestData)
 
+      this.$refs.attrsDetails.validate(flag => {
+        console.log('attrsDetails validate', flag)
+      })
+
       if (!requestData) {
         // 编辑状态下点击'完成', 没有更改则隐藏modal
         if (this.ifNew) return
-        // if (!this.ifNew) {
-        // }
         this.hideModal()
         return
       }
@@ -368,7 +420,7 @@ export default {
     // 点击编辑详细维度
     editAttrsDetails(ele, groupLabel, flag) {
       console.log('editAttrsDetails', ele)
-      this.showModal()
+      this.showAttrsDetailsModal()
       this.ifNew = false
       this.modalTitle = `${groupLabel} - ${ele.label}`
       this.attrsEditable = flag
@@ -377,22 +429,22 @@ export default {
     },
     // 查看获取详细维度数据
     getAttrsDetailsInfo(ele) {
-      this.attrsGroupId = ele.groupId
-      this.attrsDetailsId = ele.id
-      this.attrsDetailsLabel = ele.label
-      this.attrsDetailsSort = ele.sort
-      this.attrsDetailsRequire = ele.required ? '1' : '0'
-      this.attrsDetailsType = ele.type
+      this.attrsGroup.id = ele.groupId
+      this.attrsDetails.id = ele.id
+      this.attrsDetails.label = ele.label
+      this.attrsDetails.sort = ele.sort
+      this.attrsDetails.require = ele.required ? '1' : '0'
+      this.attrsDetails.type = ele.type
 
       if (ele.type.indexOf('text') !== -1) {
         if (ele.config) {
-          this.attrsDetailsConfig = ele.config
-          this.attrsDetailsTextType = ele.config.textType
+          this.attrsDetails.config = ele.config
+          this.attrsDetails.textType = ele.config.textType
           this.backupData['config.textType'] = ele.config.textType
         }
       } else {
         if (ele.options) {
-          this.attrsDetailsOptions = ele.options
+          this.attrsDetails.options = ele.options
           _.each(ele.options, (ele, index) => {
             this.backupData[`options[${index}]`] = ele
           })
@@ -413,22 +465,22 @@ export default {
     // 添加详细维度options
     addAttrsOptions() {
       console.log('addAttrsOptions')
-      if (_.trim(this.attrsDetailsOptionsText) === '') return
-      this.attrsDetailsOptions.push(this.attrsDetailsOptionsText)
-      this.attrsDetailsOptionsText = ''
+      if (_.trim(this.attrsDetails.optionsText) === '') return
+      this.attrsDetails.options.push(this.attrsDetails.optionsText)
+      this.attrsDetails.optionsText = ''
     },
     // 删除详细维度
     deleteAttrsDetails(id) {
       console.log('deleteAttrsDetails', id)
-      this.attrsDetailsId = id
+      this.attrsDetails.id = id
       this.$Modal.confirm({
         content: '此操作不可恢复，确认删除？',
         onOk: this.sendDeleteAttrsDetailsRequest
       })
     },
     sendDeleteAttrsDetailsRequest() {
-      console.log('CFM deleteAttrsDetails', this.attrsDetailsId)
-      this.$axios.post('case-attr/del', { id: this.attrsDetailsId }).then(response => {
+      console.log('CFM deleteAttrsDetails', this.attrsDetails.id)
+      this.$axios.post('case-attr/del', { id: this.attrsDetails.id }).then(response => {
         if (_.isNull(response)) return
         console.log('删除详细维度', response)
         this.refreshData()
@@ -440,7 +492,7 @@ export default {
         content: '此操作不可恢复，确认删除？',
         onOk: () => {
           console.log('CFM deleteAttrsOptions', index)
-          this.attrsDetailsOptions.splice(index, 1)
+          this.attrsDetails.options.splice(index, 1)
         }
       })
     },
@@ -452,24 +504,27 @@ export default {
     // 清空分栏数据
     clearAttrsGroupData() {
       this.attrsEditable = true
-      this.attrsGroupId = ''
-      this.attrsGroupLabel = ''
-      this.attrsGroupIndex = ''
-      this.attrsGroupIfHide = false
+      this.attrsGroup.id = ''
+      this.attrsGroup.label = ''
+      this.attrsGroup.index = ''
+      this.attrsGroup.ifHide = false
       this.backupData = {}
     },
     // 清空详细维度数据
     clearAttrsDetailsData() {
-      this.attrsDetailsId = ''
-      this.attrsDetailsLabel = ''
-      this.attrsDetailsSort = ''
-      this.attrsDetailsRequire = ''
-      this.attrsDetailsType = ''
-      this.attrsDetailsConfig = {}
-      this.attrsDetailsTextType = ''
-      this.attrsDetailsOptions = []
-      this.attrsDetailsOptionsText = ''
+      this.attrsDetails.id = ''
+      this.attrsDetails.label = ''
+      this.attrsDetails.sort = ''
+      this.attrsDetails.require = ''
+      this.attrsDetails.type = ''
+      this.attrsDetails.config = {}
+      this.attrsDetails.textType = ''
+      this.attrsDetails.options = []
+      this.attrsDetails.optionsText = ''
       this.backupData = {}
+    },
+    showErrorMsg(text) {
+      this.$store.dispatch('showErrorMsg', text)
     },
     // 鼠标移入分栏高亮显示编辑
     onEnterAttrs(item) {
@@ -479,15 +534,19 @@ export default {
     onLeaveAttrs() {
       this.hoverAttrId = ''
     },
-    showModal() {
-      this.ifShowModal = true
+    showAttrsGroupModal() {
+      this.attrsGroupModal = true
+    },
+    showAttrsDetailsModal() {
+      this.attrsDetailsModal = true
     },
     hideModal() {
       this.ifShowLoading = false
-      this.ifShowModal = false
-      _.delay(() => {
-        this.isAttrsGroup = false
-      }, 500)
+      this.attrsDetailsModal = false
+      this.attrsGroupModal = false
+      // 清空规则提示
+      this.$refs.attrsGroup.resetFields()
+      this.$refs.attrsDetails.resetFields()
     }
   }
 }

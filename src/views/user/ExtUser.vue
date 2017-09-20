@@ -292,6 +292,7 @@ export default {
 
     // 点击用户完成按钮
     saveUser(name) {
+      console.log('this.$refs[name].validate', this.$refs[name])
       this.$refs[name].validate(valid => {
         if (valid) {
           this.modal.saveLoading = true
