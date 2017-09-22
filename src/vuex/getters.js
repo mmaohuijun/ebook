@@ -4,6 +4,7 @@ const getters = {
   name: state => state.user.name,
   mobile: state => state.user.mobile,
   no: state => state.user.no,
+  type: state => state.user.type,
   auth: state => state.user.auth,
   loginName: () => {
     const loginName = $storage.localStorage.getItem('USER_LOGIN_NAME')
@@ -11,6 +12,7 @@ const getters = {
   },
   hasUserInfo: () => {
     const userInfo = $storage.sessionStorage.getItem('USER_INFO')
+    console.log('GETTERS hasUserInfo', userInfo, userInfo !== undefined)
     return userInfo !== undefined
   },
   caseId: state => state.cases.caseId,
@@ -32,7 +34,8 @@ const getters = {
   ifShowErrorMsg: state => state.app.ifShowErrorMsg,
   errorMsgText: state => state.app.errorMsgText,
   currentPathName: state => state.app.currentPathName,
-  BASE_PATH: state => state.app.BASE_PATH
+  BASE_PATH: state => state.app.BASE_PATH,
+  addRouters: state => state.auth.addRouters
 }
 
 export default getters

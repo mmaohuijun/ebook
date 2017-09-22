@@ -6,7 +6,9 @@ const user = {
     name: '', // 姓名
     mobile: '', // 手机
     no: '', // 工号
-    auth: ['CaseManage', 'Organization', 'IntUser', 'ExtUser', 'Authority', 'CallClient', 'VisitClient', 'DealClient', 'UnassignedClient', 'AddClient'] // 权限
+    type: '', // case-worker 表示外部用户; sys-user 表示为 内部用户
+    // auth: ['CaseManage', 'Organization', 'IntUser', 'ExtUser', 'Authority', 'CallClient', 'VisitClient', 'DealClient', 'UnassignedClient', 'AddClient'] // 权限
+    auth: [] // 权限
   },
   mutations: {
     SET_USERINFO(state, json) {
@@ -14,7 +16,8 @@ const user = {
       state.name = json.name
       state.mobile = json.mobile
       state.no = json.no
-      // state.auth = json.auth
+      state.auth = json.auth
+      state.type = json.type
     },
     SET_LOGIN_NAME(state, name) {
       state.loginName = name
@@ -27,9 +30,12 @@ const user = {
       $storage.sessionStorage.setItem('USER_INFO', json)
     },
     getUserInfoFromStorage({ commit }) {
-      const info = $storage.sessionStorage.getItem('USER_INFO')
-      if (!info) return
-      commit('SET_USERINFO', info)
+      return new Promise(resolve => {
+        const info = $storage.sessionStorage.getItem('USER_INFO')
+        if (!info) return
+        commit('SET_USERINFO', info)
+        resolve()
+      })
     },
     clearUserInfo() {
       $storage.sessionStorage.removeItem('USER_INFO')

@@ -89,10 +89,13 @@ export default {
           loginName: reData.loginName,
           name: reData.name,
           mobile: reData.mobile,
-          no: reData.no
+          no: reData.no,
+          auth: reData.menus,
+          type: reData.type
         }
         // 保存用户信息到全局
         this.$store.dispatch('setUserInfo', loginInfo)
+        this.$store.dispatch('setFirstRoute', reData.menus[0])
         // 是否记住账号
         if (this.ifRemember) {
           this.$store.dispatch('remeberLoginName', reData.loginName)
@@ -100,8 +103,12 @@ export default {
           this.$store.dispatch('clearLoginName')
         }
 
-        /** 根据用户权限跳转对应的菜单 */
         this.$router.push({ name: this.firstRoute })
+
+        // this.$store.dispatch('GenerateRoutes').then(() => {
+        //   /** 根据用户权限跳转对应的菜单 */
+        //   this.$router.push({ name: this.firstRoute })
+        // })
       })
     },
     checkIfHadRemeber() {

@@ -36,14 +36,13 @@ Vue.use(Router)
 
 // 全局路径
 const path = store.getters.BASE_PATH
-// 用户权限
-const auth = store.getters.auth
+
 // 根据用户权限配置的第一个路由地址(登录后跳转)
-const firstRoute = auth[0]
+const firstRoute = store.getters.auth[0]
 store.dispatch('setFirstRoute', firstRoute)
 
 // 路由索引
-const asyncRouterMap = {
+export const asyncRouterMap = {
   /** 案场 */
   CaseManage: {
     path: `${path}case`,
@@ -165,7 +164,34 @@ const asyncRouterMap = {
 }
 
 // 通用路由
-const constantRouterMap = [
+export const constantRouterMap = [
+  // { path: '/', redirect: { name: firstRoute } },
+  // { path: `${path}`, redirect: { name: firstRoute } },
+  { path: '/', redirect: { name: 'Login' } },
+  { path: `${path}`, redirect: { name: 'Login' } },
+  {
+    path: `${path}login`,
+    component: Login,
+    name: 'Login'
+  },
+  {
+    path: `${path}setting`,
+    component: Layout,
+    redirect: `${path}setting/modpsw`,
+    name: '设置',
+    children: [
+      { path: 'modpsw', name: 'ModifyPassword', component: ModifyPassword }
+    ],
+    meta: { requiresLogin: true }
+  }
+  // {
+  //   path: '*',
+  //   name: 'Login',
+  //   component: Login
+  // }
+]
+
+const routesMap2 = [
   { path: '/', redirect: { name: firstRoute } },
   { path: `${path}`, redirect: { name: firstRoute } },
   {
@@ -184,85 +210,6 @@ const constantRouterMap = [
     meta: { requiresLogin: true }
   },
   {
-    path: '*',
-    name: 'Login',
-    component: Login
-  }
-]
-
-let routesMap = []
-let hasSameRouter = false
-
-// 根据用户权限配置路由
-_.each(auth, key => {
-  _.each(routesMap, routeItem => {
-    hasSameRouter = false
-    // 如果路由的name相同则合并子路由
-    if (routeItem.name === asyncRouterMap[key].name) {
-      _.mergeWith(routeItem, asyncRouterMap[key], (objValue, srcValue) => {
-        if (_.isArray(objValue)) {
-          return _.uniq(objValue.concat(srcValue))
-        }
-      })
-      hasSameRouter = true
-    }
-  })
-  if (hasSameRouter) return
-  routesMap.push(asyncRouterMap[key])
-})
-
-routesMap = _.concat(routesMap, constantRouterMap)
-
-const router = new Router({
-  mode: 'history',
-  scrollBehavior: () => ({ y: 0 }),
-  routes: routesMap
-})
-
-router.beforeEach((to, from, next) => {
-  console.log('router.beforeEach', to, from, 'path', path)
-  store.dispatch('setSideBarSelect', to.name)
-  if (to.path.indexOf('case') !== -1) { // 包含'Case'的页面
-    store.dispatch('setSideBarSelect', 'CaseManage')
-  }
-
-  // 检查页面是否需要登录
-  if (to.matched.some(record => record.meta.requiresLogin)) {
-    // 若没有登录或没有用户信息则跳转登录页
-    if (store.getters.loginStatus || store.getters.hasUserInfo) {
-      store.dispatch('getUserInfoFromStorage')
-      // 判断url后面是否带有参数
-      if (!_.isEmpty(to.params)) {
-        if (to.params.caseId) {
-          const caseId = to.params.caseId
-          store.dispatch('setCaseId', caseId)
-        }
-      }
-      next()
-    } else {
-      next({ name: 'Login' })
-    }
-  } else {
-    next() // 确保一定要调用 next()
-  }
-})
-
-// 路由跳转后记录下当前路径名
-router.afterEach(route => {
-  store.dispatch('setCurrentPathName', route.name)
-})
-
-export default router
-
-const routesMap2 = [
-  { path: '/', redirect: `${path}case` },
-  { path: `${path}`, redirect: `${path}case` },
-  {
-    path: `${path}login`,
-    component: Login,
-    name: 'Login'
-  },
-  {
     path: `${path}case`,
     component: Layout,
     redirect: `${path}case/index`,
@@ -278,7 +225,7 @@ const routesMap2 = [
         ]
       }
     ],
-    meta: { requiresLogin: true }
+    meta: { requiresLogin: true, requiresAuth: true }
   },
   {
     path: `${path}organization`,
@@ -288,7 +235,7 @@ const routesMap2 = [
     children: [
       { path: 'index', name: 'Organization', component: Organization }
     ],
-    meta: { requiresLogin: true }
+    meta: { requiresLogin: true, requiresAuth: true }
   },
   {
     path: `${path}authority`,
@@ -298,7 +245,7 @@ const routesMap2 = [
     children: [
       { path: 'index', name: 'Authority', component: Authority }
     ],
-    meta: { requiresLogin: true }
+    meta: { requiresLogin: true, requiresAuth: true }
   },
   {
     path: `${path}user`,
@@ -309,17 +256,21 @@ const routesMap2 = [
       { path: 'intUser', name: 'IntUser', component: IntUser },
       { path: 'extUser', name: 'ExtUser', component: ExtUser }
     ],
-    meta: { requiresLogin: true }
+    meta: { requiresLogin: true, requiresAuth: true }
   },
   {
-    path: `${path}setting`,
+    path: `${path}client`,
     component: Layout,
-    redirect: `${path}setting/modpsw`,
-    name: '设置',
+    redirect: `${path}client/call`,
+    name: '客户数据',
     children: [
-      { path: 'modpsw', name: 'ModifyPassword', component: ModifyPassword }
+      { path: 'call', name: 'CallClient', component: CallClient },
+      { path: 'visit', name: 'VisitClient', component: VisitClient },
+      { path: 'deal', name: 'DealClient', component: DealClient },
+      { path: 'unassigned', name: 'UnassignedClient', component: UnassignedClient },
+      { path: 'add', name: 'AddClient', component: AddClient }
     ],
-    meta: { requiresLogin: true }
+    meta: { requiresLogin: true, requiresAuth: true }
   },
   {
     path: '*',
@@ -327,4 +278,94 @@ const routesMap2 = [
     component: Login
   }
 ]
-console.log('routesMap2', routesMap2)
+
+export const router = new Router({
+  mode: 'history',
+  scrollBehavior: () => ({ y: 0 }),
+  routes: routesMap2
+})
+
+router.beforeEach((to, from, next) => {
+  console.log('router.beforeEach', to, from)
+
+  // if (store.getters.loginStatus || store.getters.hasUserInfo) {
+  //   console.log('登录过了!')
+  //   if (to.name === 'Login') {
+  //     store.dispatch('clearUserInfo')
+  //     next()
+  //   } else {
+  //     if (store.getters.auth.length === 0) {
+  //       console.log('没有用户信息!', store.getters.auth.length, store.getters.auth)
+  //       store.dispatch('getUserInfoFromStorage').then(() => {
+  //         store.dispatch('GenerateRoutes').then(() => {
+  //           console.log('添加完路由后跳转')
+  //           next(to.path)
+  //         })
+  //       }).catch(err => {
+  //         console.log(err)
+  //       })
+  //     } else {
+  //       console.log('有用户信息了!', store.getters.auth.length, store.getters.auth)
+  //       // 判断url后面是否带有参数
+  //       if (!_.isEmpty(to.params)) {
+  //         if (to.params.caseId) {
+  //           const caseId = to.params.caseId
+  //           store.dispatch('setCaseId', caseId)
+  //         }
+  //       }
+  //       next()
+  //     }
+  //   }
+  // } else {
+  //   console.log('没登录过!', store.getters.auth)
+  //   // next({ name: 'Login' })
+  //   next()
+  // }
+
+  store.dispatch('setSideBarSelect', to.name)
+  if (to.path.indexOf('case') !== -1) { // 包含'Case'的页面
+    store.dispatch('setSideBarSelect', 'CaseManage')
+  }
+
+  // 检查页面是否需要登录
+  if (to.matched.some(record => record.meta.requiresLogin)) {
+    // 若没有登录或没有用户信息则跳转登录页
+    if (store.getters.loginStatus || store.getters.hasUserInfo) {
+      if (store.getters.auth.length === 0) {
+        store.dispatch('getUserInfoFromStorage')
+      }
+      if (to.matched.some(record => record.meta.requiresAuth)) {
+        // 检查是否有权限
+        if (_.indexOf(store.getters.auth, to.name) !== -1) {
+          console.log('有权限')
+
+          // 判断url后面是否带有参数
+          if (!_.isEmpty(to.params)) {
+            if (to.params.caseId) {
+              const caseId = to.params.caseId
+              store.dispatch('setCaseId', caseId)
+            }
+          }
+          next()
+        } else {
+          console.log('没有权限')
+          store.dispatch('showErrorMsg', '抱歉, 您没有权限访问!')
+        }
+      } else {
+        next()
+      }
+    } else {
+      next({ name: 'Login' })
+    }
+  } else {
+    next() // 确保一定要调用 next()
+  }
+})
+
+// 路由跳转后记录下当前路径名
+router.afterEach(route => {
+  store.dispatch('setCurrentPathName', route.name)
+})
+
+// export default router
+

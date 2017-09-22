@@ -8,7 +8,7 @@
   </div>
   <div class="layout__body">
     <table class="authority" cellspacing="0" cellpadding="0" border="0">
-
+<!-- 
       <tr>
         <td class="authority-row-title">权限一</td>
         <td>
@@ -38,23 +38,9 @@
             <div class="authority-check-item"><Checkbox>新建客户</Checkbox></div>
           </div>
         </td>
-      </tr>
+      </tr> -->
 
-      <tr class="authority-row-current" v-for="(auth, index) in authData" :key="index"> 
-        <td class="authority-row-title">{{auth.name}}</td>
-        <td v-for="(item, indexNum) in auth.menus" :key="indexNum">
-          <div class="authority-check-all">
-            <Checkbox :indeterminate="item.checked === 2" :value="item.checked !== 2">{{item.name}}</Checkbox>
-          </div>
-          <div class="authority-check-items" v-if="item.hasSubMenus">
-            <div class="authority-check-item" v-for="(subItem, subIndex) in item.subMenus" :key="subIndex">
-              <Checkbox :value="subItem.checked === 1">{{subItem.name}}</Checkbox>
-            </div>
-          </div>
-        </td>
-      </tr>
-
-      <tr class="authority-row-current" v-for="(auth, index) in authData" :key="index"> 
+      <tr :class="auth.id === currentAuthId ? 'authority-row-current' : ''" v-for="(auth, index) in authData" :key="index" @click.stop="toggleAuth(auth)"> 
         <td class="authority-row-title">{{auth.name}}</td>
         <ebook-authority-item
           v-for="(item, indexNum) in auth.menus"
@@ -63,10 +49,13 @@
           @checkAllAuth="checkAllAuth"></ebook-authority-item>
       </tr>
 
-
-
     </table>
   </div>
+  <Modal
+    v-model="confirmModal"
+    @on-ok="confirmSave">
+    <p class="auth-alert-text">是否保存已更改的操作</p>
+  </Modal>
 </div>
 </template>
 <script>
@@ -79,7 +68,11 @@ export default {
   },
   data() {
     return {
-      atuhMenus: [],
+      authMenus: [],
+      authMenusBackup: [],
+      // currentAuthId: '100',
+      currentAuth: {},
+      confirmModal: false,
       authData: [
         {
           name: '权限1',
@@ -158,16 +151,152 @@ export default {
               ]
             }
           ]
+        },
+        {
+          name: '权限2',
+          id: '200',
+          menus: [
+            {
+              name: '案场',
+              id: '11',
+              hasSubMenus: false,
+              checked: 0, // 整个菜单（包括子菜单）权限都有
+              subMenus: []
+            },
+            {
+              name: '组织',
+              id: '22',
+              hasSubMenus: false,
+              checked: 1, // 整个菜单（包括子菜单）权限全都没有
+              subMenus: []
+            },
+            {
+              name: '用户',
+              id: '33',
+              hasSubMenus: true,
+              checked: 1, // 有菜单部分子菜单的权限
+              subMenus: [
+                {
+                  name: '内部用户',
+                  id: '3301',
+                  checked: 0
+                },
+                {
+                  name: '外部用户',
+                  id: '3302',
+                  checked: 1
+                }
+              ]
+            },
+            {
+              name: '权限',
+              id: '44',
+              hasSubMenus: false,
+              checked: 0, // 整个菜单（包括子菜单）权限全都没有
+              subMenus: []
+            },
+            {
+              name: '客户数据',
+              id: '55',
+              hasSubMenus: true,
+              checked: 2, // 有菜单部分子菜单的权限
+              subMenus: [
+                {
+                  name: '来电客户',
+                  id: '5501',
+                  checked: 0
+                },
+                {
+                  name: '到访客户',
+                  id: '5502',
+                  checked: 0
+                },
+                {
+                  name: '成交客户',
+                  id: '5503',
+                  checked: 0
+                },
+                {
+                  name: '未分配客户',
+                  id: '5504',
+                  checked: 1
+                },
+                {
+                  name: '新建客户',
+                  id: '5505',
+                  checked: 1
+                }
+              ]
+            }
+          ]
         }
       ]
     }
   },
+  computed: {
+    currentAuthId() {
+      return this.currentAuth.id
+    },
+    currentAuthMenus() {
+      const menus = []
+      _.each(this.currentAuth.menus, authItem => {
+        if (authItem.hasSubMenus) {
+          _.each(authItem.subMenus, subAuthItem => {
+            if (subAuthItem.checked === 1) {
+              menus.push(subAuthItem.id)
+            }
+          })
+        } else {
+          if (authItem.checked === 1) {
+            menus.push(authItem.id)
+          }
+        }
+      })
+      return menus
+    }
+  },
+  mounted() {
+    this.currentAuth = this.authData[0]
+    this.authMenusBackup = _.cloneDeep(this.currentAuthMenus)
+    console.log('MOUNT', this.authMenusBackup)
+  },
   methods: {
     checkAllAuth(authId, subAuthId) {
-      console.log('checkAllAuth', authId, subAuthId)
+      console.log('checkAllAuth', this.authMenus)
     },
     checkAllChange(data) {
       console.log('checkAllChange', data)
+    },
+    toggleAuth(auth) {
+      if (this.currentAuthId === auth.id) return
+
+      console.log('toggleAuth', auth.id)
+      console.log('currentAuthMenus', this.currentAuthMenus)
+      // this.confirmModal = true
+      // this.currentAuth = auth
+      // this.authMenusBackup = _.cloneDeep(this.currentAuthMenus)
+      console.log('authMenusBackup', this.authMenusBackup)
+    },
+    getAuthMenus() {
+      const menus = []
+      _.each(this.currentAuth.menus, authItem => {
+        if (authItem.hasSubMenus) {
+          _.each(authItem.subMenus, subAuthItem => {
+            if (subAuthItem.checked === 1) {
+              menus.push(subAuthItem.id)
+            }
+          })
+        } else {
+          if (authItem.checked === 1) {
+            menus.push(authItem.id)
+          }
+        }
+      })
+      console.log('getAuthMenus', menus)
+      return menus
+    },
+    confirmSave() {
+      console.log('confirmSave')
     }
   }
 }
@@ -228,5 +357,10 @@ export default {
   .authority-row-title {
     font-size: 20px;
     padding: 18px 18px 18px 38px !important;
+  }
+
+  .ivu-modal-body .auth-alert-text {
+    text-align: center;
+    font-size: 24px;
   }
 </style>
