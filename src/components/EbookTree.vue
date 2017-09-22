@@ -67,36 +67,36 @@ export default {
 }
 </script>
 <style lang="less">
-.ebook-tree {
-  border:1px solid #bdbdbd;
-  background: #fff;
+// .ebook-tree {
+//   border:1px solid #bdbdbd;
+//   background: #fff;
 
-  &:last-child {
-    border-top: none;
-  }
-}
+//   &:last-child {
+//     border-top: none;
+//   }
+// }
 
-.ebook-tree__root {
-  height: 44px;
-  line-height: 44px;
-  background: #66c5d0;
-}
+// .ebook-tree__root {
+//   height: 44px;
+//   line-height: 44px;
+//   background: #66c5d0;
+// }
 
-.ebook-tree__root--title {
-  display: inline-block;
-  padding-left: 15px;
-  font-weight: 400;
-  font-size: 20px;
-  color: #fff;
-}
+// .ebook-tree__root--title {
+//   display: inline-block;
+//   padding-left: 15px;
+//   font-weight: 400;
+//   font-size: 20px;
+//   color: #fff;
+// }
 
-.ebook-tree__root--add {
-  float: right;
-  font-size: 21px;
-  margin-right: 29px;
-  color: #fff;
-  cursor: pointer;
-}
+// .ebook-tree__root--add {
+//   float: right;
+//   font-size: 21px;
+//   margin-right: 29px;
+//   color: #fff;
+//   cursor: pointer;
+// }
 
 .ebook-tree__item {
   position: relative;

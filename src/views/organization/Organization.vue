@@ -184,10 +184,11 @@ export default {
         this.$axios.post('office/save', requestData).then(
         response => {
           if (_.isNull(response)) return
+          this.showOrgList()
         })
         this.hideModal()
       }
-      window.location.reload()  //  重载页面..有待改善
+      // window.location.reload()  //  重载页面..有待改善
     }
   },
   mounted() { //  挂载成功时 显示组织列表
@@ -207,4 +208,29 @@ export default {
 
 </script>
 <style lang="less">
+.ebook-tree {
+  border:1px solid #bdbdbd;
+  background: #fff;
+}
+.ebook-tree__root {
+  height: 44px;
+  line-height: 44px;
+  background: #66c5d0;
+}
+
+.ebook-tree__root--title {
+  display: inline-block;
+  padding-left: 15px;
+  font-weight: 400;
+  font-size: 20px;
+  color: #fff;
+}
+
+.ebook-tree__root--add {
+  float: right;
+  font-size: 21px;
+  margin-right: 29px;
+  color: #fff;
+  cursor: pointer;
+}
 </style>
