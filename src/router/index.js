@@ -335,8 +335,12 @@ router.beforeEach((to, from, next) => {
         store.dispatch('getUserInfoFromStorage')
       }
       if (to.matched.some(record => record.meta.requiresAuth)) {
+        let toName = to.name
+        if (to.name === 'CaseInfo' || to.name === 'CaseAttrs' || to.name === 'CaseProject') {
+          toName = 'CaseManage'
+        }
         // 检查是否有权限
-        if (_.indexOf(store.getters.auth, to.name) !== -1) {
+        if (_.indexOf(store.getters.auth, toName) !== -1) {
           console.log('有权限')
 
           // 判断url后面是否带有参数
