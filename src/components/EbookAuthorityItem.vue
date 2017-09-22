@@ -67,7 +67,8 @@ export default {
   },
   methods: {
     checkAllAuth(flag) {
-      this.$emit('checkAllAuth', this.authId, flag)
+      // this.$emit('checkAllAuth', this.authId, flag)
+      this.$emit('checkAllAuth', this.selfAuthData)
     },
     handleCheckAll(flag) {
       // console.log('handleCheckAll', this.ifCheckAll)

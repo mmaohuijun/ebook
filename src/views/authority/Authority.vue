@@ -68,7 +68,7 @@ export default {
   },
   data() {
     return {
-      authMenus: [],
+      authMenus: {},
       authMenusBackup: [],
       // currentAuthId: '100',
       currentAuth: {},
@@ -257,12 +257,10 @@ export default {
   },
   mounted() {
     this.currentAuth = this.authData[0]
-    this.authMenusBackup = _.cloneDeep(this.currentAuthMenus)
-    console.log('MOUNT', this.authMenusBackup)
   },
   methods: {
     checkAllAuth(authId, subAuthId) {
-      console.log('checkAllAuth', this.authMenus)
+      console.log('checkAllAuth', authId, subAuthId)
     },
     checkAllChange(data) {
       console.log('checkAllChange', data)
@@ -274,26 +272,6 @@ export default {
       console.log('currentAuthMenus', this.currentAuthMenus)
       // this.confirmModal = true
       // this.currentAuth = auth
-      // this.authMenusBackup = _.cloneDeep(this.currentAuthMenus)
-      console.log('authMenusBackup', this.authMenusBackup)
-    },
-    getAuthMenus() {
-      const menus = []
-      _.each(this.currentAuth.menus, authItem => {
-        if (authItem.hasSubMenus) {
-          _.each(authItem.subMenus, subAuthItem => {
-            if (subAuthItem.checked === 1) {
-              menus.push(subAuthItem.id)
-            }
-          })
-        } else {
-          if (authItem.checked === 1) {
-            menus.push(authItem.id)
-          }
-        }
-      })
-      console.log('getAuthMenus', menus)
-      return menus
     },
     confirmSave() {
       console.log('confirmSave')
