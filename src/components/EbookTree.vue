@@ -2,9 +2,9 @@
   <li>
     <p class="ebook-tree__item" >
       <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.isCase" :style="{paddingLeft: pval + 'px'}"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
-      <a href="#" v-if="treeData.isCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}">{{treeData.name}}</a>
+      <a href="#" v-if="treeData.isCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}" @click="jumpToCase">{{treeData.name}}</a>
       <span class="ebook-tree__item--title" @click="eidtNewChild" v-model="isEdit"  v-else>{{treeData.name}}</span>
-      <span class="ebook-tree__item--add iconfont icon-tianjia" @click="addNewChild" v-model="isEdit"></span>
+      <span class="ebook-tree__item--add iconfont icon-tianjia" v-if="!treeData.isCase" @click="addNewChild" v-model="isEdit"></span>
     </p>
     <ul v-if="treeData.children" class="ebook-tree__item--children">
       <ebook-tree v-show="open" v-for="(item, index) in treeData.children" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree>
@@ -20,8 +20,8 @@ export default {
     return {
       isCase: false,
       open: false,
-      pval: 0,
-      mval: 0,
+      pval: 0,  //  缩进
+      mval: 0, //  案场 增加缩进
       isEdit: false //  状态  编辑/添加
     }
   },
@@ -44,23 +44,23 @@ export default {
       console.log('here to create a new child')
       this.isEdit = false
       this.$emit('openModal', this.treeData, this.isEdit)
-      // console.log(this.isEdit)
     },
     eidtNewChild() {  // 编辑 与 修改 区分
       console.log('here to edit an old child')
       this.isEdit = true
       this.$emit('openModal', this.treeData, this.isEdit)
+    },
+    jumpToCase() {
+      this.id = this.treeData.id
+      this.$router.push({ name: 'CaseInfo', params: { caseId: this.id } })
     }
   },
   mounted() { //  按层级 缩进
-    console.log('mounted', this.treeData)
     for (const i in this.treeData) {
-      if (typeof this.treeData[i] == 'number') {
-        if (this.treeData[i] !== (0 && null && undefined && false)) {
-          console.log(this.treeData[i])
-          this.mval = 35
-          this.pval = 33 * this.treeData[i]
-        }
+      if (i === 'level') {
+        // console.log('level', this.treeData[i])
+        this.pval = 33 * (this.treeData[i] - 1)
+        this.mval = 20
       }
     }
   }
