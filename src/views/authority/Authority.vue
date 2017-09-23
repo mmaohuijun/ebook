@@ -84,7 +84,7 @@ export default {
       return this.currentAuth.name
     },
     currentAuthMenus() {
-      if (!this.currentAuth.menus) return
+      if (_.isEmpty(this.currentAuth)) return
       const menus = []
       _.each(this.currentAuth.menus, authItem => {
         if (authItem.hasSubMenus) {
