@@ -28,6 +28,8 @@
 </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -39,9 +41,13 @@ export default {
     }
   },
   computed: {
-    BASE_PATH() {
-      return this.$store.getters.BASE_PATH
-    },
+    ...mapGetters([
+      'BASE_PATH',
+      'firstRoute'
+    ]),
+    // BASE_PATH() {
+    //   return this.$store.getters.BASE_PATH
+    // },
     bgImg() {
       return {
         background: `url(${this.BASE_PATH}static/img/login_bg.jpg)`,
@@ -52,11 +58,11 @@ export default {
   methods: {
     verifyAccountData() {
       if (_.trim(this.loginName) === '') {
-        this.$store.commit('showErrorMsg', '请输入账号')
+        this.$store.dispatch('showErrorMsg', '请输入账号')
         this.loginName = ''
         return false
       } else if (_.trim(this.password) === '') {
-        this.$store.commit('showErrorMsg', '请输入密码')
+        this.$store.dispatch('showErrorMsg', '请输入密码')
         this.password = ''
         return false
       }
@@ -83,10 +89,13 @@ export default {
           loginName: reData.loginName,
           name: reData.name,
           mobile: reData.mobile,
-          no: reData.no
+          no: reData.no,
+          auth: reData.menus,
+          type: reData.type
         }
         // 保存用户信息到全局
         this.$store.dispatch('setUserInfo', loginInfo)
+        this.$store.dispatch('setFirstRoute', reData.menus[0])
         // 是否记住账号
         if (this.ifRemember) {
           this.$store.dispatch('remeberLoginName', reData.loginName)
@@ -94,8 +103,12 @@ export default {
           this.$store.dispatch('clearLoginName')
         }
 
-        /** 应该根据用户权限跳转对应的菜单 */
-        this.$router.push({ name: 'CaseManage' })
+        this.$router.push({ name: this.firstRoute })
+
+        // this.$store.dispatch('GenerateRoutes').then(() => {
+        //   /** 根据用户权限跳转对应的菜单 */
+        //   this.$router.push({ name: this.firstRoute })
+        // })
       })
     },
     checkIfHadRemeber() {

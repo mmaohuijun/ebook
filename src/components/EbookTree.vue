@@ -1,13 +1,13 @@
 <template>
   <li>
     <p class="ebook-tree__item" >
-      <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.ifCase" :style="{paddingLeft: pval + 'px'}"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
-      <a href="#" v-if="treeData.ifCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}">{{treeData.title}}</a>
-      <span class="ebook-tree__item--title" v-else>{{treeData.title}}</span>
-      <span class="ebook-tree__item--add iconfont icon-tianjia"></span>
+      <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.isCase" :style="{paddingLeft: pval + 'px'}"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
+      <a href="#" v-if="treeData.isCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}" @click="jumpToCase">{{treeData.name}}</a>
+      <span class="ebook-tree__item--title" @click="eidtNewChild" v-model="isEdit"  v-else>{{treeData.name}}</span>
+      <span class="ebook-tree__item--add iconfont icon-tianjia" v-if="!treeData.isCase" @click="addNewChild" v-model="isEdit"></span>
     </p>
     <ul v-if="treeData.children" class="ebook-tree__item--children">
-      <ebook-tree v-show="open" v-for="(item, index) in treeData.children" :key="index" :tree-data="item"></ebook-tree>
+      <ebook-tree v-show="open" v-for="(item, index) in treeData.children" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree>
     </ul>
   </li>
 </template>
@@ -20,13 +20,9 @@ export default {
     return {
       isCase: false,
       open: false,
-      pval: 0,
-      mval: 0
-    }
-  },
-  computed: {
-    getLevel(obj) {
-      console.log(this.getLevel('string'))
+      pval: 0,  //  缩进
+      mval: 0, //  案场 增加缩进
+      isEdit: false //  状态  编辑/添加
     }
   },
   props: {
@@ -36,54 +32,71 @@ export default {
     EbookTree
   },
   methods: {
+    addNewOrg(ele, edit) {  // 触发自定义方法的事件
+      this.$emit('openModal', ele, edit)
+    },
     toggle() {
       if (!this.isCase) {
         this.open = !this.open
       }
+    },
+    addNewChild() {  // 定义点击事件 自定义方法 并传递参数
+      console.log('here to create a new child')
+      this.isEdit = false
+      this.$emit('openModal', this.treeData, this.isEdit)
+    },
+    eidtNewChild() {  // 编辑 与 修改 区分
+      console.log('here to edit an old child')
+      this.isEdit = true
+      this.$emit('openModal', this.treeData, this.isEdit)
+    },
+    jumpToCase() {
+      this.id = this.treeData.id
+      this.$router.push({ name: 'CaseInfo', params: { caseId: this.id } })
     }
   },
-  mounted() {
-    console.log('mounted', this.treeData)
+  mounted() { //  按层级 缩进
     for (const i in this.treeData) {
-      if (typeof this.treeData[i] == 'number') {
-        this.mval = 35
-        this.pval = 33 * this.treeData[i]
+      if (i === 'level') {
+        // console.log('level', this.treeData[i])
+        this.pval = 33 * (this.treeData[i] - 1)
+        this.mval = 20
       }
     }
   }
 }
 </script>
 <style lang="less">
-.ebook-tree {
-  border:1px solid #bdbdbd;
-  background: #fff;
+// .ebook-tree {
+//   border:1px solid #bdbdbd;
+//   background: #fff;
 
-  &:last-child {
-    border-top: none;
-  }
-}
+//   &:last-child {
+//     border-top: none;
+//   }
+// }
 
-.ebook-tree__root {
-  height: 44px;
-  line-height: 44px;
-  background: #66c5d0;
-}
+// .ebook-tree__root {
+//   height: 44px;
+//   line-height: 44px;
+//   background: #66c5d0;
+// }
 
-.ebook-tree__root--title {
-  display: inline-block;
-  padding-left: 15px;
-  font-weight: 400;
-  font-size: 20px;
-  color: #fff;
-}
+// .ebook-tree__root--title {
+//   display: inline-block;
+//   padding-left: 15px;
+//   font-weight: 400;
+//   font-size: 20px;
+//   color: #fff;
+// }
 
-.ebook-tree__root--add {
-  float: right;
-  font-size: 21px;
-  margin-right: 29px;
-  color: #fff;
-  cursor: pointer;
-}
+// .ebook-tree__root--add {
+//   float: right;
+//   font-size: 21px;
+//   margin-right: 29px;
+//   color: #fff;
+//   cursor: pointer;
+// }
 
 .ebook-tree__item {
   position: relative;

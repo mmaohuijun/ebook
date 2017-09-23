@@ -5,7 +5,7 @@
 </style>
 <template>
 <div class="layout__content">
-  <div class="layout__header">
+   <!-- <div class="layout__header">
     <h2 class="layout__header-title">用户 - 内部用户</h2>
     <div class="layout__header-tool">
       <span style="font-size:16px; color:#fff; padding: 0 10px;">时间</span>
@@ -13,10 +13,25 @@
       <span style="font-size:16px; color:#fff; padding: 0 10px;">-</span>
       <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="endDate=$event" v-model="endDate" placeholder="结束日期" :clearable="false" style="width: 95px; margin-right: 30px;"></Date-picker>
       <Input class="custom__search" icon="search" placeholder="姓名／手机号" v-model="name" @on-click="textSearch"></Input>
+
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="removeUser(selectedId)"></Button>
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addModal"></Button>
     </div>
-  </div>
+  </div>  -->
+
+  <ebook-header
+    header-title="用户 - 内部用户"
+    :dateSearch="true"
+    :textSearch="true"
+    placeholder="姓名／手机号"
+    :addBtn="true"
+    :deleteBtn="isTrash"
+    @onDateSearch="dateSearch"
+    @onTextSearch="textSearch"
+    @onAdd="addModal"
+    @onDelete="removeUser(selectedId)"></ebook-header>
+
+
   <div class="layout__body">
     <Table class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
     <Spin size="large" fix v-if="false"></Spin>
@@ -56,6 +71,8 @@
 </div>
 </template>
 <script>
+import EbookHeader from 'components/EbookHeader'
+
 export default {
   data() {
     const MobileVaild = (rule, value, callback) => {
@@ -204,6 +221,7 @@ export default {
   methods: {
     // 删除用户
     removeUser(selectedId) {
+      console.log('removeUser', selectedId)
       // this.userListData.splice(index, 1)
       const that = this
       this.$Modal.confirm({
@@ -304,14 +322,17 @@ export default {
       }
     },
     // 时间段搜索
-    dateSearch() {
+    dateSearch(starDate, endDate) {
+      this.startDate = starDate
+      this.endDate = endDate
       this.name = ''
       this.isSearch = true
       this.pageNo = 1
       this.userList()
     },
     // 文本搜索
-    textSearch() {
+    textSearch(seachText) {
+      this.name = seachText
       this.startDate = ''
       this.endDate = ''
       this.isSearch = true
@@ -356,6 +377,9 @@ export default {
         this.resetFields('userInfo')
       }
     }
+  },
+  components: {
+    EbookHeader
   }
 }
 </script>
