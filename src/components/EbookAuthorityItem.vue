@@ -1,12 +1,12 @@
 <template>
 <td>
   <div class="authority-check-all">
-    <Checkbox v-if="!hasSubMenus" :value="authData.checked === 1" @on-change="checkAllAuth">{{authData.name}}</Checkbox>
-    <Checkbox v-else :indeterminate="indeterminate" :value="ifCheckAll" @click.prevent.native="handleCheckAll">{{authData.name}}</Checkbox>
+    <Checkbox v-if="!hasSubMenus" :value="selfAuthData.checked === 1" @on-change="checkAuth">{{selfAuthData.name}}</Checkbox>
+    <Checkbox v-else :indeterminate="indeterminate" :value="ifCheckAll" @click.prevent.native="handleCheckAll">{{selfAuthData.name}}</Checkbox>
   </div>
   <CheckboxGroup class="authority-check-items" v-if="hasSubMenus" v-model="subAuthCheckedId" @on-change="subAuthCheckedIdChange">
     <Checkbox class="authority-check-item"
-      v-for="(subAuth, subAuthIndex) in authData.subMenus"
+      v-for="(subAuth, subAuthIndex) in selfAuthData.subMenus"
       :key="subAuthIndex"
       :label="subAuth.id">{{subAuth.name}}</Checkbox>
   </CheckboxGroup>
@@ -18,7 +18,9 @@ export default {
   data() {
     return {
       selfAuthData: _.cloneDeep(this.authData),
-      subAuthCheckedId: []
+      subAuthCheckedId: [],
+      subAuthUncheckedId: [],
+      subAuthCheckedIdBackup: []
     }
   },
   props: {
@@ -28,13 +30,15 @@ export default {
     authId() {
       return this.selfAuthData.id
     },
+    // 是否有子权限菜单
     hasSubMenus() {
-      return !_.isEmpty(this.selfAuthData.subMenus)
+      return this.selfAuthData.hasSubMenus
     },
+    // 子权限菜单长度
     subMenusLength() {
       return this.selfAuthData.subMenus.length
     },
-    // 权限所有子菜单的id
+    // 子权限菜单所有的id
     subAuthAllId() {
       const arr = []
       _.each(this.selfAuthData.subMenus, ele => {
@@ -42,43 +46,55 @@ export default {
       })
       return arr
     },
+    // 是否有子权限被选中
     indeterminate() {
       return this.subAuthCheckedId.length > 0
     },
+    // 是否全选
     ifCheckAll: {
       get() {
         return this.subAuthCheckedId.length === this.subMenusLength
       },
       set(value) {
-        if (value) {
+        if (value) { // 全选
           this.subAuthCheckedId = this.subAuthAllId
-        } else {
+        } else { // 全不选
           this.subAuthCheckedId = []
         }
       }
     }
   },
   mounted() {
-    _.each(this.selfAuthData.subMenus, ele => {
-      if (ele.checked) {
-        this.subAuthCheckedId.push(ele.id)
-      }
-    })
+    this.initCheckedList()
   },
   methods: {
-    checkAllAuth(flag) {
-      // this.$emit('checkAllAuth', this.authId, flag)
-      this.$emit('checkAllAuth', this.selfAuthData)
+    // 初始化CheckedList, 把已选的权限id放入数组
+    initCheckedList() {
+      _.each(this.selfAuthData.subMenus, ele => {
+        if (ele.checked) {
+          this.subAuthCheckedId.push(ele.id)
+        }
+      })
+      this.subAuthCheckedIdBackup = _.cloneDeep(this.subAuthCheckedId)
     },
-    handleCheckAll(flag) {
-      // console.log('handleCheckAll', this.ifCheckAll)
+    // 点击一级菜单
+    checkAuth(flag) {
+      this.$emit('authChange', flag, [this.authId])
+    },
+    // 点击一级菜单(有子权限)
+    handleCheckAll() {
       this.ifCheckAll = !this.ifCheckAll
-      this.$emit('checkAllAuth', this.authId, this.subAuthCheckedId)
+      this.$emit('authChange', this.ifCheckAll, this.subAuthAllId)
     },
+    // 子权限菜单改变
     subAuthCheckedIdChange(data) {
-      // console.log('authGroupChange', data)
-      this.subAuthCheckedId = data
-      this.$emit('checkAllAuth', this.authId, this.subAuthCheckedId)
+      // 判断是增加还是减少
+      const flag = this.subAuthCheckedId.length > this.subAuthCheckedIdBackup.length
+      // 没有选中的选项
+      const uncheck = _.difference(this.subAuthAllId, data)
+      const change = flag ? data : uncheck
+      // 如果是增加则把选中的传出去, 如果是减少则把没有选中的传出去
+      this.$emit('authChange', flag, change)
     }
   }
 }

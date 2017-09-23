@@ -1,28 +1,49 @@
 <template>
-<div class="layout__content">
+<div class="layout__content auth">
   <div class="layout__header">
     <h2 class="layout__header-title">权限</h2>
     <div class="layout__header-tool">
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus"></Button>
+      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click.stop="addAuth"></Button>
     </div>
   </div>
   <div class="layout__body">
     <table class="authority" cellspacing="0" cellpadding="0" border="0">
-      <tr :class="auth.id === currentAuthId ? 'authority-row-current' : ''" v-for="(auth, index) in authData" :key="index" @click.stop="toggleAuth(auth)">
+      <tr :class="auth.id === currentAuthId ? 'authority-row-current' : ''" v-for="(auth, index) in authData" :key="index" @click.stop="toggleAuthCfm(auth)"> 
         <td class="authority-row-title">{{auth.name}}</td>
         <ebook-authority-item
           v-for="(item, indexNum) in auth.menus"
           :key="indexNum"
           :auth-data="item"
-          @checkAllAuth="checkAllAuth"></ebook-authority-item>
+          @authChange="authChange"></ebook-authority-item>
       </tr>
 
     </table>
   </div>
   <Modal
-    v-model="confirmModal"
-    @on-ok="confirmSave">
+    v-model="confirmAuthChangeModal"
+    :styles="{top: '200px'}"
+    @on-ok="confirmSaveAuth">
     <p class="auth-alert-text">是否保存已更改的操作</p>
+  </Modal>
+
+  <Modal
+    on-cancel="resetFields('authForm')"
+    v-model="addAuthModal.show"
+    :styles="{top: '200px'}"
+    :closable="false"
+    :mask-closable="false"
+    width="560">
+    <p slot="header">新建权限</p>
+    <Form ref="authForm" :model="authForm" :rules="authRule" :label-width="120" style="width: 380px; padding-top: 20px; margin: 0 auto;">
+      <Form-item prop="name" label="权限名称：">
+        <Input v-model="authForm.name" placeholder="文本不能超过8个字符" :maxlength="16"></Input>
+        <p class="auth-modal-text">详细内容请在权限界面点击编辑按钮进行编辑</p>
+      </Form-item>
+    </Form>
+    <div slot="footer">
+      <Button type="text" size="large" @click.stop="hideModal">取消</Button>
+      <Button type="primary" size="large" @click="confirmAddAuth('authForm')" :loading="addAuthModal.saveLoading">完成</Button>
+    </div>
   </Modal>
 </div>
 </template>
@@ -36,174 +57,31 @@ export default {
   },
   data() {
     return {
-      authMenus: {},
-      authMenusBackup: [],
-      // currentAuthId: '100',
-      currentAuth: {},
-      confirmModal: false,
-      authData: [
-        {
-          name: '权限1',
-          id: '100',
-          menus: [
-            {
-              name: '案场',
-              id: '11',
-              hasSubMenus: false,
-              checked: 1, // 整个菜单（包括子菜单）权限都有
-              subMenus: []
-            },
-            {
-              name: '组织',
-              id: '22',
-              hasSubMenus: false,
-              checked: 0, // 整个菜单（包括子菜单）权限全都没有
-              subMenus: []
-            },
-            {
-              name: '用户',
-              id: '33',
-              hasSubMenus: true,
-              checked: 1, // 有菜单部分子菜单的权限
-              subMenus: [
-                {
-                  name: '内部用户',
-                  id: '3301',
-                  checked: 1
-                },
-                {
-                  name: '外部用户',
-                  id: '3302',
-                  checked: 1
-                }
-              ]
-            },
-            {
-              name: '权限',
-              id: '44',
-              hasSubMenus: false,
-              checked: 0, // 整个菜单（包括子菜单）权限全都没有
-              subMenus: []
-            },
-            {
-              name: '客户数据',
-              id: '55',
-              hasSubMenus: true,
-              checked: 2, // 有菜单部分子菜单的权限
-              subMenus: [
-                {
-                  name: '来电客户',
-                  id: '5501',
-                  checked: 1
-                },
-                {
-                  name: '到访客户',
-                  id: '5502',
-                  checked: 0
-                },
-                {
-                  name: '成交客户',
-                  id: '5503',
-                  checked: 1
-                },
-                {
-                  name: '未分配客户',
-                  id: '5504',
-                  checked: 0
-                },
-                {
-                  name: '新建客户',
-                  id: '5505',
-                  checked: 0
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: '权限2',
-          id: '200',
-          menus: [
-            {
-              name: '案场',
-              id: '11',
-              hasSubMenus: false,
-              checked: 0, // 整个菜单（包括子菜单）权限都有
-              subMenus: []
-            },
-            {
-              name: '组织',
-              id: '22',
-              hasSubMenus: false,
-              checked: 1, // 整个菜单（包括子菜单）权限全都没有
-              subMenus: []
-            },
-            {
-              name: '用户',
-              id: '33',
-              hasSubMenus: true,
-              checked: 1, // 有菜单部分子菜单的权限
-              subMenus: [
-                {
-                  name: '内部用户',
-                  id: '3301',
-                  checked: 0
-                },
-                {
-                  name: '外部用户',
-                  id: '3302',
-                  checked: 1
-                }
-              ]
-            },
-            {
-              name: '权限',
-              id: '44',
-              hasSubMenus: false,
-              checked: 0, // 整个菜单（包括子菜单）权限全都没有
-              subMenus: []
-            },
-            {
-              name: '客户数据',
-              id: '55',
-              hasSubMenus: true,
-              checked: 2, // 有菜单部分子菜单的权限
-              subMenus: [
-                {
-                  name: '来电客户',
-                  id: '5501',
-                  checked: 0
-                },
-                {
-                  name: '到访客户',
-                  id: '5502',
-                  checked: 0
-                },
-                {
-                  name: '成交客户',
-                  id: '5503',
-                  checked: 0
-                },
-                {
-                  name: '未分配客户',
-                  id: '5504',
-                  checked: 1
-                },
-                {
-                  name: '新建客户',
-                  id: '5505',
-                  checked: 1
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      ifNew: false, // 是否为新建
+      authMenus: [], // 所选权限菜单的已选择项
+      authMenusBackup: [], // 备份
+      currentAuth: {}, // 现在展示的权限
+      backupAuth: {}, // 将要展示的权限
+      confirmAuthChangeModal: false,
+      addAuthModal: {
+        show: false,
+        saveLoading: false
+      },
+      authForm: {
+        name: '' // 权限名，新建时必须
+      },
+      authRule: {
+        name: [{ required: true, message: '名称不能为空', trigger: 'blur' }]
+      },
+      authData: []
     }
   },
   computed: {
     currentAuthId() {
       return this.currentAuth.id
+    },
+    currentAuthName() {
+      return this.currentAuth.name
     },
     currentAuthMenus() {
       const menus = []
@@ -224,25 +102,125 @@ export default {
     }
   },
   mounted() {
-    this.currentAuth = this.authData[0]
+    this.initAuthList().then(() => {
+      this.toggleAuth(this.authData[0])
+    })
   },
   methods: {
-    checkAllAuth(authId, subAuthId) {
-      console.log('checkAllAuth', authId, subAuthId)
+    initAuthList() {
+      return new Promise(resolve => {
+        this.$axios.post('role/list').then(response => {
+          if (response === null) return
+          console.log('权限列表', response)
+          const reData = response.data
+          this.authData = reData
+          resolve()
+        })
+      })
+    },
+    addAuth() {
+      this.ifNew = true
+      this.addAuthModal.show = true
+    },
+    authChange(flag, changeId) {
+      console.log('authChange', flag, changeId)
+
+      if (flag) { // 增加
+        this.authMenus = _.uniq(_.concat(this.authMenus, changeId))
+      } else {
+        this.authMenus = _.pull(this.authMenus, ...changeId)
+      }
     },
     checkAllChange(data) {
       console.log('checkAllChange', data)
     },
-    toggleAuth(auth) {
+    toggleAuthCfm(auth) {
       if (this.currentAuthId === auth.id) return
+      this.backupAuth = _.cloneDeep(auth)
+      let diff = [] // 备份的checkedList和现有的checkedList对比
 
-      console.log('toggleAuth', auth.id)
-      console.log('currentAuthMenus', this.currentAuthMenus)
-      // this.confirmModal = true
-      // this.currentAuth = auth
+      if (this.currentAuthMenus.length > this.authMenus.length) {
+        diff = _.difference(this.currentAuthMenus, this.authMenus)
+      } else {
+        diff = _.difference(this.authMenus, this.currentAuthMenus)
+      }
+
+      console.log('toggleAuthCfm', diff)
+      if (!_.isEmpty(diff)) {
+        this.confirmAuthChangeModal = true
+        return
+      }
+
+      this.toggleAuth(this.backupAuth)
     },
-    confirmSave() {
-      console.log('confirmSave')
+    // 更新权限checked菜单
+    updateAuthMenus() {
+      this.authMenus = _.cloneDeep(this.currentAuthMenus)
+    },
+    // 切换权限
+    toggleAuth(auth) {
+      console.log('切换权限', auth)
+      this.currentAuth = _.cloneDeep(auth)
+      this.updateAuthMenus()
+    },
+    getAuthSaveData() {
+      const data = {
+        id: this.ifNew ? '' : this.currentAuthId,
+        name: this.ifNew ? this.authForm.name : this.currentAuthName
+      }
+      if (this.ifNew) {
+        // 验证标识
+        let flagV = false
+
+        this.$refs.authForm.validate(flag => {
+          console.log('validate', flag)
+          flagV = flag
+        })
+        return flagV ? data : false
+      } else {
+        _.each(this.authMenus, (authItem, index) => {
+          console.log(authItem, index)
+          data[`menus[${index}].id`] = authItem
+        })
+        return data
+      }
+    },
+    // 权限保存/新建
+    sendSaveRequest() {
+      return new Promise(resolve => {
+        const requestData = this.getAuthSaveData()
+        if (!requestData) return
+        this.addAuthModal.saveLoading = true
+        this.$axios.post('role/save', requestData).then(response => {
+          this.addAuthModal.saveLoading = false
+          if (response === null) return
+          console.log('权限保存/新建', response)
+          this.initAuthList()
+          this.hideModal()
+          resolve()
+        })
+      })
+    },
+    // toggle权限时确认
+    confirmSaveAuth() {
+      console.log('confirmSaveAuth')
+      this.sendSaveRequest().then(() => {
+        this.toggleAuth(this.backupAuth)
+      })
+    },
+    // 新建权限时确认
+    confirmAddAuth() {
+      console.log('confirmAddAuth')
+      this.sendSaveRequest().then(() => {
+        this.toggleAuth(this.authData[0])
+      })
+    },
+    hideModal() {
+      this.addAuthModal.show = false
+      this.authForm.name = ''
+      this.ifNew = false
+      // 清空规则
+      this.$refs.authForm.resetFields()
     }
   }
 }
@@ -305,8 +283,17 @@ export default {
     padding: 18px 18px 18px 38px !important;
   }
 
-  .ivu-modal-body .auth-alert-text {
-    text-align: center;
-    font-size: 24px;
+  .ivu-modal-body {
+    .auth-alert-text {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 24px;
+      color: #4e546c;
+    }
   }
+  .auth-modal-text {
+    font-size: 14px;
+    color: #888;
+  }
+
 </style>
