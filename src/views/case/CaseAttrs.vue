@@ -28,7 +28,11 @@
       <div class="attrsinfo__card__tool">
         <i class="iconfont icon-xiugai" @click.stop="editAttrsGroup(item)"></i>
         <i class="iconfont icon-shanchu1" @click.stop="deleteAttrsGroup(item)"></i>
+<<<<<<< Updated upstream
         <i class="iconfont" :class="item.hidden ? 'icon-yincang' : 'icon-keshi'" @click.stop="displayAttrsGroup(item)"></i>
+=======
+        <i class="iconfont" :class="item.hidden ? 'icon-keshi' : 'icon-yincang'" @click.stop="displayAttrsGroup(item)"></i>
+>>>>>>> Stashed changes
       </div>
     </div>
   </div>
@@ -84,7 +88,11 @@
           <i class="add-detail-attrs ivu-icon ivu-icon-minus-circled" v-if="attrsEditable" @click.stop="attrsEditable ? deleteAttrsOptions(index) : ''"></i>
         </Form-item>
         <Form-item :label="attrsDetailsOptions.length === 0 ? '详细维度：' : ''" v-show="attrsEditable">
+<<<<<<< Updated upstream
           <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText" :maxlength="20"></Input>
+=======
+          <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText"></Input>
+>>>>>>> Stashed changes
           <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i>
         </Form-item>
       </div>

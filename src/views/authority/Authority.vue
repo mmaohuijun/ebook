@@ -8,7 +8,7 @@
   </div>
   <div class="layout__body">
     <table class="authority" cellspacing="0" cellpadding="0" border="0">
-      <tr class="authority-row-current" v-for="(ele, index) in authData" :key="index"> 
+      <tr class="authority-row-current" v-for="(ele, index) in authData" :key="index">
         <td class="authority-row-title">{{ele.title}}</td>
         <td v-for="(item, indexNum) in ele.children" :key="indexNum">
           <div class="authority-check-all">
@@ -31,7 +31,7 @@
           <div class="authority-check-all"><Checkbox>组织</Checkbox></div>
         </td>
         <td>
-          <div class="authority-check-all"><Checkbox :indeterminate="true" :value="true">用户</Checkbox></div>
+          <div class="authority-check-all"><Checkbox :indeterminate="true" :value="true">用户</Checkbox><div class="triangle-right"></div></div>
           <div class="authority-check-items">
             <div class="authority-check-item"><Checkbox>内部用户</Checkbox></div>
             <div class="authority-check-item"><Checkbox>外部用户</Checkbox></div>
