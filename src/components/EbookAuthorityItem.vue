@@ -1,14 +1,15 @@
 <template>
 <td>
   <div class="authority-check-all">
-    <Checkbox v-if="!hasSubMenus" :value="selfAuthData.checked === 1" @on-change="checkAuth">{{selfAuthData.name}}</Checkbox>
-    <Checkbox v-else :indeterminate="indeterminate" :value="ifCheckAll" @click.prevent.native="handleCheckAll">{{selfAuthData.name}}</Checkbox>
+    <Checkbox v-if="!hasSubMenus" :value="selfAuthData.checked === 1" @on-change="checkAuth" :disabled="!display">{{selfAuthData.name}}</Checkbox>
+    <Checkbox v-else :indeterminate="indeterminate" :value="ifCheckAll" @click.prevent.native="handleCheckAll" :disabled="!display">{{selfAuthData.name}}</Checkbox>
   </div>
   <CheckboxGroup class="authority-check-items" v-if="hasSubMenus" v-model="subAuthCheckedId" @on-change="subAuthCheckedIdChange">
     <Checkbox class="authority-check-item"
       v-for="(subAuth, subAuthIndex) in selfAuthData.subMenus"
       :key="subAuthIndex"
-      :label="subAuth.id">{{subAuth.name}}</Checkbox>
+      :label="subAuth.id"
+      :disabled="!display">{{subAuth.name}}</Checkbox>
   </CheckboxGroup>
 </td>
 </template>
@@ -24,7 +25,8 @@ export default {
     }
   },
   props: {
-    authData: Object
+    authData: Object,
+    display: false
   },
   computed: {
     authId() {
@@ -65,6 +67,7 @@ export default {
     }
   },
   mounted() {
+    console.log('MOUNT', this.display)
     this.initCheckedList()
   },
   methods: {

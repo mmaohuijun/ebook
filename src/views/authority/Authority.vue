@@ -6,7 +6,7 @@
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click.stop="addAuth"></Button>
     </div>
   </div>
-  <div class="layout__body">
+  <div class="layout__body" @click="onClickTable">
     <table class="authority" cellspacing="0" cellpadding="0" border="0" v-if="authData.length !== 0">
       <tr :class="auth.id === currentAuthId ? 'authority-row-current' : ''" v-for="(auth, index) in authData" :key="index" @click.stop="toggleAuthCfm(auth)"> 
         <td class="authority-row-title">{{auth.name}}</td>
@@ -14,9 +14,9 @@
           v-for="(item, indexNum) in auth.menus"
           :key="indexNum"
           :auth-data="item"
+          :display="auth.id === currentAuthId"
           @authChange="authChange"></ebook-authority-item>
       </tr>
-
     </table>
   </div>
   <Modal
@@ -109,6 +109,31 @@ export default {
     })
   },
   methods: {
+    // 检查权限列表是否有更改
+    checkIfEdit() {
+      return new Promise(resolve => {
+        // 备份的checkedList和现有的checkedList对比
+        let diff = []
+
+        if (this.currentAuthMenus.length > this.authMenus.length) {
+          diff = _.difference(this.currentAuthMenus, this.authMenus)
+        } else {
+          diff = _.difference(this.authMenus, this.currentAuthMenus)
+        }
+        console.log('checkIfEdit', !_.isEmpty(diff))
+        // 如果有差异则表示有更改
+        if (!_.isEmpty(diff)) {
+          // 弹出提示框是否保存
+          this.confirmAuthChangeModal = true
+        } else {
+          resolve()
+        }
+      })
+    },
+    onClickTable() {
+      console.log('onClickTable')
+      this.checkIfEdit()
+    },
     initAuthList() {
       return new Promise(resolve => {
         this.$axios.post('role/list').then(response => {
@@ -137,22 +162,10 @@ export default {
       if (this.currentAuthId === auth.id) return
       // 备份点击的权限, 判断之前的权限是否有编辑
       this.backupAuth = _.cloneDeep(auth)
-      // 备份的checkedList和现有的checkedList对比
-      let diff = []
 
-      if (this.currentAuthMenus.length > this.authMenus.length) {
-        diff = _.difference(this.currentAuthMenus, this.authMenus)
-      } else {
-        diff = _.difference(this.authMenus, this.currentAuthMenus)
-      }
-
-      // 如果有差异则表示有更改, 弹出提示框是否保存
-      if (!_.isEmpty(diff)) {
-        this.confirmAuthChangeModal = true
-        return
-      }
-
-      this.toggleAuth(this.backupAuth)
+      this.checkIfEdit().then(() => {
+        this.toggleAuth(this.backupAuth)
+      })
     },
     // 更新权限checked菜单
     updateAuthMenus() {
@@ -295,6 +308,31 @@ export default {
   .auth-modal-text {
     font-size: 14px;
     color: #888;
+  }
+
+  .ivu-checkbox {
+    &-inner {
+      width: 18px;
+      height: 18px;
+      background: #d2e9fb;
+      border-radius: 4px;
+      border: none;
+
+      &:after {
+        display: none;
+      }
+    }
+
+    &-checked {
+      .ivu-checkbox-inner {
+        width: 18px;
+        heigth: 18px;
+        background: #1c93ea;
+        &:after{
+          display: none;
+        }
+      }
+    }
   }
 
 </style>

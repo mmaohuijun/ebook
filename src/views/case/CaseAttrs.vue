@@ -45,10 +45,6 @@
         <Form-item label="栏目名称：" prop="label">
           <Input v-model="attrsGroup.label" placeholder="请输入栏目名称" :maxlength="64"></Input>
         </Form-item>
-        <Form-item :label="attrsDetailsOptions.length === 0 ? '详细维度：' : ''" v-show="attrsEditable">
-          <Input placeholder="文本不能超过20个字符" v-model="attrsDetailsOptionsText" :maxlength="20"></Input>
-          <i class="add-detail-attrs ivu-icon ivu-icon-plus-circled" @click.stop="attrsEditable ? addAttrsOptions() : ''"></i>
-        </Form-item>
         <Form-item label="名称序号：" prop="index">
           <Input v-model="attrsGroup.index" placeholder="请输入名称序号(数字)" :maxlength="5"></Input>
         </Form-item>
