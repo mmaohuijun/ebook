@@ -103,6 +103,7 @@ export default {
   },
   mounted() {
     this.initAuthList().then(() => {
+      // 初始化后默认展开第一个权限
       this.toggleAuth(this.authData[0])
     })
   },
@@ -131,13 +132,12 @@ export default {
         this.authMenus = _.pull(this.authMenus, ...changeId)
       }
     },
-    checkAllChange(data) {
-      console.log('checkAllChange', data)
-    },
     toggleAuthCfm(auth) {
       if (this.currentAuthId === auth.id) return
+      // 备份点击的权限, 判断之前的权限是否有编辑
       this.backupAuth = _.cloneDeep(auth)
-      let diff = [] // 备份的checkedList和现有的checkedList对比
+      // 备份的checkedList和现有的checkedList对比
+      let diff = []
 
       if (this.currentAuthMenus.length > this.authMenus.length) {
         diff = _.difference(this.currentAuthMenus, this.authMenus)
@@ -145,7 +145,7 @@ export default {
         diff = _.difference(this.authMenus, this.currentAuthMenus)
       }
 
-      console.log('toggleAuthCfm', diff)
+      // 如果有差异则表示有更改, 弹出提示框是否保存
       if (!_.isEmpty(diff)) {
         this.confirmAuthChangeModal = true
         return
@@ -159,7 +159,6 @@ export default {
     },
     // 切换权限
     toggleAuth(auth) {
-      console.log('切换权限', auth)
       this.currentAuth = _.cloneDeep(auth)
       this.updateAuthMenus()
     },
@@ -194,6 +193,7 @@ export default {
         this.$axios.post('role/save', requestData).then(response => {
           this.addAuthModal.saveLoading = false
           if (response === null) return
+          this.$Message.success('保存成功')
           console.log('权限保存/新建', response)
           this.initAuthList()
           this.hideModal()
