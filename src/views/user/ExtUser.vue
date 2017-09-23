@@ -54,6 +54,11 @@
       <Form-item label="E-mail：" prop="email">
         <Input v-model="userInfo.email" placeholder="请您输入" :maxlength="64"></Input>
       </Form-item>
+      <Form-item label="权限：" prop="roleGroupId">
+        <Select placeholder="请选择权限" v-model="userInfo.roleGroupId">
+          <Option v-for="(item, index) in authList" :key="index" :value="item.id">{{item.name}}</Option>
+        </Select>
+      </Form-item>
       <Form-item label="工号：" prop="no">
         <Input v-model="userInfo.no" placeholder="请您输入" :maxlength="10"></Input>
       </Form-item>
@@ -62,25 +67,12 @@
           <Option v-for="items in caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
         </Select>
       </Form-item>
-      <Form-item label="管理员：">
-        <i-switch v-model="userInfo.adminFlag">
-          <span slot="open"></span>
-          <span slot="close"></span>
-        </i-switch>
+      <Form-item label="管理员：" prop="adminFlag">
+        <i-switch v-model="userInfo.adminFlag"></i-switch>
       </Form-item>
-      <!-- <Form-item label="权限：" prop="power">
-        <Select v-model="userInfo.power" placeholder="请您选择...">
-          <Option value="beijing">全选1</Option>
-          <Option value="shanghai">全选2</Option>
-          <Option value="shenzhen">全选3</Option>
-        </Select>
-      </Form-item> -->
-      <!-- <Form-item label="禁用：">
-        <i-switch>
-          <span slot="open"></span>
-          <span slot="close"></span>
-        </i-switch>
-      </Form-item> -->
+      <Form-item label="禁用：" prop="loginFlag">
+        <i-switch v-model="userInfo.loginFlag"></i-switch>
+      </Form-item>
     </Form>
     <div slot="footer">
       <Button type="text" size="large" @click="modal.show = false">取消</Button>
@@ -138,9 +130,11 @@ export default {
         no: '',           // 工号
         caseId: '',       // 案场ID
         caseName: '',     // 案场名称
-        // power: '1',    // 权限
-        adminFlag: false  // 是否案场管理员
+        roleGroupId: '',    // 权限
+        adminFlag: false,  // 是否案场管理员
+        loginFlag: false   // 是否禁用, 返回的data里 true表示可以登录, false表示禁止登录
       },
+      authList: {},   // 权限列表
       ruleValidate: {
         name: [
           { required: true, message: '姓名不能为空', trigger: 'blur' }
@@ -155,12 +149,12 @@ export default {
         password: [
           // { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
+        roleGroupId: [
+          { required: true, message: '请选择权限', trigger: 'blur' }
+        ],
         no: [
           { required: true, message: '工号不能为空', trigger: 'blur' }
         ],
-        // power: [
-        //   { required: true, message: '权限不能为空', trigger: 'change' }
-        // ],
         caseId: [
           { required: true, message: '案场不能为空', trigger: 'change' }
         ]
@@ -189,6 +183,11 @@ export default {
         {
           title: '生成时间',
           key: 'createTime',
+          ellipsis: true
+        },
+        {
+          title: '状态',
+          key: 'loginFlag',
           ellipsis: true
         },
         {
@@ -236,16 +235,7 @@ export default {
           }
         }
       ],
-      userListData: [
-        // {
-        //   id: 1,
-        //   name: '张磊1',
-        //   mobile: '15811110000',
-        //   email: '213sdga@163.com',
-        //   no: 'XXXXX', // 工号
-        //   createTime: '2017-06-06'
-        // }
-      ]
+      userListData: []
     }
   },
   methods: {
@@ -276,6 +266,13 @@ export default {
         this.caseList = response.data.list
       })
     },
+    // 获取权限列表
+    getAuthList() {
+      this.$axios.post('role/shortlist').then(response => {
+        const responseData = response.data
+        this.authList = responseData
+      })
+    },
     // 新增用户
     addModal() {
       for (const item in this.userInfo) {
@@ -283,6 +280,7 @@ export default {
       }
       this.userInfo.password = '123456'
       this.userInfo.adminFlag = false
+      this.userInfo.loginFlag = false
       this.getCaseList()
       this.userInfo.id = 0
       this.modal.title = '新建用户'
@@ -292,22 +290,27 @@ export default {
     editModal(userId) {
       this.$axios.get('/ext-user/detail', { params: { id: userId } }).then(response => {
         if (response === null) return
+        console.log('editModal', response)
         for (const items in response.data) {
-          this.userInfo[items] = response.data[items]
+          // 将数字类型强制转换为字符串类型
+          if (_.isNumber(response.data[items])) {
+            this.userInfo[items] = String(response.data[items])
+          } else {
+            this.userInfo[items] = response.data[items]
+          }
         }
         if (this.userInfo.caseId !== 0 && this.userInfo.caseId !== '0') {
           this.userInfo.caseId = String(this.userInfo.caseId)
         }
+        this.userInfo.loginFlag = !response.data.loginFlag
         this.userInfo.password = '123456'
       })
       this.getCaseList()
       this.modal.title = '修改用户'
       this.modal.show = true
     },
-
     // 点击用户完成按钮
     saveUser(name) {
-      console.log('this.$refs[name].validate', this.$refs[name])
       this.$refs[name].validate(valid => {
         if (valid) {
           this.modal.saveLoading = true
@@ -331,7 +334,9 @@ export default {
         email: this.userInfo.email,
         no: this.userInfo.no,
         adminFlag: this.userInfo.adminFlag,
-        caseId: this.userInfo.caseId
+        caseId: this.userInfo.caseId,
+        roleGroupId: this.userInfo.roleGroupId,
+        loginFlag: !this.userInfo.loginFlag
       }
       this.$axios.get('/ext-user/save', { params: data }).then(response => {
         if (response === null) return
@@ -409,6 +414,7 @@ export default {
       }
       this.$axios.get('/ext-user/list', { params: data }).then(response => {
         if (response === null) return
+        console.log('用户列表', response.data)
         this.userListData = []
         for (const items in response.data.list) {
           this.userListData.push(response.data.list[items])
@@ -419,6 +425,7 @@ export default {
   },
   mounted() {
     this.userList()
+    this.getAuthList()
   },
   watch: {
     'modal.show'(val, oldVal) {

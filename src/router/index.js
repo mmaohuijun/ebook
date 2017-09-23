@@ -192,8 +192,8 @@ export const constantRouterMap = [
 ]
 
 const routesMap2 = [
-  { path: '/', redirect: { name: firstRoute } },
-  { path: `${path}`, redirect: { name: firstRoute } },
+  { path: '/', redirect: { name: 'Login' } },
+  { path: `${path}`, redirect: { name: 'Login' } },
   {
     path: `${path}login`,
     component: Login,

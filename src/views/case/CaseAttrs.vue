@@ -50,7 +50,7 @@
         </Form-item>
         <Form-item label="是否隐藏：" prop="ifHide">
           <i-switch v-model="attrsGroup.ifHide"></i-switch>
-        </Form-item> 
+        </Form-item>
       </Form>
      <div slot="footer">
       <Button type="text" size="large" @click.stop="hideModal">取消</Button>
@@ -81,8 +81,8 @@
         </Form-item>
         <Form-item label="类型：" prop="type">
           <Select placeholder="请选择类型" v-model="attrsDetails.type" :disabled="!attrsEditable">
-            <Option v-if="!attrsEditable" value="text">单行文本框</Option> 
-            <Option v-if="!attrsEditable" value="textarea">多行文本框</Option> 
+            <Option v-if="!attrsEditable" value="text">单行文本框</Option>
+            <Option v-if="!attrsEditable" value="textarea">多行文本框</Option>
             <Option value="select">单选</Option>
             <Option value="selectbox">多选</Option>
           </Select>

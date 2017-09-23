@@ -59,8 +59,16 @@
       <Form-item label="E-mail：" prop="email">
         <Input v-model="userInfo.email" placeholder="请您输入" :maxlength="64"></Input>
       </Form-item>
+      <Form-item label="权限：" prop="roleGroupId">
+        <Select placeholder="请选择权限" v-model="userInfo.roleGroupId">
+          <Option v-for="(item, index) in authList" :key="index" :value="item.id">{{item.name}}</Option>
+        </Select>
+      </Form-item>
       <Form-item label="工号：" prop="no">
         <Input v-model="userInfo.no" placeholder="请您输入" :maxlength="10"></Input>
+      </Form-item>
+      <Form-item label="禁用：" prop="loginFlag">
+        <i-switch v-model="userInfo.loginFlag"></i-switch>
       </Form-item>
     </Form>
     <div slot="footer">
@@ -115,8 +123,11 @@ export default {
         mobile: '',       // 电话
         email: '',        // 邮箱
         password: '123456',     // 密码
+        roleGroupId: 0,    // 权限
+        loginFlag: false,  // 是否禁用, 返回的data里 true表示可以登录, false表示禁止登录
         no: ''            // 工号
       },
+      authList: {},      // 权限列表
       ruleValidate: {
         name: [
           { required: true, message: '姓名不能为空', trigger: 'blur' }
@@ -130,6 +141,9 @@ export default {
         ],
         password: [
           // { required: true, message: '密码不能为空', trigger: 'blur' }
+        ],
+        roleGroupId: [
+          { required: true, message: '请选择权限', trigger: 'blur' }
         ],
         no: [
           { required: true, message: '工号不能为空', trigger: 'blur' }
@@ -206,16 +220,7 @@ export default {
           }
         }
       ],
-      userListData: [
-        // {
-        //   id: 1,
-        //   name: '张磊1',
-        //   mobile: '15811110000',
-        //   email: '213sdga@163.com',
-        //   no: 'XXXXX', // 工号
-        //   createTime: '2017-06-06'
-        // }
-      ]
+      userListData: []
     }
   },
   methods: {
@@ -243,16 +248,31 @@ export default {
       }
       this.userInfo.password = '123456'
       this.userInfo.id = 0
+      this.userInfo.loginFlag = false
       this.modal.title = '新建用户'
       this.modal.show = true
+    },
+    // 获取权限列表
+    getAuthList() {
+      this.$axios.post('role/shortlist').then(response => {
+        const responseData = response.data
+        this.authList = responseData
+      })
     },
     // 修改用户modal
     editModal(userId) {
       this.$axios.get('/int-user/detail', { params: { id: userId } }).then(response => {
         if (response === null) return
+        console.log('修改用户', response)
         for (const items in response.data) {
-          this.userInfo[items] = response.data[items]
+          // 将数字类型强制转换为字符串类型
+          if (_.isNumber(response.data[items])) {
+            this.userInfo[items] = String(response.data[items])
+          } else {
+            this.userInfo[items] = response.data[items]
+          }
         }
+        this.userInfo.loginFlag = !response.data.loginFlag
         this.userInfo.password = '123456'
       })
       this.modal.title = '修改用户'
@@ -282,7 +302,9 @@ export default {
         mobile: this.userInfo.mobile,
         password: this.userInfo.password,
         email: this.userInfo.email,
-        no: this.userInfo.no
+        no: this.userInfo.no,
+        roleGroupId: this.userInfo.roleGroupId,
+        loginFlag: !this.userInfo.loginFlag
       }
       this.$axios.get('/int-user/save', { params: data }).then(response => {
         if (response === null) return
@@ -370,6 +392,7 @@ export default {
   },
   mounted() {
     this.userList()
+    this.getAuthList()
   },
   watch: {
     'modal.show'(val, oldVal) {
