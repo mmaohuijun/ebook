@@ -8,20 +8,34 @@
         <span style="font-size:16px; color:#fff; padding:0 10px;">-</span>
         <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="endDate=$event" v-model="endDate" placeholder="结束日期" style="width:95px; margin-right:30px;"></Date-picker>
         <Input class="custom__search" icon="search" placeholder="姓名/手机号" v-model="name" @on-click="textSearch"></Input>
-        <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="cutRelation(selectedId)"></Button>
-        <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="deleteClient(selectedId)"></Button>
+        <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="cutRelation(id)"></Button>
+        <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="deleteClient(id)"></Button>
       </div>
     </div>
     <div class="layout__body">
       <Table class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
       <Spin size="large" fix v-if="false"></Spin>
-      <Page class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" ></Page>
+      <Page class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
     </div>
     <Modal
-      v-model="modal.show"
+      v-model="modal1.show"
       :closable="false"
       width="500">
-      <p class="modal-style">{{modal.content}}</p>
+      <p class="modal-style">{{modal1.content}}</p>
+      <div slot="footer">
+        <Button type="text" size="large" @click="hideModal">取消</Button>
+        <Button type="primary" size="large" v-model="clicked1" @click="saveRelation(id)" >完成</Button>
+      </div>
+    </Modal>
+    <Modal
+      v-model="modal2.show"
+      :closable="false"
+      width="500">
+      <p class="modal-style">{{modal2.content}}</p>
+      <div slot="footer">
+        <Button type="text" size="large" @click="hideModal">取消</Button>
+        <Button type="primary" size="large" v-model="clicked2" @click="saveDelete" >完成</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -30,17 +44,26 @@ export default {
   name: 'CallClient',
   data() {
     return {
+      id: '',  //  被选中的客户id
       startDate: '',
       endDate: '',
       name: '', //  搜索关键字
       isSearch: false, // 是否开始条件筛选
       pageNo: 1,  //  当前页码
       total: 20,  //  总页数
-      pageSize: 20,  //  每页显示信息数
-      modal: {  //  模态框对象
+      pageSize: 10,  //  每页显示信息数
+      // clicked: false,
+      // confirmed: false,
+      modal1: {  //  模态框对象
         show: false,
         content: ''
       },
+      modal2: {
+        show: false,
+        content: ''
+      },
+      clicked1: false,
+      clicked2: false,
       clientListTitle: [  //  表头
         {
           title: '全选',
@@ -50,23 +73,28 @@ export default {
         },
         {
           title: '姓名',
-          key: 'name'
+          key: 'name',
+          ellipsis: true
         },
         {
           title: '电话号码',
-          key: 'mobile'
+          key: 'mobile',
+          ellipsis: true
         },
         {
           title: '案场',
-          key: 'caseName'
+          key: 'caseName',
+          ellipsis: true
         },
         {
           title: '置业顾问',
-          key: 'consultantName'
+          key: 'consultantName',
+          ellipsis: true
         },
         {
           title: '来电时间',
-          key: 'createTime'
+          key: 'createTime',
+          ellipsis: true
         },
         {
           title: ' ',
@@ -89,10 +117,11 @@ export default {
                 },
                 on: {
                   click() {
-                    // that.modal.content = '是否解除顾问与客户的关联'
-                    // that.modal.show = true
+                    // that.modal1.content = '是否解除顾问与客户的关联'
+                    // that.modal1.show = true
                     console.log(params)
                     that.cutRelation(params.row.id)
+                    that.id = params.row.id
                   }
                 }
               }),
@@ -108,9 +137,10 @@ export default {
                 },
                 on: {
                   click() {
-                    // that.modal.content = '是否确认删除'
-                    // that.modal.show = true
+                    // that.modal2.content = '是否确认删除'
+                    // that.modal2.show = true
                     that.deleteClient(params.row.id)
+                    that.id = params.row.id
                   }
                 }
               })
@@ -119,55 +149,59 @@ export default {
         }
       ],
       clientListData: [  //  客户信息
-        {
-          id: 1,  //  客户id
-          consultantId: 1,  //  置业顾问id
-          name: '张磊',  //  客户姓名
-          mobile: '1234567',  //  客户手机号
-          caseName: '金地精益',  //  案场名
-          consultantName: '小丽',  //  置业顾问姓名
-          createTime: '2017-1-1'  //  创建时间
-        },
-        {
-          id: 2,
-          consultantId: 2,
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          createTime: '2017-1-1'
-        },
-        {
-          id: 3,
-          consultantId: 3,
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          createTime: '2017-1-1'
-        },
-        {
-          id: 4,
-          consultantId: 4,
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          createTime: '2017-1-1'
-        },
-        {
-          id: 5,
-          consultantId: 5,
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          createTime: '2017-1-1'
-        }
+    //     {
+    //       id: 1,  //  客户id
+    //       consultantId: 1,  //  置业顾问id
+    //       name: '张磊',  //  客户姓名
+    //       mobile: '1234567',  //  客户手机号
+    //       caseName: '金地精益',  //  案场名
+    //       consultantName: '小丽',  //  置业顾问姓名
+    //       createTime: '2017-1-1'  //  创建时间
+    //     },
+    //     {
+    //       id: 2,
+    //       consultantId: 2,
+    //       name: '张磊',
+    //       mobile: '1234567',
+    //       caseName: '金地精益',
+    //       consultantName: '小丽',
+    //       createTime: '2017-1-1'
+    //     },
+    //     {
+    //       id: 3,
+    //       consultantId: 3,
+    //       name: '张磊',
+    //       mobile: '1234567',
+    //       caseName: '金地精益',
+    //       consultantName: '小丽',
+    //       createTime: '2017-1-1'
+    //     },
+    //     {
+    //       id: 4,
+    //       consultantId: 4,
+    //       name: '张磊',
+    //       mobile: '1234567',
+    //       caseName: '金地精益',
+    //       consultantName: '小丽',
+    //       createTime: '2017-1-1'
+    //     },
+    //     {
+    //       id: 5,
+    //       consultantId: 5,
+    //       name: '张磊',
+    //       mobile: '1234567',
+    //       caseName: '金地精益',
+    //       consultantName: '小丽',
+    //       createTime: '2017-1-1'
+    //     }
       ]
     }
   },
   methods: {
+    hideModal() {
+      this.modal1.show = false
+      this.modal2.show = false
+    },
     //  点击确认开始时间按钮
     startDateOk(data) {
       if (this.endDate) {
@@ -206,33 +240,60 @@ export default {
         this.startDate = ''
         this.endDate = ''
       }
-      // this.$axios.post('/case-cust/caller-list').then(response => {
-      //   if (response === null) return
-      //   this.clientListData = []
-      //   for (const items in response.data.list) {
-      //     this.clientListData.push(response.data.list[items])
-      //   }
-      //   this.total = data.list.total
-      // })
+      this.$axios.post('/case-cust/caller-list', data).then(response => {
+        if (response === null) return
+        this.clientListData = []
+        for (const items in response.data.list) {
+          console.log(response.data.list[items].consultantName)
+          // if (response.data.list[items].consultantName === '--') {
+          //   continue
+          // }
+          this.clientListData.push(response.data.list[items])
+        }
+        this.total = response.data.total
+        console.log('total', this.total)
+      })
     },
     //  解除置业顾问 关系
-    cutRelation(selectedId) {
-      this.modal.content = '是否解除顾问与客户的关联'
-      this.modal.show = true
-      console.log(selectedId)
-      // this.$Message.success('删除成功')
-      // this.$axios.post('/case-cust/assign-cancel', { params: { id: selectedId } }).then(response => {
-      //   if (response === null) return
-      // })
+    cutRelation(id) {
+      this.modal1.content = '是否解除顾问与客户的关联'
+      this.modal1.show = true
+    },
+    saveRelation() {
+      this.clicked1 = !this.clicked1
+      // console.log('点击确定后', this.clicked)
+      console.log('id', this.id)
+      if (this.clicked1) {
+        console.log('点击确定后做的事情')
+        this.$axios.post('/case-cust/assign-cancel', { id: this.id }).then(response => {
+          console.log(response)
+          if (response === null) return
+          // this.clientListData.splice(index, 1)
+          this.modal1.show = false
+          this.clicked1 = false
+          this.showClientList()
+        })
+      }
+      this.clicked1 = false
+      // this.cutRelation(id)
     },
     //  删除客户
-    deleteClient(selectedId) {
-      this.modal.content = '是否确认删除'
-      this.modal.show = true
-      console.log(selectedId)
-      // this.$axios.post('/case-cust/del', { params: { id: selectedId } }).then(response => {
-      //   if (response === null) return
-      // })
+    deleteClient(id) {
+      this.modal2.content = '是否确认删除'
+      this.modal2.show = true
+    },
+    saveDelete() {
+      this.clicked2 = !this.clicked2
+      console.log('clicked2', this.clicked2)
+      console.log('deleted id', this.id)
+      if (this.clicked2) {
+        this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
+          if (response === null) return
+          this.modal2.show = false
+          this.clicked2 = false
+          this.showClientList()
+        })
+      }
     },
     onSelect(selection) {
       console.log(selection)
@@ -240,8 +301,11 @@ export default {
       for (let i = 0; i < selection.length; i++) {
         idList.push(selection[i].id)
       }
-      this.selectedId = idList.join(',')
-      console.log(this.selectedId)
+      this.id = idList.join(',')
+    },
+    pageChange(currentPage) {
+      this.pageNo = currentPage
+      this.showClientList()
     }
   },
   mounted() {
