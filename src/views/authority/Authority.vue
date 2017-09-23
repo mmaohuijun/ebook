@@ -7,7 +7,7 @@
     </div>
   </div>
   <div class="layout__body">
-    <table class="authority" cellspacing="0" cellpadding="0" border="0">
+    <table class="authority" cellspacing="0" cellpadding="0" border="0" v-if="authData.length !== 0">
       <tr :class="auth.id === currentAuthId ? 'authority-row-current' : ''" v-for="(auth, index) in authData" :key="index" @click.stop="toggleAuthCfm(auth)"> 
         <td class="authority-row-title">{{auth.name}}</td>
         <ebook-authority-item
