@@ -56,7 +56,6 @@ export default {
   methods: {
     onClickMenu(name) {
       console.log('onClickMenu', name)
-      this.$store.dispatch('setSideBarSelect', name)
       this.$router.push({ name })
     },
     logout() {

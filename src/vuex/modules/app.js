@@ -97,6 +97,8 @@ const app = {
     ifShowErrorMsg: false,
     errorMsgText: '',
     firstRoute: '',
+    authHasChange: false,
+    showAuthAlert: false,
     BASE_PATH: process.env.BASE_PATH // 全局路径
   },
   mutations: {
@@ -111,6 +113,12 @@ const app = {
     },
     SET_FIRST_ROUTE(state, route) {
       state.firstRoute = route
+    },
+    TOGGLE_AUTH_CHANGE_STATUS(state, flag) {
+      state.authHasChange = flag
+    },
+    SHOW_AUTH_ALERT(state) {
+      state.showAuthAlert = true
     },
     TOGGLE_LOGIN_STATUS(state, flag) {
       state.hasLogin = flag
@@ -156,6 +164,12 @@ const app = {
     },
     setFirstRoute({ commit }, route) {
       commit('SET_FIRST_ROUTE', route)
+    },
+    authHasChange({ commit }, flag) {
+      commit('TOGGLE_AUTH_CHANGE_STATUS', flag)
+    },
+    showAuthAlert({ commit }) {
+      commit('SHOW_AUTH_ALERT')
     },
     toggleLoginStatus({ commit }, flag) {
       commit('TOGGLE_LOGIN_STATUS', flag)

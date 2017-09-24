@@ -2,7 +2,7 @@
 <td>
   <div class="authority-check-all">
     <Checkbox v-if="!hasSubMenus" :value="selfAuthData.checked === 1" @on-change="checkAuth" :disabled="!display">{{selfAuthData.name}}</Checkbox>
-    <Checkbox v-else :indeterminate="indeterminate" :value="ifCheckAll" @click.prevent.native="handleCheckAll" :disabled="!display">{{selfAuthData.name}}</Checkbox>
+    <Checkbox v-else :indeterminate="indeterminate" :value="ifCheckAll" @click.prevent.native.stop="handleCheckAll" :disabled="!display">{{selfAuthData.name}}</Checkbox>
   </div>
   <CheckboxGroup class="authority-check-items" v-if="hasSubMenus" v-model="subAuthCheckedId" @on-change="subAuthCheckedIdChange">
     <Checkbox class="authority-check-item"
@@ -67,7 +67,6 @@ export default {
     }
   },
   mounted() {
-    console.log('MOUNT', this.display)
     this.initCheckedList()
   },
   methods: {
@@ -82,15 +81,18 @@ export default {
     },
     // 点击一级菜单
     checkAuth(flag) {
+      if (!this.display) return
       this.$emit('authChange', flag, [this.authId])
     },
     // 点击一级菜单(有子权限)
     handleCheckAll() {
+      if (!this.display) return
       this.ifCheckAll = !this.ifCheckAll
       this.$emit('authChange', this.ifCheckAll, this.subAuthAllId)
     },
     // 子权限菜单改变
     subAuthCheckedIdChange(data) {
+      if (!this.display) return
       // 判断是增加还是减少
       const flag = this.subAuthCheckedId.length > this.subAuthCheckedIdBackup.length
       // 没有选中的选项

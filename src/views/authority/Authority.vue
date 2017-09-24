@@ -21,6 +21,8 @@
   </div>
   <Modal
     v-model="confirmAuthChangeModal"
+    :closable="false"
+    :mask-closable="false"
     :styles="{top: '200px'}"
     @on-ok="confirmSaveAuth">
     <p class="auth-alert-text">是否保存已更改的操作</p>
@@ -62,6 +64,7 @@ export default {
       authMenusBackup: [], // 备份
       currentAuth: {}, // 现在展示的权限
       backupAuth: {}, // 将要展示的权限
+      // authHasChange: this.$store.state.app.authHasChange,
       confirmAuthChangeModal: false,
       addAuthModal: {
         show: false,
@@ -77,6 +80,12 @@ export default {
     }
   },
   computed: {
+    authHasChange() {
+      return this.$store.state.app.authHasChange
+    },
+    showAuthAlert() {
+      return this.$store.state.app.showAuthAlert
+    },
     currentAuthId() {
       return this.currentAuth.id
     },
@@ -102,37 +111,26 @@ export default {
       return menus
     }
   },
+  watch: {
+    showAuthAlert(flag) {
+      if (flag) {
+        this.confirmAuthChangeModal = true
+      }
+    }
+  },
   mounted() {
+    console.log('authHasChange', this.$store.state.app.authHasChange)
     this.initAuthList().then(() => {
       // 初始化后默认展开第一个权限
       this.toggleAuth(this.authData[0])
     })
   },
   methods: {
-    // 检查权限列表是否有更改
-    checkIfEdit() {
-      return new Promise(resolve => {
-        // 备份的checkedList和现有的checkedList对比
-        let diff = []
-
-        if (this.currentAuthMenus.length > this.authMenus.length) {
-          diff = _.difference(this.currentAuthMenus, this.authMenus)
-        } else {
-          diff = _.difference(this.authMenus, this.currentAuthMenus)
-        }
-        console.log('checkIfEdit', !_.isEmpty(diff))
-        // 如果有差异则表示有更改
-        if (!_.isEmpty(diff)) {
-          // 弹出提示框是否保存
-          this.confirmAuthChangeModal = true
-        } else {
-          resolve()
-        }
-      })
-    },
     onClickTable() {
-      console.log('onClickTable')
-      this.checkIfEdit()
+      if (this.authHasChange) {
+        // 弹出提示框是否保存
+        this.confirmAuthChangeModal = true
+      }
     },
     initAuthList() {
       return new Promise(resolve => {
@@ -149,8 +147,11 @@ export default {
       this.ifNew = true
       this.addAuthModal.show = true
     },
+    // 响应子组件改变的事件
     authChange(flag, changeId) {
       console.log('authChange', flag, changeId)
+      // 标记为有更改
+      this.$store.dispatch('authHasChange', true)
 
       if (flag) { // 增加
         this.authMenus = _.uniq(_.concat(this.authMenus, changeId))
@@ -159,13 +160,19 @@ export default {
       }
     },
     toggleAuthCfm(auth) {
-      if (this.currentAuthId === auth.id) return
+      if (this.currentAuthId === auth.id) {
+        console.log('点击了table')
+        return
+      }
       // 备份点击的权限, 判断之前的权限是否有编辑
       this.backupAuth = _.cloneDeep(auth)
 
-      this.checkIfEdit().then(() => {
+      if (this.authHasChange) {
+        // 弹出提示框是否保存
+        this.confirmAuthChangeModal = true
+      } else {
         this.toggleAuth(this.backupAuth)
-      })
+      }
     },
     // 更新权限checked菜单
     updateAuthMenus() {
@@ -186,13 +193,11 @@ export default {
         let flagV = false
 
         this.$refs.authForm.validate(flag => {
-          console.log('validate', flag)
           flagV = flag
         })
         return flagV ? data : false
       } else {
         _.each(this.authMenus, (authItem, index) => {
-          console.log(authItem, index)
           data[`menus[${index}].id`] = authItem
         })
         return data
@@ -211,6 +216,7 @@ export default {
           console.log('权限保存/新建', response)
           this.initAuthList()
           this.hideModal()
+          this.$store.dispatch('authHasChange', false)
           resolve()
         })
       })
@@ -219,7 +225,9 @@ export default {
     confirmSaveAuth() {
       console.log('confirmSaveAuth')
       this.sendSaveRequest().then(() => {
-        this.toggleAuth(this.backupAuth)
+        if (!_.isEmpty(this.backupAuth)) {
+          this.toggleAuth(this.backupAuth)
+        }
       })
     },
     // 新建权限时确认
@@ -308,31 +316,6 @@ export default {
   .auth-modal-text {
     font-size: 14px;
     color: #888;
-  }
-
-  .ivu-checkbox {
-    &-inner {
-      width: 18px;
-      height: 18px;
-      background: #d2e9fb;
-      border-radius: 4px;
-      border: none;
-
-      &:after {
-        display: none;
-      }
-    }
-
-    &-checked {
-      .ivu-checkbox-inner {
-        width: 18px;
-        heigth: 18px;
-        background: #1c93ea;
-        &:after{
-          display: none;
-        }
-      }
-    }
   }
 
 </style>

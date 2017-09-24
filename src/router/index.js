@@ -288,39 +288,14 @@ export const router = new Router({
 router.beforeEach((to, from, next) => {
   console.log('router.beforeEach', to, from)
 
-  // if (store.getters.loginStatus || store.getters.hasUserInfo) {
-  //   console.log('登录过了!')
-  //   if (to.name === 'Login') {
-  //     store.dispatch('clearUserInfo')
-  //     next()
-  //   } else {
-  //     if (store.getters.auth.length === 0) {
-  //       console.log('没有用户信息!', store.getters.auth.length, store.getters.auth)
-  //       store.dispatch('getUserInfoFromStorage').then(() => {
-  //         store.dispatch('GenerateRoutes').then(() => {
-  //           console.log('添加完路由后跳转')
-  //           next(to.path)
-  //         })
-  //       }).catch(err => {
-  //         console.log(err)
-  //       })
-  //     } else {
-  //       console.log('有用户信息了!', store.getters.auth.length, store.getters.auth)
-  //       // 判断url后面是否带有参数
-  //       if (!_.isEmpty(to.params)) {
-  //         if (to.params.caseId) {
-  //           const caseId = to.params.caseId
-  //           store.dispatch('setCaseId', caseId)
-  //         }
-  //       }
-  //       next()
-  //     }
-  //   }
-  // } else {
-  //   console.log('没登录过!', store.getters.auth)
-  //   // next({ name: 'Login' })
-  //   next()
-  // }
+  if (from.name === 'Authority') {
+    if (store.getters.authHasChange) {
+      console.log('有权限没有保存')
+      store.dispatch('showAuthAlert')
+      // next({ name: 'Authority' })
+      return
+    }
+  }
 
   store.dispatch('setSideBarSelect', to.name)
   if (to.path.indexOf('case') !== -1) { // 包含'Case'的页面
@@ -369,6 +344,7 @@ router.beforeEach((to, from, next) => {
 // 路由跳转后记录下当前路径名
 router.afterEach(route => {
   store.dispatch('setCurrentPathName', route.name)
+  store.dispatch('setSideBarSelect', route.name)
 })
 
 // export default router

@@ -188,30 +188,31 @@ export default {
     }
   }
 
-  // .ivu-checkbox {
-  //   &-inner {
-  //     width: 18px;
-  //     height: 18px;
-  //     background: #d2e9fb;
-  //     border-radius: 4px;
-  //     border: none;
+  .ivu-checkbox,
+  .auth .authority .ivu-checkbox {
+    &-inner {
+      width: 18px;
+      height: 18px;
+      background: #d2e9fb;
+      border-radius: 4px;
+      border: none;
 
-  //     &:after {
-  //       display: none;
-  //     }
-  //   }
+      &:after {
+        display: none;
+      }
+    }
 
-  //   &-checked {
-  //     .ivu-checkbox-inner {
-  //       width: 18px;
-  //       heigth: 18px;
-  //       background: #1c93ea;
-  //       &:after{
-  //         display: none;
-  //       }
-  //     }
-  //   }
-  // }
+    &-checked {
+      .ivu-checkbox-inner {
+        width: 18px;
+        heigth: 18px;
+        background: #1c93ea;
+        &:after{
+          display: none;
+        }
+      }
+    }
+  }
 
   .custom__page {
     display: inline-block;

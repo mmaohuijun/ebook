@@ -25,6 +25,8 @@ const getters = {
       return '新建案场'
     }
   },
+  authHasChange: state => state.app.authHasChange,
+  showAuthAlert: state => state.app.showAuthAlert,
   loginStatus: state => state.app.hasLogin,
   loadingStatus: state => state.app.isLoading,
   firstRoute: state => state.app.firstRoute,
