@@ -26,6 +26,9 @@
     <Button v-if="lockBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="locked" @click="onLock"></Button>
     <Button v-if="deleteBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="onDelete"></Button>
     <Button v-if="addBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="onAdd"></Button>
+
+    <Button v-if="cutBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onCutRelation"></Button>
+    <Button v-if="delBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="onDeleteClient"></Button>
   </div>
 </div>
 </template>
@@ -85,6 +88,16 @@ export default {
     lockBtn: {
       type: Boolean,
       default: false
+    },
+    // 解除关系按钮
+    cutBtn: {
+      type: Boolean,
+      default: false
+    },
+    // 删除客户按钮
+    delBtn: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -121,6 +134,14 @@ export default {
     // 点击'禁用'
     onLock() {
       this.$emit('onLock')
+    },
+    // 点击'解除关系'
+    onCutRelation() {
+      this.$emit('onCutRelation')
+    },
+    // 点击'删除客户'
+    onDeleteClient() {
+      this.$emit('onDeleteClient')
     }
   }
 }

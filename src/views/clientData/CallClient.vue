@@ -1,7 +1,7 @@
 <template>
   <div class="layout__content">
-    <div class="layout__header">
-      <h2 class="layout__header-title">客户 - 来电客户</h2>
+<!--     <div class="layout__header">
+      <h2 class="layout__header-title">客户管理 - 来电客户</h2>
       <div class="layout__header-tool">
         <span style="font-size:16px; color:#fff; padding:0 10px;">时间</span>
         <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="startDateOk" @on-change="startDate=$event" v-model="startDate" placeholder="开始日期" style="width:95px;"></Date-picker>
@@ -11,7 +11,20 @@
         <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="cutRelation(id)"></Button>
         <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="deleteClient(id)"></Button>
       </div>
-    </div>
+    </div> -->
+    <ebook-header
+      header-title="客户管理 - 到访客户"
+      :dateSearch="true"
+      :textSearch="true"
+      :cutBtn="true"
+      :delBtn="true"
+      placeholder="姓名/手机号"
+      @onDateSearch="dateSearch"
+      @onTextSearch="textSearch"
+      @onCutRelation="cutRelation(id)"
+      @onDeleteClient="deleteClient(id)">
+      </ebook-header>
+
     <div class="layout__body">
       <Table class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
       <Spin size="large" fix v-if="false"></Spin>
@@ -40,6 +53,7 @@
   </div>
 </template>
 <script>
+import EbookHeader from 'components/EbookHeader'
 export default {
   name: 'CallClient',
   data() {
@@ -51,7 +65,7 @@ export default {
       isSearch: false, // 是否开始条件筛选
       pageNo: 1,  //  当前页码
       total: 20,  //  总页数
-      pageSize: 10,  //  每页显示信息数
+      pageSize: 20,  //  每页显示信息数
       // clicked: false,
       // confirmed: false,
       modal1: {  //  模态框对象
@@ -93,7 +107,7 @@ export default {
         },
         {
           title: '来电时间',
-          key: 'createTime',
+          key: 'lastRecordDate',
           ellipsis: true
         },
         {
@@ -231,6 +245,9 @@ export default {
     //  渲染来电客户列表
     showClientList() {
       const data = {
+        name: this.name || '',
+        startDate: this.startDate || '',
+        endDate: this.endDate || '',
         pageNo: this.pageNo || 1,
         pageSize: this.pageSize
       }
@@ -251,7 +268,7 @@ export default {
           this.clientListData.push(response.data.list[items])
         }
         this.total = response.data.total
-        console.log('total', this.total)
+        console.log('clientListData', this.clientListData)
       })
     },
     //  解除置业顾问 关系
@@ -310,6 +327,9 @@ export default {
   },
   mounted() {
     this.showClientList()
+  },
+  components: {
+    EbookHeader
   }
 }
 </script>
