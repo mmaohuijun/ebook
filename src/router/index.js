@@ -292,7 +292,6 @@ router.beforeEach((to, from, next) => {
     if (store.getters.authHasChange) {
       console.log('有权限没有保存')
       store.dispatch('showAuthAlert')
-      // next({ name: 'Authority' })
       return
     }
   }

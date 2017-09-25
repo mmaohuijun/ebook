@@ -21,6 +21,9 @@
 
     <Input v-if="textSearch" class="custom__search" icon="search" v-model="seachText" :placeholder="placeholder" @on-click="onTextSearch"></Input>
 
+    <Button v-if="uploadBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="upload" @click="onUpload"></Button>
+    <Button v-if="linkBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onLink"></Button>
+    <Button v-if="lockBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="locked" @click="onLock"></Button>
     <Button v-if="deleteBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="onDelete"></Button>
     <Button v-if="addBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="onAdd"></Button>
   </div>
@@ -58,6 +61,11 @@ export default {
       type: String,
       default: ''
     },
+    // 上传按钮
+    uploadBtn: {
+      type: Boolean,
+      default: false
+    },
     // 删除按钮
     deleteBtn: {
       type: Boolean,
@@ -67,9 +75,20 @@ export default {
     addBtn: {
       type: Boolean,
       default: false
+    },
+    // 分配按钮
+    linkBtn: {
+      type: Boolean,
+      default: false
+    },
+    // 禁用按钮
+    lockBtn: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
+    // 选择了时间范围, 返回daterange是一个数组[开始日期, 结束日期]
     onDateChange(daterange) {
       console.log('onDateChange', daterange)
       this.startDate = daterange[0]
@@ -77,21 +96,31 @@ export default {
     },
     // 点击'确认'进行日期搜索
     onDateSearch() {
-      console.log('onDateSearch')
       this.$emit('onDateSearch', this.startDate, this.endDate)
     },
     // 点击'搜索'
     onTextSearch() {
       this.$emit('onTextSearch', this.seachText)
     },
+    // 点击'上传'
+    onUpload() {
+      this.$emit('onUpload')
+    },
     // 点击'删除'
     onDelete() {
-      console.log('onDelete!!!!')
       this.$emit('onDelete')
     },
     // 点击'新增'
     onAdd() {
       this.$emit('onAdd')
+    },
+    // 点击'分配'
+    onLink() {
+      this.$emit('onLink')
+    },
+    // 点击'禁用'
+    onLock() {
+      this.$emit('onLock')
     }
   }
 }

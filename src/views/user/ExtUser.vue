@@ -1,4 +1,21 @@
 <style lang="less">
+.custom__circle-btn--upload{
+  width: 33px;
+  height: 33px;
+  border-color: #4e546c;
+}
+
+.custom__uploadmodal_text {
+  width: 320px;
+  height: 22px;
+  margin-bottom: 24px;
+  font-family: PingFangSC;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+  color: #4e546c;
+}
+
 </style>
 <template>
 <div class="layout__content">
@@ -20,11 +37,14 @@
     :dateSearch="true"
     :textSearch="true"
     placeholder="姓名／手机号"
+    :uploadBtn="true"
     :addBtn="true"
+    :lockBtn="true"
     :deleteBtn="isTrash"
     @onDateSearch="dateSearch"
     @onTextSearch="textSearch"
-    @onAdd="addModal"
+    @onUpload="showUploadModal"
+    @onAdd="showAddUserModal"
     @onDelete="removeUser(selectedId)"></ebook-header>
 
   <div class="layout__body">
@@ -34,11 +54,11 @@
   </div>
   <Modal
     on-cancel="resetFields('userInfo')"
-    v-model="modal.show"
+    v-model="userModal.show"
     :closable="false"
     width="560">
     <p slot="header">
-      {{modal.title}}
+      {{userModal.title}}
     </p>
     <Form ref="userInfo" :model="userInfo" :rules="ruleValidate" :label-width="120" class="modal-form">
       <Form-item label="姓名：" prop="name">
@@ -75,8 +95,26 @@
       </Form-item>
     </Form>
     <div slot="footer">
-      <Button type="text" size="large" @click="modal.show = false">取消</Button>
-      <Button type="primary" size="large" :loading="modal.saveLoading" @click="saveUser('userInfo')">完成</Button>
+      <Button type="text" size="large" @click="userModal.show = false">取消</Button>
+      <Button type="primary" size="large" :loading="userModal.saveLoading" @click="saveUser('userInfo')">完成</Button>
+    </div>
+  </Modal>
+
+  <Modal
+    on-cancel="resetFields('uploadInfo')"
+    v-model="uploadModal.show"
+    :closable="false"
+    width="560">
+    <p slot="header">批量导入外部用户</p>
+    <Form :label-width="120" class="modal-form">
+      <p class="custom__uploadmodal_text">您可以先下载模板，填写完成后，上传文件。</p>
+      <Button class="custom__uploadmodal custom__circle-btn--upload" shape="circle" type="ghost" icon="ios-upload-outline"></Button>
+      <!-- <Icon type="ios-upload-outline"></Icon>
+      <Icon type="ios-download-outline"></Icon> -->
+    </Form>
+    <div slot="footer">
+      <Button type="text" size="large" @click="uploadModal.show = false">取消</Button>
+      <Button type="primary" size="large" :loading="uploadModal.saveLoading" @click="saveUser()">完成</Button>
     </div>
   </Modal>
 </div>
@@ -105,7 +143,12 @@ export default {
       }
     }
     return {
-      modal: {
+      userModal: {
+        show: false,        // 是否显示编辑和查看userModal
+        saveLoading: false, // 是否正在保存用户中
+        title: ''           // userModal的标题
+      },
+      uploadModal: {
         show: false,        // 是否显示编辑和查看modal
         saveLoading: false, // 是否正在保存用户中
         title: ''           // modal的标题
@@ -239,6 +282,9 @@ export default {
     }
   },
   methods: {
+    showUploadModal() {
+      this.uploadModal.show = true
+    },
     // 编辑用户改变案场
     onChangeCaseId(id) {
       this.userInfo.caseId = id
@@ -274,7 +320,7 @@ export default {
       })
     },
     // 新增用户
-    addModal() {
+    showAddUserModal() {
       for (const item in this.userInfo) {
         this.userInfo[item] = ''
       }
@@ -283,8 +329,8 @@ export default {
       this.userInfo.loginFlag = false
       this.getCaseList()
       this.userInfo.id = 0
-      this.modal.title = '新建用户'
-      this.modal.show = true
+      this.userModal.title = '新建用户'
+      this.userModal.show = true
     },
     // 修改用户
     editModal(userId) {
@@ -306,14 +352,14 @@ export default {
         this.userInfo.password = '123456'
       })
       this.getCaseList()
-      this.modal.title = '修改用户'
-      this.modal.show = true
+      this.userModal.title = '修改用户'
+      this.userModal.show = true
     },
     // 点击用户完成按钮
     saveUser(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.modal.saveLoading = true
+          this.userModal.saveLoading = true
           if (this.userInfo.id === 0) {
             this.saveUserInfo('新建用户成功')
             this.pageNo = 1
@@ -321,7 +367,7 @@ export default {
             this.saveUserInfo('修改用户成功')
           }
         } else {
-          this.modal.saveLoading = false
+          this.userModal.saveLoading = false
         }
       })
     },
@@ -344,8 +390,8 @@ export default {
         this.name = ''
         this.userList()
       })
-      this.modal.show = false
-      this.modal.saveLoading = false
+      this.userModal.show = false
+      this.userModal.saveLoading = false
     },
     // 清空用户信息
     resetFields(name) {
@@ -428,7 +474,7 @@ export default {
     this.getAuthList()
   },
   watch: {
-    'modal.show'(val, oldVal) {
+    'userModal.show'(val, oldVal) {
       if (!val) {
         this.resetFields('userInfo')
       }

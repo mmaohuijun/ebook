@@ -119,6 +119,9 @@ const app = {
     },
     SHOW_AUTH_ALERT(state) {
       state.showAuthAlert = true
+      setTimeout(() => {
+        state.showAuthAlert = false
+      }, 500)
     },
     TOGGLE_LOGIN_STATUS(state, flag) {
       state.hasLogin = flag

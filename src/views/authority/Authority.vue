@@ -64,7 +64,6 @@ export default {
       authMenusBackup: [], // 备份
       currentAuth: {}, // 现在展示的权限
       backupAuth: {}, // 将要展示的权限
-      // authHasChange: this.$store.state.app.authHasChange,
       confirmAuthChangeModal: false,
       addAuthModal: {
         show: false,
@@ -80,7 +79,7 @@ export default {
     }
   },
   computed: {
-    authHasChange() {
+    authHasChange() { // 权限是否有变更
       return this.$store.state.app.authHasChange
     },
     showAuthAlert() {
@@ -160,10 +159,8 @@ export default {
       }
     },
     toggleAuthCfm(auth) {
-      if (this.currentAuthId === auth.id) {
-        console.log('点击了table')
-        return
-      }
+      if (this.currentAuthId === auth.id) return
+
       // 备份点击的权限, 判断之前的权限是否有编辑
       this.backupAuth = _.cloneDeep(auth)
 

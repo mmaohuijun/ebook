@@ -148,7 +148,7 @@ export default {
     width:150px;
     height:44px;
     border-bottom-right-radius: 6px;
-    color:#4bce64;
+    color:#fff;
     background: rgba(0,0,0,.45);
     padding-top: 2px;
     font-size: 14px;

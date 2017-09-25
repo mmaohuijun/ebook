@@ -18,6 +18,9 @@
         <Form-item label="案场名称：">
           <Input placeholder="请输入" v-model="name"></Input>
         </Form-item>
+        <Form-item label="所属组织：">
+          <Input placeholder="请输入" v-model="org" icon="ios-clock-outline" @on-click="selectOrg"></Input>
+        </Form-item>
         <Form-item label="公众号ID：">
           <Input placeholder="请输入" v-model="appID"></Input>
         </Form-item>
@@ -75,6 +78,7 @@ export default {
     return {
       caseDataSource: [],
       name: '', // 案场名
+      org: '', // 所属组织
       address: '', // 案场地址
       location: { lng: 121.4806, lat: 31.2408 }, // 案场的经纬度
       logoUrl: '', // 案场logo
@@ -96,6 +100,9 @@ export default {
     ])
   },
   methods: {
+    selectOrg() {
+      console.log('selectOrg')
+    },
     initCaseInfo() {
       this.$axios.get('case/detail', { params: { id: this.caseId } }).then(response => {
         if (response === null) return
