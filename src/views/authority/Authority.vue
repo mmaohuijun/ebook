@@ -235,6 +235,10 @@ export default {
       })
     },
     hideModal() {
+      console.log('hideModal', _.isEmpty(this.backupAuth))
+      if (!_.isEmpty(this.backupAuth)) {
+        this.toggleAuth(this.backupAuth)
+      }
       this.addAuthModal.show = false
       this.authForm.name = ''
       this.ifNew = false

@@ -36,7 +36,7 @@
         <Input v-model="orgForm.mobile" placeholder="请您输入..."></Input>
       </Form-item>
       <Form-item prop="remark" label="描述：">
-        <Input v-model="orgForm.remark" placeholder="请您输入..." type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
+        <Input v-model="orgForm.remark" placeholder="请您输入..." type="textarea" :autosize="{minRows: 2, maxRows: 5}"></Input>
       </Form-item>
     </Form>
     <div slot="footer">

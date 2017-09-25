@@ -19,7 +19,7 @@
           <Input placeholder="请输入" v-model="name"></Input>
         </Form-item>
         <Form-item label="所属组织：">
-          <Input placeholder="请输入" v-model="org" icon="ios-clock-outline" @on-click="selectOrg"></Input>
+          <Input placeholder="请输入" v-model="org" icon="plus-circled" @on-click="selectOrg"></Input>
         </Form-item>
         <Form-item label="公众号ID：">
           <Input placeholder="请输入" v-model="appID"></Input>
@@ -65,7 +65,21 @@
     <div class="field-bottom-btn">
       <Button type="primary" class="custom-btn" @click="saveCaseInfo">保存</Button>
     </div>
-</Form>
+  </Form>
+
+  <Modal
+    v-model="orgModal"
+    :closable="false"
+    width="840">
+    <p slot="header">组织选择</p>
+    <div class="org-modal-wrap">
+      组织树wrap
+    </div>
+    <div slot="footer">
+      <Button type="text" size="large" @click.stop="orgModal = false">取消</Button>
+      <Button type="primary" size="large" @click.stop="orgModalDone()">完成</Button>
+    </div>
+  </Modal>
 </div>
 </template>
 <script>
@@ -90,7 +104,32 @@ export default {
       appSecret: '', // 公众号密码
       uploadMode: '', // 上传标识 logo或者bg
       logoUploadShow: false,
-      bgUploadShow: false
+      bgUploadShow: false,
+      orgModal: false,
+      orgTreeData: [
+        {
+          id: '11',
+          name: '1级子组织',
+          level: 2
+        },
+        {
+          id: '22',
+          name: '2级组织',
+          level: 2,
+          children: [
+            {
+              id: '2221',
+              name: '2级子组织1',
+              level: 2
+            },
+            {
+              id: '2221',
+              name: '2级子组织2',
+              level: 2
+            }
+          ]
+        }
+      ]
     }
   },
   computed: {
@@ -102,6 +141,10 @@ export default {
   methods: {
     selectOrg() {
       console.log('selectOrg')
+      this.orgModal = true
+    },
+    orgModalDone() {
+      console.log('orgModalDone')
     },
     initCaseInfo() {
       this.$axios.get('case/detail', { params: { id: this.caseId } }).then(response => {
@@ -227,4 +270,16 @@ export default {
 }
 </script>
 <style lang="less">
+.ivu-input-icon {
+  cursor: pointer;
+}
+
+.org-modal-wrap {
+  width: 750px;
+  height: 466px;
+  opacity: 0.3;
+  border-radius: 5px;
+  background-color: #ffffff;
+  border: solid 1px #979797;
+}
 </style>
