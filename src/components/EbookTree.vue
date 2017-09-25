@@ -138,7 +138,7 @@ export default {
 .ebook-tree__children {
   > li:last-child {
     > .ebook-tree__item{
-      border-bottom: none;
+      // border-bottom: none;
     }
   }
 }

@@ -9,7 +9,7 @@
   <div class="layout__body">
     <div class="ebook-tree" v-for="(item, index) in treeData" :key="index" :tree-data="item" >
       <div class="ebook-tree__root">
-      <h2 class="ebook-tree__root--title" >{{item.name}}</h2>
+      <h2 class="ebook-tree__root--title" @click="editChild(index)" >{{item.name}}</h2>
       <i class="iconfont icon-tianjia ebook-tree__root--add" @click="addNewChild(index)" ></i>
       </div>
       <ul v-if="item.children" class="ebook-tree__children">
@@ -60,7 +60,7 @@ export default {
       },
       orgRule: {
         name: [
-          { required: true, message: '姓名不能为空', trigger: 'blur' }
+          { required: true, message: '组织名不能为空', trigger: 'blur' }
         ]
       },
       modal: {
@@ -103,8 +103,22 @@ export default {
   },
   methods: {
     addNewChild(index) {
+      this.id = null || 0
       this.parentId = this.treeData[index].id
+      console.log(this.treeData[index].id)
       this.modal.title = this.treeData[index].name + ' -- 新建组织'
+      this.modal.show = true
+    },
+    editChild(index) {
+      const treeData = this.treeData[index]
+      console.log(treeData)
+      this.id = treeData.id
+      this.orgForm.name = treeData.name
+      this.orgForm.responsable = treeData.responsable
+      this.orgForm.mobile = treeData.mobile
+      this.orgForm.remark = treeData.remark
+      this.modal.title = treeData.name
+      this.parentId = treeData.parentId
       this.modal.show = true
     },
     addNewOrg(ele, edit) {  //  触发自定义事件的方法
@@ -165,7 +179,7 @@ export default {
           this.$Message.success('提交成功！')
           this.editSave()
         } else {
-          this.$Message.error('表单验证失败')
+          this.$Message.error('组织名不能为空')
           this.saveLoading = false
         }
       })
