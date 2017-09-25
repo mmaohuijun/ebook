@@ -164,7 +164,7 @@ export default {
       this.modal.show = false
     },
     verifyEdit() { // 验证编辑
-      if (this.orgForm.name === '' || this.parentId === '') {
+      if (_.trim(this.orgForm.name) === '' || this.parentId === '') {
         return false
       } else {
         return true
@@ -175,7 +175,7 @@ export default {
     },
     editSaveModal(name) { //  保存修改
       this.$refs[name].validate(valid => {
-        if (valid) {
+        if (valid && this.verifyEdit()) {
           this.saveLoading = true
           this.$Message.success('提交成功！')
           this.editSave()
@@ -195,15 +195,13 @@ export default {
         remark: this.orgForm.remark
       }
       console.log(requestData)
-      if (this.verifyEdit()) {
-        this.$axios.post('office/save', requestData).then(
-        response => {
-          if (_.isNull(response)) return
-          this.showOrgList()
-        })
-        this.hideModal()
-      }
-      // window.location.reload()  //  重载页面..有待改善
+      this.$axios.post('office/save', requestData).then(
+      response => {
+        if (_.isNull(response)) return
+        this.showOrgList()
+      })
+      this.hideModal()
+    // window.location.reload()  //  重载页面..有待改善
     }
   },
   mounted() { //  挂载成功时 显示组织列表
