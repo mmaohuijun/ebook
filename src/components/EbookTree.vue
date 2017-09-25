@@ -60,7 +60,7 @@ export default {
       if (i === 'level') {
         // console.log('level', this.treeData[i])
         this.pval = 33 * (this.treeData[i] - 1)
-        this.mval = 20
+        this.mval = 26
       }
     }
   }

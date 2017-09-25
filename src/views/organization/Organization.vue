@@ -143,6 +143,7 @@ export default {
       }
     },
     addOrganization() {  // 新建组织
+      this.id = null || 0
       this.modal.show = true
       this.parentId = 0
       this.modal.title = '新建组织'
