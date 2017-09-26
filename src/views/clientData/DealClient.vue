@@ -153,51 +153,51 @@ export default {
         }
       ],
       clientListData: [
-        {
-          id: 1,
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          status: '成交',
-          createTime: '2017-1-1'
-        },
-        {
-          id: 3,
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          status: '成交',
-          createTime: '2017-1-1'
-        },
-        {
-          id: 4,
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          status: '成交',
-          createTime: '2017-1-1'
-        },
-        {
-          id: 10,
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          status: '成交',
-          createTime: '2017-1-1'
-        },
-        {
-          id: 11,
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          status: '成交',
-          createTime: '2017-1-1'
-        }
+        // {
+        //   id: 1,
+        //   name: '张磊',
+        //   mobile: '1234567',
+        //   caseName: '金地精益',
+        //   consultantName: '小丽',
+        //   status: '成交',
+        //   createTime: '2017-1-1'
+        // },
+        // {
+        //   id: 3,
+        //   name: '张磊',
+        //   mobile: '1234567',
+        //   caseName: '金地精益',
+        //   consultantName: '小丽',
+        //   status: '成交',
+        //   createTime: '2017-1-1'
+        // },
+        // {
+        //   id: 4,
+        //   name: '张磊',
+        //   mobile: '1234567',
+        //   caseName: '金地精益',
+        //   consultantName: '小丽',
+        //   status: '成交',
+        //   createTime: '2017-1-1'
+        // },
+        // {
+        //   id: 10,
+        //   name: '张磊',
+        //   mobile: '1234567',
+        //   caseName: '金地精益',
+        //   consultantName: '小丽',
+        //   status: '成交',
+        //   createTime: '2017-1-1'
+        // },
+        // {
+        //   id: 11,
+        //   name: '张磊',
+        //   mobile: '1234567',
+        //   caseName: '金地精益',
+        //   consultantName: '小丽',
+        //   status: '成交',
+        //   createTime: '2017-1-1'
+        // }
       ]
     }
   },
