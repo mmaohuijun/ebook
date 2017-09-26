@@ -28,6 +28,7 @@
     <Button v-if="addBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="onAdd"></Button>
 
     <Button v-if="cutBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onCutRelation"></Button>
+    <Button v-if="disBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onDistributeClient"></Button>
     <Button v-if="delBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="onDeleteClient"></Button>
   </div>
 </div>
@@ -98,6 +99,11 @@ export default {
     delBtn: {
       type: Boolean,
       default: false
+    },
+    // 分配客户
+    disBtn: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -142,6 +148,10 @@ export default {
     // 点击'删除客户'
     onDeleteClient() {
       this.$emit('onDeleteClient')
+    },
+    // 点击'分配客户'
+    onDistributeClient() {
+      this.$emit('onDistributeClient')
     }
   }
 }

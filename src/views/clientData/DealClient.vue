@@ -16,8 +16,8 @@
       header-title="客户管理 - 成交客户"
       :dateSearch="true"
       :textSearch="true"
-      :cutBtn="true"
-      :delBtn="true"
+      :cutBtn="isShow"
+      :delBtn="isShow"
       placeholder="姓名/手机号"
       @onDateSearch="dateSearch"
       @onTextSearch="textSearch"
@@ -28,7 +28,7 @@
     <div class="layout__body">
       <Table class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
       <Spin size="large" fix v-if="false"></Spin>
-      <Page class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
+      <Page style="margin-top: 14px" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
     </div>
     <Modal
       v-model="modal.show"
@@ -58,6 +58,7 @@ export default {
         title: '',
         isDelete: false
       },
+      isShow: false,
       clientListTitle: [
         {
           title: '全选',
@@ -275,6 +276,11 @@ export default {
       const idList = []
       for (let i = 0; i < selection.length; i++) {
         idList.push(selection[i].id)
+      }
+      if (idList.length > 0) {
+        this.isShow = true
+      } else {
+        this.isShow = false
       }
       console.log(idList)
       this.id = idList.join(',')
