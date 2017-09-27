@@ -8,12 +8,12 @@
   </div>
   <div class="layout__body">
     <div class="ebook-tree" v-for="(item, index) in treeData" :key="index" :tree-data="item" >
-      <div class="ebook-tree__root">
-      <h2 class="ebook-tree__root--title" @click="editChild(index)" >{{item.name}}</h2>
-      <i class="iconfont icon-tianjia ebook-tree__root--add" @click="addNewChild(index)" ></i>
-      </div>
-      <ul v-if="item.children" class="ebook-tree__children">
-        <ebook-tree v-for="(item, index) in item.children" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree>
+      <ul class="ebook-tree__children">
+        <div class="ebook-tree__root">
+          <h2 class="ebook-tree__root--title" @click="editChild(index)">{{item.name}}</h2>
+          <i class="iconfont icon-tianjia ebook-tree__root--add" @click="addNewChild(index)" ></i>
+        </div>
+        <ebook-tree-node v-for="(item, index) in item.children" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree-node>
       </ul>
     </div>
 
@@ -47,7 +47,9 @@
 </div>
 </template>
 <script>
-import EbookTree from 'components/EbookTree'
+// import EbookTree from 'components/EbookTree'
+import EbookTreeNode from 'components/EbookTreeNode'
+
 export default {
   name: 'Organization',
   data() {
@@ -215,7 +217,7 @@ export default {
     }
   },
   components: {
-    EbookTree
+    EbookTreeNode
   }
 }
 
