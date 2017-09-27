@@ -37,17 +37,31 @@
       @on-cancle="resetFields"
       width="500">
       <p slot="header" v-if="!isDelete">{{modal.title}}</p>
+      <!-- <div slot="header" v-if="!isDelete">{{modal.title}}</div> -->
       <Form :inline="true" style="height:360px" :label-width="180" v-if="!isDelete" >
-        <Form-item label="案场：" v-if="!isEUser"></Form-item>
+<!--         <Form-item label="案场：" v-if="!isEUser"></Form-item>
         <Select v-model='s1' style="width:200px" @on-change="CaseSelectChange" v-if="!isEUser">
           <Option v-for="item in caseList" :value="item.id" :key="item.id">{{item.label}}</Option>
-        </Select>
+        </Select> -->
         <Form-item label="指派顾问："></Form-item>
         <Select v-model='s2' style="width:200px" @on-change="ConSelectChange">
           <Option v-for="item in extUserList" :value="item.id" :key="item.id">{{item.label}}</Option>
         </Select> 
       </Form>
-      <p v-if="isDelete">{{modal.title}}</p>       
+      <p class="modal-style" v-if="isDelete">{{modal.title}}</p>       
+      </Modal>
+      <Modal
+        v-model="disModal.show"
+        :closable="false"
+        width="500">
+        <p class="modal-style">{{disModal.title}}</p>
+      </Modal>
+      <Modal
+        v-model="delModal.show"
+        :closable="false"
+        @on-ok="saveEdit"
+        width="500">
+        <p class="modal-style">{{delModal.title}}</p>
       </Modal>
   </div>
 </template>
@@ -60,7 +74,16 @@ export default {
       id: '',  // 被选中客户的id
       consultant: '',  // 被选中置业顾问id
       caseId: '', // 被选中案场id
+      caseIdList: [], // 多项选择时 案场id数组
       modal: {
+        show: false,
+        title: ''
+      },
+      disModal: {
+        show: false, // 批量选择 案场id不唯一时 弹框
+        title: '不能跨案场分配'
+      },
+      delModal: {
         show: false,
         title: ''
       },
@@ -69,6 +92,7 @@ export default {
       s1: '',
       s2: '',
       isShow: false, // 图标显示
+      singleLine: false,  // 点击单行 解除关系
       startDate: '',
       endDate: '',
       name: '', //  搜索关键字
@@ -100,14 +124,33 @@ export default {
           ellipsis: true
         },
         {
-          title: '置业顾问',
-          key: 'consultantName',
-          ellipsis: true
-        },
-        {
           title: '状态',
           key: 'status',
-          ellipsis: true
+          ellipsis: true,
+          filters: [
+            {
+              label: '来电',
+              value: 1
+            },
+            {
+              label: '到访',
+              value: 2
+            },
+            {
+              label: '成交',
+              value: 3
+            }
+          ],
+          filterMultiple: false,
+          filterMethod(value, row) {
+            if (value === 1) {
+              return row.status === '来电'
+            } else if (value === 2) {
+              return row.status === '到访'
+            } else {
+              return row.status === '成交'
+            }
+          }
         },
         {
           title: '生成时间',
@@ -135,8 +178,12 @@ export default {
                 },
                 on: {
                   click() {
+                    that.singleLine = true
                     that.distributeClient(params.row.id)
                     that.id = params.row.id
+                    that.caseId = params.row.caseId
+                    // console.log('params', params.row)
+                    // console.log('id', that.id, 'caseId', that.caseId)
                   }
                 }
               }),
@@ -171,25 +218,44 @@ export default {
           label: '222小二'
         }
       ],
-      caseList: [
-        {
-          id: 2012,
-          label: '中南售楼处'
-        },
-        {
-          id: 2000,
-          label: '金地集团'
-        }
-      ],
+      // caseList: [
+      //   {
+      //     id: 2012,
+      //     label: '中南售楼处'
+      //   },
+      //   {
+      //     id: 2000,
+      //     label: '金地集团'
+      //   }
+      // ],
       clientListData: [
-        {
-          name: '张磊',
-          mobile: '1234567',
-          caseName: '金地精益',
-          consultantName: '小丽',
-          status: '成交',
-          createTime: '2017-1-1'
-        }
+        // {
+        //   caseId: 1001,
+        //   id: 1,
+        //   name: '张磊',
+        //   mobile: '1234567',
+        //   caseName: '金地精益',
+        //   status: '成交',
+        //   createTime: '2017-1-1'
+        // },
+        // {
+        //   caseId: 1002,
+        //   id: 2,
+        //   name: '张磊1',
+        //   mobile: '1234567',
+        //   caseName: '金地精益',
+        //   status: '成交',
+        //   createTime: '2017-1-1'
+        // },
+        // {
+        //   caseId: 1002,
+        //   id: 3,
+        //   name: '张磊2',
+        //   mobile: '1234567',
+        //   caseName: '金地精益',
+        //   status: '到访',
+        //   createTime: '2017-1-1'
+        // }
       ]
     }
   },
@@ -269,20 +335,20 @@ export default {
       })
     },
     // 获取案场列表：案场id+案场名
-    getCaseList() {
-      const data = {
-        pageNo: this.pageNo,
-        pageSize: this.pageSize
-      }
-      this.$axios.get('/case/list', { params: data }).then(response => {
-        if (response === null) return
-        this.caseList = []
-        for (const items of response.data.list) {
-          this.caseList.push({ id: items.id, label: items.name })
-        }
-        console.log('caseList', this.caseList)
-      })
-    },
+    // getCaseList() {
+    //   const data = {
+    //     pageNo: this.pageNo,
+    //     pageSize: this.pageSize
+    //   }
+    //   this.$axios.get('/case/list', { params: data }).then(response => {
+    //     if (response === null) return
+    //     this.caseList = []
+    //     for (const items of response.data.list) {
+    //       this.caseList.push({ id: items.id, label: items.name })
+    //     }
+    //     console.log('caseList', this.caseList)
+    //   })
+    // },
     // 获取登录信息 外/内部用户
     // getLoginInfo() {
     //   console.log('getLoginInfo')
@@ -292,15 +358,17 @@ export default {
       this.consultant = consultant
     },
     // 点击 案场下拉框 获取案场id
-    CaseSelectChange(caseId) {
-      this.caseId = caseId
-    },
+    // CaseSelectChange(caseId) {
+    //   this.caseId = caseId
+    // },
     // 选择表格项 获取客户id
     onSelect(selection) {
       console.log(selection)
       const idList = []
+      this.caseIdList = []
       for (let i = 0; i < selection.length; i++) {
         idList.push(selection[i].id)
+        this.caseIdList.push(selection[i].caseId)
       }
       if (idList.length > 0) {
         this.isShow = true
@@ -308,10 +376,27 @@ export default {
         this.isShow = false
       }
       this.id = idList.join(',')
+      // this.caseId = this.caseIdList.join(',')
       console.log(this.id)
+      console.log(this.caseId)
     },
     // 分配客户
     distributeClient(id) {
+      console.log('caseIdList', this.caseIdList)
+      console.log('singleLine', this.singleLine)
+      if (!this.singleLine) {
+        for (let i = 0; i < this.caseIdList.length; i++) {
+          if (this.caseIdList[i] === this.caseIdList[0]) {
+            this.disModal.show = false
+            this.caseId = this.caseIdList[0]
+            console.log('完全一样')
+          } else {
+            console.log('不完全一样')
+            this.disModal.show = true
+            return
+          }
+        }
+      }
       this.isDelete = false
       this.modal.show = true
       this.modal.title = '分配客户'
@@ -324,41 +409,54 @@ export default {
     // 删除客户
     deleteClient(id) {
       this.isDelete = true
-      this.modal.show = true
-      this.modal.title = '是否确认删除客户'
+      this.delModal.show = true
+      this.delModal.title = '是否确认删除客户'
     },
     // 确认保存
     saveEdit() {
       if (this.isDelete) {
         console.log('点击删除按钮')
-        this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
-          if (response === null) return
-          this.showClientList()
-        })
-      } else {
-        if (this.isEUser) {
-          console.log('外部用户通道 顾问', 'id', this.id, 'consultant', this.consultant)
-          this.$axios.post('/case-cust/assign', { id: this.id, consultant: this.consultant }).then(response => {
-            if (response === null) return
-            this.showClientList()
-          })
-        } else {
-          console.log('内部用户通道 案场+顾问')
-          console.log('id', this.id, 'consultant', this.consultant, 'caseId', this.caseId)
-        }
-        // console.log('分配客户')
-        // console.log('客户id', this.id)
-        // console.log('置业顾问id', this.consultant)
-        // this.$axios.post('/case-cust/assign', { id: this.id, consultant: this.consultant }).then(response => {
+        // this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
         //   if (response === null) return
         //   this.showClientList()
         // })
+        this.delete()
+      } else {
+        const data = {
+          id: this.id,
+          consultant: this.consultant
+        }
+        if (!this.isEUser) {
+          console.log('外部用户通道 顾问', 'id', this.id, 'consultant', this.consultant)
+          data.caseId = this.caseId
+        }
+        console.log(data)
+        // this.$axios.post('/case-cust/assign', data).then(response => {
+        //   if (response === null) return
+        //   this.showClientList()
+        // })
+        this.distribute(data)
       }
       this.resetFields()
+    },
+    // 删除操作
+    delete() {
+      this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
+        if (response === null) return
+        this.showClientList()
+      })
+    },
+    // 分配操作
+    distribute(data) {
+      this.$axios.post('/case-cust/assign', data).then(response => {
+        if (response === null) return
+        this.showClientList()
+      })
     },
     resetFields() {
       this.s1 = ''
       this.s2 = ''
+      this.singleLine = false
     }
   },
   computed: {
@@ -369,11 +467,27 @@ export default {
   mounted() {
     this.showClientList()
     this.getExtUserList()
-    this.getCaseList()
+    // this.getCaseList()
     console.log(this.getLoginInfo)
+  },
+  watch: {
+    'modal.show'(val, oldVal) {
+      if (!val) {
+        this.resetFields()
+      }
+    }
   },
   components: {
     EbookHeader
   }
 }
 </script>
+<style lang="css">
+  .modal-style{
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 15px;
+    color: #4E546C;
+  }
+</style>
