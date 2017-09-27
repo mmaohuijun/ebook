@@ -37,29 +37,29 @@ export default {
           title: 'ID',
           key: 'id',
           ellipsis: false,
-          sortable: true, // 开启排序
-          filters: [
-            {
-              label: '大于4000',
-              value: 1
-            },
-            {
-              label: '小于4000',
-              value: 2
-            }
-          ]
+          sortable: true // 开启排序
+          // filters: [
+          //   {
+          //     label: '大于4000',
+          //     value: 1
+          //   },
+          //   {
+          //     label: '小于4000',
+          //     value: 2
+          //   }
+          // ]
         },
         {
           title: '案场',
           key: 'name',
-          ellipsis: true
-          // sortable: true // 开启排序
+          ellipsis: true,
+          sortable: true // 开启排序
         },
-        // {
-        //   title: '所属组织',
-        //   key: 'name',
-        //   ellipsis: true
-        // },
+        {
+          title: '所属组织',
+          key: 'officeName',
+          ellipsis: true
+        },
         {
           title: '项目名称',
           key: 'projectName',

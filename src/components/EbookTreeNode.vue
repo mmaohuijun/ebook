@@ -6,9 +6,9 @@
           <i class="ebook-tree__item--expand iconfont" :class="showSubMenus ? 'icon-jianshao' : 'icon-zengjia'" @click="toggleTreeChildren"></i>
         </span>
         <a href="#" v-if="treeData.isCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}" @click="jumpToCase">
-          {{treeData.name}}
+          {{name}}
         </a>
-        <span class="ebook-tree__item--title" @click="eidtNewChild" v-model="isEdit"  v-else>{{treeData.name}}</span>
+        <span class="ebook-tree__item--title" @click="eidtNewChild" v-else>{{name}}</span>
         <span class="ebook-tree__item--add iconfont icon-tianjia" v-if="!treeData.isCase" @click="addNewChild" v-model="isEdit"></span>
       </p>
       <ul v-if="treeData.children" class="ebook-tree__item--children">
@@ -25,9 +25,10 @@
     </div>
 
     <div v-else>
-      <div class="ebook-tree__item">
-        <Checkbox v-model="selected" @click.native.prevent="handleCheck(id)" :disabled="ifHasChildren">{{treeData.name}}</Checkbox>
-        <i v-if="treeData.children"
+      <div :class="level === 1 ? 'ebook-tree__root' : 'ebook-tree__item'">
+        <Checkbox v-model="checked" @click.native.prevent="handleCheck(id)" :disabled="ifHasChildren">{{name}}</Checkbox>
+        <!-- <i v-if="treeData.children" -->
+        <i v-if="ifHasChildren"
           class="ebook-tree__item--expand iconfont"
           :class="showSubMenus ? 'icon-jianshao' : 'icon-zengjia'"
           @click="toggleTreeChildren">
@@ -36,13 +37,11 @@
 
       <ul v-if="treeData.children" class="ebook-tree__children">
         <ebook-tree-node
-          ref="ebTree"
+          tree-type="orgModal"
           v-show="showSubMenus"
           v-for="(item, index) in treeData.children"
           :key="index"
-          tree-type="orgModal"
-          :tree-data="item"
-          :level="item.level">
+          :tree-data="item">
         </ebook-tree-node>
       </ul>
     </div>
@@ -50,33 +49,41 @@
 </template>
 <script>
 import EbookTreeNode from 'components/EbookTreeNode'
+import Emitter from '../mixins/emitter'
 
 export default {
   name: 'EbookTreeNode',
+  mixins: [Emitter],
   components: {
     EbookTreeNode
   },
   data() {
     return {
       isCase: false, // 是否为案场
-      open: false,
       showSubMenus: false,
       mval: 20, //  案场 增加缩进
       isEdit: false, //  状态  编辑/添加
-      selected: false
+      checked: false
     }
   },
   props: {
     treeData: Object,
+    // 组织为: 'org'; 案场信息里的组织选择为'orgModal'
     treeType: {
       type: String,
       default: 'org'
     }
   },
   computed: {
+    id() {
+      return this.treeData.id
+    },
+    name() {
+      return this.treeData.name
+    },
     // 如果有子组织则禁止选择
     ifHasChildren() {
-      return !!this.treeData.children
+      return this.treeData.children.length !== 0
     },
     // 层级
     level() {
@@ -85,31 +92,14 @@ export default {
     // 缩进
     pval() {
       return 33 * (this.level - 1)
-    },
-    id() {
-      return this.treeData.id
     }
   },
   methods: {
     handleCheck(id) {
-      console.log('handleCheck', id)
+      console.log('handleCheck', id, this.name)
       if (this.ifHasChildren) return
-      // this.$emit('handleCheck', id, this.selected)
-      this.$emit('onhandleCheck')
-    },
-    /**
-     * id : 被选项id
-     * flag: 是否点击了自身
-     */
-    // onhandleCheck(id, flag) {
-    //   console.log('onhandleCheck IN NODE', '被选项id', id, flag)
-    //   this.$emit('handleCheck', id, flag)
-    // },
-    deselected() {
-      this.selected = false
-    },
-    onselected() {
-      this.selected = true
+      // 广播事件
+      this.dispatch('EbookTree', 'on-checked', id)
     },
     addNewOrg(ele, edit) {  // 触发自定义方法的事件
       this.$emit('openModal', ele, edit)
@@ -142,6 +132,7 @@ export default {
     //     this.mval = 20
     //   }
     // }
+    this.showSubMenus = this.level === 1
   }
 }
 </script>

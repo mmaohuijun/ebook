@@ -19,7 +19,7 @@
           <Input placeholder="请输入" v-model="name"></Input>
         </Form-item>
         <Form-item label="所属组织：">
-          <Input placeholder="请输入" v-model="org" icon="plus-circled" @on-click="showOrgSelection"></Input>
+          <Input placeholder="请输入" v-model="officeName" icon="plus-circled" @on-click="showOrgSelection"></Input>
         </Form-item>
         <Form-item label="公众号ID：">
           <Input placeholder="请输入" v-model="appID"></Input>
@@ -70,27 +70,11 @@
   <Modal
     v-model="orgModal"
     :closable="false"
+    :mask-closable="false"
     width="840">
     <p slot="header">组织选择</p>
     <div id="org-modal-wrap">
-      <!-- <Tree :data="orgTree.data" show-checkbox></Tree> -->
-      <!-- 组织树wrap -->
-      <ebook-tree
-        ref="ebTree"
-        v-for="(item, index) in orgTreeData"
-        :key="index"
-        :tree-data="item"
-        @onCheckedTreeNode="treeNodeChecked"
-        @firstLevelSelected="treeDataSelected"></ebook-tree>
-      <!-- <div class="ebook-tree" v-for="(item, index) in orgTree.data" :key="index">
-        <ul class="ebook-tree__children">
-          <div class="ebook-tree__root">
-            <Checkbox v-model="orgTree.firstLevelChecked">{{item.name}}</Checkbox>
-            <i class="ebook-tree__item--expand iconfont icon-jianshao"></i>
-          </div>
-          <ebook-tree ref="ebTree" tree-type="orgModal" v-for="(item, index) in item.children" :key="index" :tree-data="item" @selectOrg="selectOrg"></ebook-tree>
-        </ul>
-      </div> -->
+      <ebook-tree ref="ebTree" :tree-data="orgTreeData" @checked="onSelectedOrg"></ebook-tree>
     </div>
     <div slot="footer">
       <Button type="text" size="large" @click.stop="orgModal = false">取消</Button>
@@ -106,12 +90,19 @@ import { mapGetters } from 'vuex'
 import EbookTree from 'components/EbookTree'
 
 export default {
+  name: 'CaseInfo',
+  components: {
+    CaseMap,
+    imgUpload,
+    EbookTree
+  },
   data() {
     return {
       caseDataSource: [],
       name: '', // 案场名
-      org: '', // 所属组织
       address: '', // 案场地址
+      officeId: '',  // 所属组织id
+      officeName: '',  // 所属组织名称
       location: { lng: 121.4806, lat: 31.2408 }, // 案场的经纬度
       logoUrl: '', // 案场logo
       bgImgUrl: '', // 案场背景图
@@ -123,98 +114,8 @@ export default {
       uploadMode: '', // 上传标识 logo或者bg
       logoUploadShow: false,
       bgUploadShow: false,
-      orgSelectedId: '',  // 选中组织的id
       orgModal: false,
-      orgTreeData: [
-        {
-          id: '100',
-          name: '1级组织',
-          title: '1级组织',
-          level: 1,
-          children: [
-            {
-              id: '211',
-              name: '2级子组织',
-              title: '2级子组织',
-              level: 2,
-              children: [
-                {
-                  id: '311',
-                  name: '3级子组织',
-                  title: '3级子组织',
-                  level: 3,
-                  children: [
-                    {
-                      id: '411',
-                      name: '4级子组织',
-                      title: '4级子组织',
-                      level: 4
-                    },
-                    {
-                      id: '412',
-                      name: '4级子组织',
-                      title: '4级子组织',
-                      level: 4
-                    }
-                  ]
-                },
-                {
-                  id: '312',
-                  name: '3级子组织',
-                  title: '3级子组织',
-                  level: 3
-                }
-              ]
-            },
-            {
-              id: '212',
-              name: '2级子组织2',
-              title: '2级子组织2',
-              level: 2
-            }
-          ]
-        },
-        {
-          id: '200',
-          name: '1级组织2',
-          title: '1级组织2',
-          level: 1,
-          children: [
-            {
-              id: '221',
-              name: '2级子组织2',
-              title: '2级子组织2',
-              level: 2,
-              children: [
-                {
-                  id: '321',
-                  name: '3级子子组织1',
-                  title: '3级子子组织1',
-                  level: 3
-                },
-                {
-                  id: '322',
-                  name: '3级子子组织2',
-                  title: '3级子子组织2',
-                  level: 3
-                }
-              ]
-            },
-            {
-              id: '222',
-              name: '2级子组织2',
-              title: '2级子组织2',
-              level: 2
-            },
-            {
-              id: '223',
-              name: '2级子组织3',
-              title: '2级子组织3',
-              level: 2
-            }
-          ]
-        }
-      ]
+      orgTreeData: []
     }
   },
   computed: {
@@ -226,34 +127,39 @@ export default {
       'BASE_PATH'
     ])
   },
+  mounted() {
+    if (this.caseId === '0') {
+      // 新建案场
+      this.clearAllData()
+      return
+    }
+    this.initCaseInfo()
+  },
   methods: {
-    treeDataSelected(id, flag) {
-      // 其中一个treeData选中, 取消选中同级其他的treeData
-      console.log('treeDataSelected', id, flag)
-      if (!flag) return
-      console.log('ebTree', this.$refs.ebTree)
-      _.each(this.$refs.ebTree, item => {
-        console.log('item', item)
-        if (item.id !== id) {
-          item.unCheckedFirstLevel()
-        }
-      })
-    },
-    treeNodeChecked(id, flag) {
-      console.log('treeNodeChecked', id, flag)
-      this.orgSelectedId = id
-      _.each(this.$refs.ebTree, item => {
-        console.log('item', item)
-      })
-    },
     // 点击'+'弹出组织选择
     showOrgSelection() {
-      console.log('showOrgSelection')
+      console.log('showOrgSelection', this.officeId)
+      this.$axios.get('office/tree').then(response => {
+        if (response === null) return
+        console.log('组织 response', response)
+        const reData = response.data
+        this.orgTreeData = reData
+      })
+      // 选中现在的组织
+      this.$refs.ebTree.handleChecked(this.officeId)
       this.orgModal = true
+    },
+    // 点击组织选择
+    onSelectedOrg(id, orgName) {
+      console.log('onSelectedOrg', id, orgName)
+      this.officeId = id
+      this.officeName = orgName
     },
     orgModalDone() {
       console.log('orgModalDone')
+      this.orgModal = false
     },
+    // 初始化案场详情
     initCaseInfo() {
       this.$axios.get('case/detail', { params: { id: this.caseId } }).then(response => {
         if (response === null) return
@@ -284,7 +190,8 @@ export default {
         appID: this.appID,
         appSecret: this.appSecret,
         'location.lng': this.location.lng,
-        'location.lat': this.location.lat
+        'location.lat': this.location.lat,
+        officeId: this.officeId
       }
       return data
     },
@@ -314,6 +221,8 @@ export default {
       this.appName = ''
       this.appID = ''
       this.appSecret = ''
+      this.officeId = ''
+      this.officeName = ''
       this.location = { lng: 121.4806, lat: 31.2408 }
     },
     toggleUploadShow(key) {
@@ -362,24 +271,6 @@ export default {
         }
       })
     }
-  },
-  mounted() {
-    if (this.caseId === '0') {
-      // 新建案场
-      this.clearAllData()
-      return
-    }
-    this.initCaseInfo()
-
-    this.$on('onhandleCheck', () => {
-      console.log('MAIN 监听到checked')
-      // this.$emit('on-check-change')
-    })
-  },
-  components: {
-    CaseMap,
-    imgUpload,
-    EbookTree
   }
 }
 </script>
@@ -397,7 +288,7 @@ export default {
   margin: 11px 29px 0;
   border-radius: 5px;
   background-color: #ffffff;
-  border: solid 1px #979797;
+  border: solid 1px #dfdfdf;
   overflow: hidden;
   font-size: 16px;
 
@@ -410,10 +301,12 @@ export default {
   .ebook-tree__root {
     display: flex;
     height: 30px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     background-color: #dbdce1;
   }
 
-  .ebook-tree__children > li {
+  .ebook-tree__children > li .ebook-tree__children {
     padding-left: 23px;
   }
 
