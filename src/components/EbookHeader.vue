@@ -119,6 +119,7 @@ export default {
     },
     // 点击'搜索'
     onTextSearch() {
+      // 把搜索词传出去
       this.$emit('onTextSearch', this.seachText)
     },
     // 点击'上传'

@@ -19,18 +19,6 @@
 </style>
 <template>
 <div class="layout__content">
-  <!-- <div class="layout__header">
-    <h2 class="layout__header-title">用户 - 外部用户</h2>
-    <div class="layout__header-tool">
-      <span style="font-size:16px; color:#fff; padding: 0 10px;">时间</span>
-      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="startDateOk" @on-change="startDate=$event" v-model="startDate" placeholder="开始日期" :clearable="false" style="width: 95px"></Date-picker>
-      <span style="font-size:16px; color:#fff; padding: 0 10px;">-</span>
-      <Date-picker confirm :editable="false" class="custom__input--white custom__date-picker" type="date" format="yyyy-MM-dd" @on-ok="endDateOk" @on-change="endDate=$event" v-model="endDate" placeholder="结束日期" :clearable="false" style="width: 95px; margin-right: 30px;"></Date-picker>
-      <Input class="custom__search" icon="search" placeholder="姓名／手机号" v-model="name" @on-click="textSearch"></Input>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-if="isTrash" @click="removeUser(selectedId)"></Button>
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addModal"></Button>
-    </div>
-  </div> -->
 
   <ebook-header
     header-title="用户 - 外部用户"
@@ -45,7 +33,8 @@
     @onTextSearch="textSearch"
     @onUpload="showUploadModal"
     @onAdd="showAddUserModal"
-    @onDelete="removeUser(selectedId)"></ebook-header>
+    @onDelete="removeUser(selectedId)">
+  </ebook-header>
 
   <div class="layout__body">
     <Table class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
@@ -230,7 +219,7 @@ export default {
         },
         {
           title: '状态',
-          key: 'loginFlag',
+          key: 'loginFlagDesc',
           ellipsis: true
         },
         {
@@ -431,8 +420,8 @@ export default {
       this.userList()
     },
     // 文本搜索
-    textSearch(seachText) {
-      this.name = seachText
+    textSearch(searchText) {
+      this.name = searchText
       this.startDate = ''
       this.endDate = ''
       this.isSearch = true

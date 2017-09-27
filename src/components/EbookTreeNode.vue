@@ -3,13 +3,13 @@
     <div v-if="treeType === 'org'">
       <p class="ebook-tree__item">
         <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.isCase" :style="{paddingLeft: pval + 'px'}">
-          <i class="ebook-tree__item--expand iconfont" :class="showSubMenus ? 'icon-jianshao' : 'icon-zengjia'" @click="toggleTreeChildren"></i>
+          <i v-if="ifHasChildren" class="ebook-tree__item--expand iconfont" :class="showSubMenus ? 'icon-jianshao' : 'icon-zengjia'" @click="toggleTreeChildren"></i>
         </span>
         <a href="#" v-if="treeData.isCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}" @click="jumpToCase">
           {{name}}
         </a>
-        <span class="ebook-tree__item--title" @click="eidtNewChild" v-else>{{name}}</span>
-        <span class="ebook-tree__item--add iconfont icon-tianjia" v-if="!treeData.isCase" @click="addNewChild" v-model="isEdit"></span>
+        <span :style="ifHasChildren ? '' : 'marginLeft: 20px'" class="ebook-tree__item--title" @click="eidtNewChild" v-else>{{name}}</span>
+        <span class="ebook-tree__item--add iconfont icon-tianjia" v-if="!treeData.isCase" @click="addNewChild"></span>
       </p>
       <ul v-if="treeData.children" class="ebook-tree__item--children">
 
@@ -27,7 +27,6 @@
     <div v-else>
       <div :class="level === 1 ? 'ebook-tree__root' : 'ebook-tree__item'">
         <Checkbox v-model="checked" @click.native.prevent="handleCheck(id)" :disabled="ifHasChildren">{{name}}</Checkbox>
-        <!-- <i v-if="treeData.children" -->
         <i v-if="ifHasChildren"
           class="ebook-tree__item--expand iconfont"
           :class="showSubMenus ? 'icon-jianshao' : 'icon-zengjia'"
@@ -83,7 +82,12 @@ export default {
     },
     // 如果有子组织则禁止选择
     ifHasChildren() {
-      return this.treeData.children.length !== 0
+      if (this.treeData.children) {
+        return this.treeData.children.length !== 0
+      } else {
+        return false
+      }
+      // return this.treeData.children.length !== 0
     },
     // 层级
     level() {

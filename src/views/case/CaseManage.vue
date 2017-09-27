@@ -1,13 +1,15 @@
 <template>
 <div class="layout__content">
-  <div class="layout__header">
-    <h2 class="layout__header-title">案场管理</h2>
-    <div class="layout__header-tool">
-      <Input class="custom__search" icon="search" placeholder="案场" v-model="searchText" @on-click="goSearch"></Input>
-      <!-- <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" v-show="selectId.length !== 0" @click="deleteItem('select')"></Button> -->
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addCase"></Button>
-    </div>
-  </div>
+
+  <ebook-header
+    header-title="案场管理"
+    :textSearch="true"
+    :addBtn="true"
+    placeholder="案场 / 组织"
+    @onTextSearch="goSearch"
+    @onAdd="addCase">
+  </ebook-header>
+
   <div class="layout__body">
     <Table class="custom__table" :columns="caseTable" :data="caseList" @on-row-click="onClickCaseItem"></Table>
     <Page style="margin-top: 14px;" class="custom__page" :total="total" :page-size="pageSize" @on-change="changePage" :current="pageNo"></Page>
@@ -16,7 +18,13 @@
 </div>
 </template>
 <script>
+import EbookHeader from 'components/EbookHeader'
+
 export default {
+  name: 'CaseManage',
+  components: {
+    EbookHeader
+  },
   data() {
     return {
       pageNo: 1, // 页码
@@ -60,11 +68,11 @@ export default {
           key: 'officeName',
           ellipsis: true
         },
-        {
-          title: '项目名称',
-          key: 'projectName',
-          ellipsis: true
-        },
+        // {
+        //   title: '项目名称',
+        //   key: 'projectName',
+        //   ellipsis: true
+        // },
         {
           title: '公众号名称',
           key: 'appName',
@@ -120,10 +128,11 @@ export default {
       })
     },
     // 查询
-    goSearch() {
+    goSearch(searchText) {
+      this.searchText = searchText
       console.log('goSearch', this.searchText)
       // 判断是否有搜索词
-      if (this.$_.isEmpty(this.searchText.trim())) {
+      if (_.isEmpty(this.searchText.trim())) {
         if (this.afterSearch) { // 搜索后清空搜索词, 初始化列表
           this.pageNo = 1
           this.initCaseList()

@@ -27,13 +27,13 @@
     <p slot="header">{{modal.title}}</p>
     <Form ref="orgForm" :model="orgForm" :rules="orgRule" :label-width="120" style="width: 380px; padding-top: 20px; margin: 0 auto;">
       <Form-item prop="name" label="组织名称：">
-        <Input v-model="orgForm.name" placeholder="请您输入..." ></Input>
+        <Input v-model="orgForm.name" placeholder="请您输入..." :maxlength="16"></Input>
       </Form-item>
       <Form-item prop="responsable" label="负责人：">
         <Input v-model="orgForm.responsable" placeholder="请您输入..."></Input>
       </Form-item>
       <Form-item prop="mobile" label="联系方式：">
-        <Input v-model="orgForm.mobile" placeholder="请您输入..."></Input>
+        <Input v-model="orgForm.mobile" placeholder="请您输入..." :maxlength="11"></Input>
       </Form-item>
       <Form-item prop="remark" label="描述：">
         <Input v-model="orgForm.remark" placeholder="请您输入..." type="textarea" :autosize="{minRows: 2, maxRows: 5}"></Input>
@@ -71,30 +71,7 @@ export default {
         title: ''
       },
       modalShow: false, // 弹框隐藏显示
-      treeData: [
-        // {
-        //   level: 1,
-        //   name: '华东区2',
-        //   children: [
-        //     { level: 2, name: '南京市' },
-        //     { level: 2,
-        //       name: '上海市',
-        //       children: [
-        //         { level: 3,
-        //           name: '上海东',
-        //           children: [
-        //             { level: 4, name: '金地艺境1', ifCase: true },
-        //             { level: 4, name: '金地艺境2', ifCase: true }
-        //           ] },
-        //         { level: 3, name: '上海西' }
-        //       ] }
-        //   ]
-        // },
-        // {
-        //   level: 1,
-        //   name: '华南区2'
-        // }
-      ],
+      treeData: [],
       id: 0 || null, //  组织id 空或0表示新建保存 其他为修改保存
       name: '', //  组织名称 必填
       parentId: 0, // 上级组织 0表示自己为第一级
