@@ -1,11 +1,13 @@
 <template>
 <div class="layout__content auth">
-  <div class="layout__header">
+  <!-- <div class="layout__header">
     <h2 class="layout__header-title">权限</h2>
     <div class="layout__header-tool">
       <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click.stop="addAuth"></Button>
     </div>
-  </div>
+  </div> -->
+  <ebook-header header-title="权限" :addBtn="true" @onAdd="addAuth"></ebook-header>
+  
   <div class="layout__body" @click="onClickTable">
     <table class="authority" cellspacing="0" cellpadding="0" border="0" v-if="authData.length !== 0">
       <tr :class="auth.id === currentAuthId ? 'authority-row-current' : ''" v-for="(auth, index) in authData" :key="index" @click.stop="toggleAuthCfm(auth)"> 
@@ -38,7 +40,7 @@
     <p slot="header">新建权限</p>
     <Form ref="authForm" :model="authForm" :rules="authRule" :label-width="120" style="width: 380px; padding-top: 20px; margin: 0 auto;">
       <Form-item prop="name" label="权限名称：">
-        <Input v-model="authForm.name" placeholder="文本不能超过8个字符" :maxlength="16"></Input>
+        <Input v-model="authForm.name" placeholder="文本不能超过8个字符" :maxlength="8"></Input>
         <p class="auth-modal-text">详细内容请在权限界面点击编辑按钮进行编辑</p>
       </Form-item>
     </Form>
@@ -51,11 +53,13 @@
 </template>
 <script>
 import EbookAuthorityItem from 'components/EbookAuthorityItem'
+import EbookHeader from 'components/EbookHeader'
 
 export default {
   name: 'Authority',
   components: {
-    EbookAuthorityItem
+    EbookAuthorityItem,
+    EbookHeader
   },
   data() {
     return {

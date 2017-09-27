@@ -296,11 +296,6 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  store.dispatch('setSideBarSelect', to.name)
-  if (to.path.indexOf('case') !== -1) { // 包含'Case'的页面
-    store.dispatch('setSideBarSelect', 'CaseManage')
-  }
-
   // 检查页面是否需要登录
   if (to.matched.some(record => record.meta.requiresLogin)) {
     // 若没有登录或没有用户信息则跳转登录页
@@ -344,6 +339,10 @@ router.beforeEach((to, from, next) => {
 router.afterEach(route => {
   store.dispatch('setCurrentPathName', route.name)
   store.dispatch('setSideBarSelect', route.name)
+  // 包含'Case'的页面
+  if (route.path.indexOf('case') !== -1) {
+    store.dispatch('setSideBarSelect', 'CaseManage')
+  }
 })
 
 // export default router

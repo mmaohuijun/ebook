@@ -1,146 +1,92 @@
 <template>
-  <li>
-    <p class="ebook-tree__item" >
-      <span class="ebook-tree__item--expand-wrapper" v-show="!treeData.isCase" :style="{paddingLeft: pval + 'px'}"><i class="ebook-tree__item--expand iconfont" :class="open ? 'icon-jianshao' : 'icon-zengjia'" @click="toggle"></i></span>
-      <a href="#" v-if="treeData.isCase" class="ebook-tree__item--title" :style="{paddingLeft: pval + 'px', marginLeft: mval + 'px'}" @click="jumpToCase">{{treeData.name}}</a>
-      <span class="ebook-tree__item--title" @click="eidtNewChild" v-model="isEdit"  v-else>{{treeData.name}}</span>
-      <span class="ebook-tree__item--add iconfont icon-tianjia" v-if="!treeData.isCase" @click="addNewChild" v-model="isEdit"></span>
-    </p>
-    <ul v-if="treeData.children" class="ebook-tree__item--children">
-      <ebook-tree v-show="open" v-for="(item, index) in treeData.children" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree>
+  <div class="ebook-tree">
+    <ul class="ebook-tree__children">
+      <div class="ebook-tree__root">
+        <Checkbox v-model="firstLevelChecked">{{treeData.name}}</Checkbox>
+        <i class="ebook-tree__item--expand iconfont icon-jianshao"></i>
+      </div>
+      <ebook-tree-node
+        ref="ebTree"
+        tree-type="orgModal"
+        v-for="(item, index) in treeData.children"
+        :key="index"
+        :tree-data="item"
+        ></ebook-tree-node>
+        <!-- @handleCheck="onhandleCheck" -->
     </ul>
-  </li>
+  </div>
 </template>
 <script>
-import EbookTree from 'components/EbookTree'
+import EbookTreeNode from 'components/EbookTreeNode'
 
 export default {
   name: 'EbookTree',
+  components: {
+    EbookTreeNode
+  },
   data() {
     return {
-      isCase: false,
-      open: false,
-      pval: 0,  //  缩进
-      mval: 0, //  案场 增加缩进
-      isEdit: false //  状态  编辑/添加
+      firstLevelChecked: false
+    }
+  },
+  watch: {
+    firstLevelChecked(flag) {
+      // 自身取消选中, 所有子选项取消选中
+      this.$emit('firstLevelSelected', this.id, flag)
+      if (flag) return
+      _.each(this.$refs.ebTree, item => {
+        item.deselected()
+      })
+    }
+  },
+  computed: {
+    id() {
+      return this.treeData.id
     }
   },
   props: {
     treeData: Object
   },
-  components: {
-    EbookTree
-  },
   methods: {
-    addNewOrg(ele, edit) {  // 触发自定义方法的事件
-      this.$emit('openModal', ele, edit)
+    /**
+     * id : 被选项id
+     * flag: 是否点击了自身
+     */
+    // onhandleCheck(id, flag) {
+    //   console.log('onhandleCheck IN TREE', '被选项id', id, flag)
+    //   this.$emit('onCheckedTreeNode', id, flag)
+    //   // // 单选效果
+    //   // _.each(this.$refs.ebTree, item => {
+    //   //   // 如果点击的不是自己则选中, 并让同级的其他选项取消选中
+    //   //   if (!flag && item.id === id) {
+    //   //     item.onselected()
+    //   //     this.$emit('onCheckedTreeNode', id)
+    //   //   } else {
+    //   //     item.deselected()
+    //   //   }
+    //   // })
+
+    //   // // 子选项取消选中, 上级也取消选中
+    //   // if (flag) {
+    //   //   this.unCheckedFirstLevel()
+    //   // } else {
+    //   //   this.onCheckedFirstLevel()
+    //   // }
+    // },
+    onCheckedFirstLevel() {
+      this.firstLevelChecked = true
     },
-    toggle() {
-      if (!this.isCase) {
-        this.open = !this.open
-      }
-    },
-    addNewChild() {  // 定义点击事件 自定义方法 并传递参数
-      console.log('here to create a new child')
-      this.isEdit = false
-      this.$emit('openModal', this.treeData, this.isEdit)
-    },
-    eidtNewChild() {  // 编辑 与 修改 区分
-      console.log('here to edit an old child')
-      this.isEdit = true
-      this.$emit('openModal', this.treeData, this.isEdit)
-    },
-    jumpToCase() {
-      this.id = this.treeData.id
-      this.$router.push({ name: 'CaseInfo', params: { caseId: this.id } })
+    unCheckedFirstLevel() {
+      this.firstLevelChecked = false
     }
   },
-  mounted() { //  按层级 缩进
-    for (const i in this.treeData) {
-      if (i === 'level') {
-        // console.log('level', this.treeData[i])
-        this.pval = 33 * (this.treeData[i] - 1)
-        this.mval = 26
-      }
-    }
+  mounted() {
+    this.$on('onhandleCheck', () => {
+      console.log('监听到checked')
+      // this.$emit('on-check-change')
+    })
   }
 }
 </script>
 <style lang="less">
-// .ebook-tree {
-//   border:1px solid #bdbdbd;
-//   background: #fff;
-
-//   &:last-child {
-//     border-top: none;
-//   }
-// }
-
-// .ebook-tree__root {
-//   height: 44px;
-//   line-height: 44px;
-//   background: #66c5d0;
-// }
-
-// .ebook-tree__root--title {
-//   display: inline-block;
-//   padding-left: 15px;
-//   font-weight: 400;
-//   font-size: 20px;
-//   color: #fff;
-// }
-
-// .ebook-tree__root--add {
-//   float: right;
-//   font-size: 21px;
-//   margin-right: 29px;
-//   color: #fff;
-//   cursor: pointer;
-// }
-
-.ebook-tree__item {
-  position: relative;
-  height: 44px;
-  line-height: 44px;
-  border-bottom: 1px solid #ddd;
-}
-
-.ebook-tree__item--title {
-  display: inline-block;
-  vertical-align: top;
-  height: 44px;
-  line-height: 44px;
-  font-size: 18px;
-}
-
-.ebook-tree__item--expand-wrapper {
-  display: inline-block;
-  height: 44px;
-  line-height: 44px;
-  padding-left: 33px;
-  padding-right: 6px;
-  border-bottom: 1px dashed #fff;
-}
-
-.ebook-tree__item--expand {
-  font-size: 20px;
-  color: #8e8e8e;
-}
-
-.ebook-tree__item--add {
-  float: right;
-  margin-right: 29px;
-  font-size: 21px;
-  color: #bbb;;
-  cursor: pointer;
-}
-
-.ebook-tree__children {
-  > li:last-child {
-    > .ebook-tree__item{
-      // border-bottom: none;
-    }
-  }
-}
-
 </style>

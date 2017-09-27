@@ -19,7 +19,7 @@
           <Input placeholder="请输入" v-model="name"></Input>
         </Form-item>
         <Form-item label="所属组织：">
-          <Input placeholder="请输入" v-model="org" icon="plus-circled" @on-click="selectOrg"></Input>
+          <Input placeholder="请输入" v-model="org" icon="plus-circled" @on-click="showOrgSelection"></Input>
         </Form-item>
         <Form-item label="公众号ID：">
           <Input placeholder="请输入" v-model="appID"></Input>
@@ -72,8 +72,25 @@
     :closable="false"
     width="840">
     <p slot="header">组织选择</p>
-    <div class="org-modal-wrap">
-      组织树wrap
+    <div id="org-modal-wrap">
+      <!-- <Tree :data="orgTree.data" show-checkbox></Tree> -->
+      <!-- 组织树wrap -->
+      <ebook-tree
+        ref="ebTree"
+        v-for="(item, index) in orgTreeData"
+        :key="index"
+        :tree-data="item"
+        @onCheckedTreeNode="treeNodeChecked"
+        @firstLevelSelected="treeDataSelected"></ebook-tree>
+      <!-- <div class="ebook-tree" v-for="(item, index) in orgTree.data" :key="index">
+        <ul class="ebook-tree__children">
+          <div class="ebook-tree__root">
+            <Checkbox v-model="orgTree.firstLevelChecked">{{item.name}}</Checkbox>
+            <i class="ebook-tree__item--expand iconfont icon-jianshao"></i>
+          </div>
+          <ebook-tree ref="ebTree" tree-type="orgModal" v-for="(item, index) in item.children" :key="index" :tree-data="item" @selectOrg="selectOrg"></ebook-tree>
+        </ul>
+      </div> -->
     </div>
     <div slot="footer">
       <Button type="text" size="large" @click.stop="orgModal = false">取消</Button>
@@ -86,6 +103,7 @@
 import CaseMap from 'components/CaseMap'
 import imgUpload from 'vue-image-crop-upload'
 import { mapGetters } from 'vuex'
+import EbookTree from 'components/EbookTree'
 
 export default {
   data() {
@@ -105,26 +123,93 @@ export default {
       uploadMode: '', // 上传标识 logo或者bg
       logoUploadShow: false,
       bgUploadShow: false,
+      orgSelectedId: '',  // 选中组织的id
       orgModal: false,
       orgTreeData: [
         {
-          id: '11',
-          name: '1级子组织',
-          level: 2
-        },
-        {
-          id: '22',
-          name: '2级组织',
-          level: 2,
+          id: '100',
+          name: '1级组织',
+          title: '1级组织',
+          level: 1,
           children: [
             {
-              id: '2221',
-              name: '2级子组织1',
+              id: '211',
+              name: '2级子组织',
+              title: '2级子组织',
+              level: 2,
+              children: [
+                {
+                  id: '311',
+                  name: '3级子组织',
+                  title: '3级子组织',
+                  level: 3,
+                  children: [
+                    {
+                      id: '411',
+                      name: '4级子组织',
+                      title: '4级子组织',
+                      level: 4
+                    },
+                    {
+                      id: '412',
+                      name: '4级子组织',
+                      title: '4级子组织',
+                      level: 4
+                    }
+                  ]
+                },
+                {
+                  id: '312',
+                  name: '3级子组织',
+                  title: '3级子组织',
+                  level: 3
+                }
+              ]
+            },
+            {
+              id: '212',
+              name: '2级子组织2',
+              title: '2级子组织2',
+              level: 2
+            }
+          ]
+        },
+        {
+          id: '200',
+          name: '1级组织2',
+          title: '1级组织2',
+          level: 1,
+          children: [
+            {
+              id: '221',
+              name: '2级子组织2',
+              title: '2级子组织2',
+              level: 2,
+              children: [
+                {
+                  id: '321',
+                  name: '3级子子组织1',
+                  title: '3级子子组织1',
+                  level: 3
+                },
+                {
+                  id: '322',
+                  name: '3级子子组织2',
+                  title: '3级子子组织2',
+                  level: 3
+                }
+              ]
+            },
+            {
+              id: '222',
+              name: '2级子组织2',
+              title: '2级子组织2',
               level: 2
             },
             {
-              id: '2221',
-              name: '2级子组织2',
+              id: '223',
+              name: '2级子组织3',
+              title: '2级子组织3',
               level: 2
             }
           ]
@@ -133,14 +218,37 @@ export default {
     }
   },
   computed: {
+    treeOnShow() {
+      return
+    },
     ...mapGetters([
       'caseId',
       'BASE_PATH'
     ])
   },
   methods: {
-    selectOrg() {
-      console.log('selectOrg')
+    treeDataSelected(id, flag) {
+      // 其中一个treeData选中, 取消选中同级其他的treeData
+      console.log('treeDataSelected', id, flag)
+      if (!flag) return
+      console.log('ebTree', this.$refs.ebTree)
+      _.each(this.$refs.ebTree, item => {
+        console.log('item', item)
+        if (item.id !== id) {
+          item.unCheckedFirstLevel()
+        }
+      })
+    },
+    treeNodeChecked(id, flag) {
+      console.log('treeNodeChecked', id, flag)
+      this.orgSelectedId = id
+      _.each(this.$refs.ebTree, item => {
+        console.log('item', item)
+      })
+    },
+    // 点击'+'弹出组织选择
+    showOrgSelection() {
+      console.log('showOrgSelection')
       this.orgModal = true
     },
     orgModalDone() {
@@ -262,24 +370,82 @@ export default {
       return
     }
     this.initCaseInfo()
+
+    this.$on('onhandleCheck', () => {
+      console.log('MAIN 监听到checked')
+      // this.$emit('on-check-change')
+    })
   },
   components: {
     CaseMap,
-    imgUpload
+    imgUpload,
+    EbookTree
   }
 }
 </script>
 <style lang="less">
 .ivu-input-icon {
+  width: 29px;
+  height: 29px;
+  line-height: 29px;
   cursor: pointer;
 }
 
-.org-modal-wrap {
+#org-modal-wrap {
   width: 750px;
   height: 466px;
-  opacity: 0.3;
+  margin: 11px 29px 0;
   border-radius: 5px;
   background-color: #ffffff;
   border: solid 1px #979797;
+  overflow: hidden;
+  font-size: 16px;
+
+  .ebook-tree {
+    border: none;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .ebook-tree__root {
+    display: flex;
+    height: 30px;
+    background-color: #dbdce1;
+  }
+
+  .ebook-tree__children > li {
+    padding-left: 23px;
+  }
+
+  .ivu-checkbox {
+    vertical-align: baseline;
+    &-checked,
+    &-inner {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .ebook-tree__item{
+    display: flex;
+    height: 30px;
+    line-height: 30px;
+    border: none;
+  }
+
+  .ivu-checkbox-wrapper {
+    height: 30px;
+    margin-left: 14px;
+    line-height: 30px;
+    color: #111;
+    font-size: 16px;
+  }
+
+  .ebook-tree__item--expand {
+    cursor: pointer;
+    line-height: 30px;
+    font-size: 16px;
+  }
+
 }
 </style>
