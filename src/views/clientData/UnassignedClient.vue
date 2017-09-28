@@ -45,7 +45,7 @@
         </Select> -->
         <Form-item label="指派顾问："></Form-item>
         <Select v-model='s2' style="width:200px" @on-change="ConSelectChange">
-          <Option v-for="item in extUserList" :value="item.id" :key="item.id">{{item.label}}</Option>
+          <Option v-for="item in extUserList" :value="item.id" :key="item.id">{{item.name}}</Option>
         </Select> 
       </Form>
       <p class="modal-style" v-if="isDelete">{{modal.title}}</p>       
@@ -179,9 +179,10 @@ export default {
                 on: {
                   click() {
                     that.singleLine = true
-                    that.distributeClient(params.row.id)
+                    that.distributeClient(params.row.caseId)
                     that.id = params.row.id
                     that.caseId = params.row.caseId
+                    console.log('caseId', that.caseId)
                     // console.log('params', params.row)
                     // console.log('id', that.id, 'caseId', that.caseId)
                   }
@@ -319,48 +320,10 @@ export default {
         console.log('clientListData', this.clientListData)
       })
     },
-    //  获取外部用户列表：工号+姓名
-    getExtUserList() {
-      const data = {
-        pageNo: this.pageNo,
-        pageSize: this.pageSize
-      }
-      this.$axios.get('/ext-user/list', { params: data }).then(response => {
-        if (response === null) return
-        this.extUserList = []
-        for (const items of response.data.list) {
-          this.extUserList.push({ id: items.id, label: items.no + items.name })
-        }
-        console.log('extUserList', this.extUserList)
-      })
-    },
-    // 获取案场列表：案场id+案场名
-    // getCaseList() {
-    //   const data = {
-    //     pageNo: this.pageNo,
-    //     pageSize: this.pageSize
-    //   }
-    //   this.$axios.get('/case/list', { params: data }).then(response => {
-    //     if (response === null) return
-    //     this.caseList = []
-    //     for (const items of response.data.list) {
-    //       this.caseList.push({ id: items.id, label: items.name })
-    //     }
-    //     console.log('caseList', this.caseList)
-    //   })
-    // },
-    // 获取登录信息 外/内部用户
-    // getLoginInfo() {
-    //   console.log('getLoginInfo')
-    // },
     // 点击顾问下拉框选项 获取外部用户id
     ConSelectChange(consultant) {
       this.consultant = consultant
     },
-    // 点击 案场下拉框 获取案场id
-    // CaseSelectChange(caseId) {
-    //   this.caseId = caseId
-    // },
     // 选择表格项 获取客户id
     onSelect(selection) {
       console.log(selection)
@@ -381,29 +344,46 @@ export default {
       console.log(this.caseId)
     },
     // 分配客户
-    distributeClient(id) {
-      console.log('caseIdList', this.caseIdList)
-      console.log('singleLine', this.singleLine)
+    distributeClient(caseId) {
       if (!this.singleLine) {
         for (let i = 0; i < this.caseIdList.length; i++) {
           if (this.caseIdList[i] === this.caseIdList[0]) {
             this.disModal.show = false
             this.caseId = this.caseIdList[0]
             console.log('完全一样')
+            console.log('singleLine为false', 'caseId', this.caseId)
           } else {
             console.log('不完全一样')
             this.disModal.show = true
             return
           }
         }
+      } else {
+        this.caseId = caseId
       }
+      console.log('singleLine为true', 'caseId', this.caseId)
       this.isDelete = false
       this.modal.show = true
       this.modal.title = '分配客户'
-      if (this.getLoginInfo === 'case-worker') {
-        this.isEUser = true
+      console.log('是否为外部用户', this.isEUser)
+      if (this.isEUser) {
+        this.$axios.post('/ext-user/worker-list').then(response => {
+          if (response === null) return
+          this.extUserList = []
+          for (const items in response.data) {
+            this.extUserList.push(response.data[items])
+          }
+          console.log('extuserlist', this.extUserList)
+        })
       } else {
-        this.isEUser = false
+        this.$axios.post('/ext-user/worker-list', { caseId: this.caseId }).then(response => {
+          if (response === null) return
+          this.extUserList = []
+          for (const items in response.data) {
+            this.extUserList.push(response.data[items])
+          }
+          console.log('extuserlist', this.extUserList)
+        })
       }
     },
     // 删除客户
@@ -416,10 +396,6 @@ export default {
     saveEdit() {
       if (this.isDelete) {
         console.log('点击删除按钮')
-        // this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
-        //   if (response === null) return
-        //   this.showClientList()
-        // })
         this.delete()
       } else {
         const data = {
@@ -427,17 +403,23 @@ export default {
           consultant: this.consultant
         }
         if (!this.isEUser) {
-          console.log('外部用户通道 顾问', 'id', this.id, 'consultant', this.consultant)
+          console.log('内部用户通道 顾问', 'id', this.id, 'consultant', this.consultant)
           data.caseId = this.caseId
         }
         console.log(data)
-        // this.$axios.post('/case-cust/assign', data).then(response => {
-        //   if (response === null) return
-        //   this.showClientList()
-        // })
         this.distribute(data)
       }
       this.resetFields()
+    },
+    // 判断 内部、外部用户
+    justifyIdentity() {
+      if (this.getLoginInfo === 'case-worker') {
+        this.isEUser = true
+        console.log('外部用户')
+      } else {
+        this.isEUser = false
+        console.log('内部用户')
+      }
     },
     // 删除操作
     delete() {
@@ -466,8 +448,7 @@ export default {
   },
   mounted() {
     this.showClientList()
-    this.getExtUserList()
-    // this.getCaseList()
+    this.justifyIdentity()
     console.log(this.getLoginInfo)
   },
   watch: {
