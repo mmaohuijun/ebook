@@ -292,11 +292,13 @@ export default {
         this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
           if (response === null) return
           this.showClientList()
+          this.isShow = false
         })
       } else {
         this.$axios.post('/case-cust/assign-cancel', { id: this.id }).then(response => {
           if (response == null) return
           this.showClientList()
+          this.isShow = false
         })
       }
     }

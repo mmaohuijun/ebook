@@ -426,6 +426,7 @@ export default {
       this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
         if (response === null) return
         this.showClientList()
+        this.isShow = false
       })
     },
     // 分配操作
@@ -433,6 +434,7 @@ export default {
       this.$axios.post('/case-cust/assign', data).then(response => {
         if (response === null) return
         this.showClientList()
+        this.isShow = false
       })
     },
     resetFields() {

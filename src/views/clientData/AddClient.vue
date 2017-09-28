@@ -94,6 +94,7 @@ export default {
       console.log('caseid', this.caseId)
       this.$axios.post('/ext-user/worker-list', { caseId: this.caseId }).then(response => {
         if (response === null) return
+        this.extUserList = []
         for (const items in response.data) {
           this.extUserList.push(response.data[items])
         }
