@@ -152,7 +152,7 @@ export default {
       userListTitle: [
         {
           type: 'selection',
-          width: 60,
+          width: 70,
           align: 'center'
         },
         {

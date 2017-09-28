@@ -1,17 +1,17 @@
 <template>
 <div class="layout__content">
-  <div class="layout__header">
-    <h2 class="layout__header-title">组织</h2>
-    <div class="layout__header-tool">
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addOrganization" ></Button>
-    </div>
-  </div>
+  <ebook-header
+    header-title="组织"
+    :addBtn="true"
+    @onAdd="addOrganization">
+  </ebook-header>
+
   <div class="layout__body">
     <div class="ebook-tree" v-for="(item, index) in treeData" :key="index" :tree-data="item" >
       <ul class="ebook-tree__children">
         <div class="ebook-tree__root">
           <h2 class="ebook-tree__root--title" @click="editChild(index)">{{item.name}}</h2>
-          <i class="iconfont icon-tianjia ebook-tree__root--add" @click="addNewChild(index)" ></i>
+          <i class="iconfont icon-tianjia ebook-tree__root--add" @click="addNewChild(index)"></i>
         </div>
         <ebook-tree-node v-for="(item, index) in item.children" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree-node>
       </ul>
@@ -49,6 +49,7 @@
 <script>
 // import EbookTree from 'components/EbookTree'
 import EbookTreeNode from 'components/EbookTreeNode'
+import EbookHeader from 'components/EbookHeader'
 
 export default {
   name: 'Organization',
@@ -194,7 +195,8 @@ export default {
     }
   },
   components: {
-    EbookTreeNode
+    EbookTreeNode,
+    EbookHeader
   }
 }
 

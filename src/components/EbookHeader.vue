@@ -23,6 +23,7 @@
 
     <Button v-if="uploadBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="upload" @click="onUpload"></Button>
     <Button v-if="linkBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onLink"></Button>
+    <Button v-if="keyBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="key" @click="onKey"></Button>
     <Button v-if="lockBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="locked" @click="onLock"></Button>
     <Button v-if="deleteBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="onDelete"></Button>
     <Button v-if="addBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="onAdd"></Button>
@@ -90,6 +91,11 @@ export default {
       type: Boolean,
       default: false
     },
+    // 解锁按钮
+    keyBtn: {
+      type: Boolean,
+      default: false
+    },
     // 解除关系按钮
     cutBtn: {
       type: Boolean,
@@ -141,6 +147,10 @@ export default {
     // 点击'禁用'
     onLock() {
       this.$emit('onLock')
+    },
+    // 点击'解锁'
+    onKey() {
+      this.$emit('onKey')
     },
     // 点击'解除关系'
     onCutRelation() {

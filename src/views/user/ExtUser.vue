@@ -28,16 +28,17 @@
     :uploadBtn="true"
     :addBtn="true"
     :lockBtn="true"
-    :deleteBtn="isTrash"
+    :keyBtn="true"
     @onDateSearch="dateSearch"
     @onTextSearch="textSearch"
     @onUpload="showUploadModal"
     @onAdd="showAddUserModal"
-    @onDelete="removeUser(selectedId)">
+    @onKey="unlockUser(selectedId)"
+    @onLock="lockUser(selectedId)">
   </ebook-header>
 
   <div class="layout__body">
-    <Table class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
+    <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
     <Spin size="large" fix v-if="false"></Spin>
     <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
   </div>
@@ -56,21 +57,21 @@
       <Form-item label="电话号码：" prop="mobile">
         <Input v-model="userInfo.mobile" placeholder="请您输入..." :maxlength="11"></Input>
       </Form-item>
-      <Form-item label="密码：" prop="password">
+      <!-- <Form-item label="密码：" prop="password">
         <Input v-model="userInfo.password" type="password" disabled></Input>
-        <!-- <Input v-model="userInfo.password" placeholder="123456（或随机生成）"></Input> -->
-      </Form-item>
-      <Form-item label="E-mail：" prop="email">
+        <Input v-model="userInfo.password" placeholder="123456（或随机生成）"></Input>
+      </Form-item> -->
+      <!-- <Form-item label="E-mail：" prop="email">
         <Input v-model="userInfo.email" placeholder="请您输入" :maxlength="64"></Input>
-      </Form-item>
+      </Form-item> -->
       <Form-item label="权限：" prop="roleGroupId">
         <Select placeholder="请选择权限" v-model="userInfo.roleGroupId">
           <Option v-for="(item, index) in authList" :key="index" :value="item.id">{{item.name}}</Option>
         </Select>
       </Form-item>
-      <Form-item label="工号：" prop="no">
+      <!-- <Form-item label="工号：" prop="no">
         <Input v-model="userInfo.no" placeholder="请您输入" :maxlength="10"></Input>
-      </Form-item>
+      </Form-item> -->
       <Form-item label="案场：" prop="caseId">
         <Select v-model="userInfo.caseId" placeholder="请您选择..." @on-change="onChangeCaseId">
           <Option v-for="items in caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
@@ -106,6 +107,14 @@
       <Button type="primary" size="large" :loading="uploadModal.saveLoading" @click="saveUser()">完成</Button>
     </div>
   </Modal>
+
+  <Modal
+    v-model="confirmModal.show"
+    :closable="false"
+    @on-ok="saveEdit"
+    width="500">
+    <p class="modal-style">{{confirmModal.title}}</p>
+  </Modal>
 </div>
 </template>
 <script>
@@ -120,18 +129,22 @@ export default {
         callback()
       }
     }
-    const EmailVaild = (rule, value, callback) => {
-      if (!value) {
-        callback()
-        return
-      }
-      if (!/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(value)) {
-        callback(new Error('邮箱格式不正确'))
-      } else {
-        callback()
-      }
-    }
+    // const EmailVaild = (rule, value, callback) => {
+    //   if (!value) {
+    //     callback()
+    //     return
+    //   }
+    //   if (!/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(value)) {
+    //     callback(new Error('邮箱格式不正确'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
+      confirmModal: {
+        show: false,
+        title: ''
+      },
       userModal: {
         show: false,        // 是否显示编辑和查看userModal
         saveLoading: false, // 是否正在保存用户中
@@ -146,7 +159,7 @@ export default {
       endDate: '',      // 结束时间
       name: '',         // 搜索关键字
       isSearch: false,  // 是否开始条件筛选
-      isTrash: false,   // 是否显示删除按钮
+      isLocked: false,  // 是否点击了禁用
       selectedId: '',   // 选中的用户Id
       pageNo: 1,        // 页码
       total: 20,        // 数据总条数
@@ -175,18 +188,18 @@ export default {
           { required: true, message: '电话号码不能为空', trigger: 'blur' },
           { validator: MobileVaild, trigger: 'blur' }
         ],
-        email: [
-          { validator: EmailVaild, trigger: 'blur' }
-        ],
+        // email: [
+        //   { validator: EmailVaild, trigger: 'blur' }
+        // ],
         password: [
           // { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
         roleGroupId: [
           { required: true, message: '请选择权限', trigger: 'blur' }
         ],
-        no: [
-          { required: true, message: '工号不能为空', trigger: 'blur' }
-        ],
+        // no: [
+        //   { required: true, message: '工号不能为空', trigger: 'blur' }
+        // ],
         caseId: [
           { required: true, message: '案场不能为空', trigger: 'change' }
         ]
@@ -194,7 +207,7 @@ export default {
       userListTitle: [
         {
           type: 'selection',
-          width: 60,
+          width: 70,
           align: 'center'
         },
         {
@@ -203,8 +216,18 @@ export default {
           ellipsis: true
         },
         {
-          title: 'E-mail',
-          key: 'email',
+          title: '案场',
+          key: 'caseName',
+          ellipsis: true
+        },
+        {
+          title: '工号',
+          key: 'no',
+          ellipsis: true
+        },
+        {
+          title: '权限',
+          key: 'roleGroupName',
           ellipsis: true
         },
         {
@@ -229,6 +252,42 @@ export default {
           align: 'center',
           render: (h, params) => {
             const that = this
+            let button = null
+            if (params.row.loginFlag) {
+              button = h('Button', {
+                props: {
+                  type: 'text',
+                  icon: 'locked',
+                  size: 'small'
+                },
+                style: {
+                  color: '#999',
+                  fontSize: '22px'
+                },
+                on: {
+                  click() {
+                    that.lockUser(params.row.id)
+                  }
+                }
+              })
+            } else {
+              button = h('Button', {
+                props: {
+                  type: 'text',
+                  icon: 'key',
+                  size: 'small'
+                },
+                style: {
+                  color: '#999',
+                  fontSize: '22px'
+                },
+                on: {
+                  click() {
+                    that.unlockUser(params.row.id)
+                  }
+                }
+              })
+            }
             return h('div', [
               h('Button', {
                 props: {
@@ -247,56 +306,49 @@ export default {
                   }
                 }
               }),
-              h('Button', {
-                props: {
-                  type: 'text',
-                  icon: 'trash-a',
-                  size: 'small'
-                },
-                style: {
-                  color: '#999',
-                  fontSize: '22px'
-                },
-                on: {
-                  click() {
-                    that.removeUser(params.row.id)
-                  }
-                }
-              })
+              button
             ])
           }
         }
       ],
-      userListData: []
+      userListData: [] // 用户列表
     }
   },
   methods: {
     showUploadModal() {
       this.uploadModal.show = true
     },
+    showConfirmModal(title) {
+      console.log('showConfirmModal')
+      this.confirmModal.title = title
+      this.confirmModal.show = true
+    },
+    saveEdit() {
+      if (this.isLocked) {
+        console.log('点击确定Modal 禁用该用户', this.selectedId)
+        // this.$refs.userListTable.selectAll(false)
+      } else {
+        console.log('点击确定Modal 解锁该用户', this.selectedId)
+      }
+    },
     // 编辑用户改变案场
     onChangeCaseId(id) {
       this.userInfo.caseId = id
     },
-    // 删除用户
-    removeUser(selectedId) {
-      // this.userListData.splice(index, 1)
-      const that = this
-      this.$Modal.confirm({
-        content: '此操作不可恢复，确认删除用户？',
-        onOk: () => {
-          that.$axios.get('/ext-user/del', { params: { id: selectedId } }).then(response => {
-            if (response === null) return
-            that.$Message.success('删除成功')
-            this.userList()
-            this.isTrash = false
-          })
-        }
-      })
+    lockUser(id) {
+      console.log('锁定用户', id)
+      this.selectedId = id
+      this.isLocked = true
+      this.showConfirmModal('是否确定禁用该用户?')
+    },
+    unlockUser(id) {
+      console.log('解锁用户', this.selectedId)
+      this.selectedId = id
+      this.showConfirmModal('是否确定解锁该用户?')
     },
     // 案场列表
     getCaseList() {
-      this.$axios.get('/case/list', { params: { pageNo: 1, pageSize: 1000 } }).then(response => {
+      this.$axios.get('case/list', { params: { pageNo: 1, pageSize: 1000 } }).then(response => {
         if (response === null) return
         this.caseList = response.data.list
       })
@@ -365,9 +417,9 @@ export default {
         id: this.userInfo.id,
         name: this.userInfo.name,
         mobile: this.userInfo.mobile,
-        password: this.userInfo.password,
-        email: this.userInfo.email,
-        no: this.userInfo.no,
+        // password: this.userInfo.password,
+        // email: this.userInfo.email,
+        // no: this.userInfo.no,
         adminFlag: this.userInfo.adminFlag,
         caseId: this.userInfo.caseId,
         roleGroupId: this.userInfo.roleGroupId,
@@ -389,7 +441,6 @@ export default {
     // 监听选中用户
     onSelect(selection) {
       const idList = []
-      this.isTrash = selection.length > 0
       this.selectedId = ''
 
       for (let i = selection.length - 1; i >= 0; i--) {
@@ -447,7 +498,7 @@ export default {
         this.startDate = ''
         this.endDate = ''
       }
-      this.$axios.get('/ext-user/list', { params: data }).then(response => {
+      this.$axios.get('ext-user/list', { params: data }).then(response => {
         if (response === null) return
         console.log('用户列表', response.data)
         this.userListData = []

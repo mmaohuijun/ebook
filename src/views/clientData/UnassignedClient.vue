@@ -104,7 +104,7 @@ export default {
         {
           title: '全选',
           type: 'selection',
-          width: 60,
+          width: 70,
           align: 'center'
         },
         {
