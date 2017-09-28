@@ -63,7 +63,7 @@ export default {
         {
           title: '全选',
           type: 'selection',
-          width: 60,
+          width: 70,
           align: 'center'
         },
         {
@@ -310,11 +310,4 @@ export default {
 }
 </script>
 <style lang="css">
-  .modal-style{
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    padding-top: 15px;
-    color: #4E546C;
-  }
 </style>

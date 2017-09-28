@@ -1,17 +1,17 @@
 <template>
 <div class="layout__content">
-  <div class="layout__header">
-    <h2 class="layout__header-title">组织</h2>
-    <div class="layout__header-tool">
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="addOrganization" ></Button>
-    </div>
-  </div>
+  <ebook-header
+    header-title="组织"
+    :addBtn="true"
+    @onAdd="addOrganization">
+  </ebook-header>
+
   <div class="layout__body">
     <div class="ebook-tree" v-for="(item, index) in treeData" :key="index" :tree-data="item" >
       <ul class="ebook-tree__children">
         <div class="ebook-tree__root">
           <h2 class="ebook-tree__root--title" @click="editChild(index)">{{item.name}}</h2>
-          <i class="iconfont icon-tianjia ebook-tree__root--add" @click="addNewChild(index)" ></i>
+          <i class="iconfont icon-tianjia ebook-tree__root--add" @click="addNewChild(index)"></i>
         </div>
         <ebook-tree-node v-for="(item, index) in item.children" :key="index" :tree-data="item" @openModal="addNewOrg"></ebook-tree-node>
       </ul>
@@ -27,13 +27,13 @@
     <p slot="header">{{modal.title}}</p>
     <Form ref="orgForm" :model="orgForm" :rules="orgRule" :label-width="120" style="width: 380px; padding-top: 20px; margin: 0 auto;">
       <Form-item prop="name" label="组织名称：">
-        <Input v-model="orgForm.name" placeholder="请您输入..." ></Input>
+        <Input v-model="orgForm.name" placeholder="请您输入..." :maxlength="16"></Input>
       </Form-item>
       <Form-item prop="responsable" label="负责人：">
         <Input v-model="orgForm.responsable" placeholder="请您输入..."></Input>
       </Form-item>
       <Form-item prop="mobile" label="联系方式：">
-        <Input v-model="orgForm.mobile" placeholder="请您输入..."></Input>
+        <Input v-model="orgForm.mobile" placeholder="请您输入..." :maxlength="11"></Input>
       </Form-item>
       <Form-item prop="remark" label="描述：">
         <Input v-model="orgForm.remark" placeholder="请您输入..." type="textarea" :autosize="{minRows: 2, maxRows: 5}"></Input>
@@ -49,6 +49,7 @@
 <script>
 // import EbookTree from 'components/EbookTree'
 import EbookTreeNode from 'components/EbookTreeNode'
+import EbookHeader from 'components/EbookHeader'
 
 export default {
   name: 'Organization',
@@ -71,30 +72,7 @@ export default {
         title: ''
       },
       modalShow: false, // 弹框隐藏显示
-      treeData: [
-        // {
-        //   level: 1,
-        //   name: '华东区2',
-        //   children: [
-        //     { level: 2, name: '南京市' },
-        //     { level: 2,
-        //       name: '上海市',
-        //       children: [
-        //         { level: 3,
-        //           name: '上海东',
-        //           children: [
-        //             { level: 4, name: '金地艺境1', ifCase: true },
-        //             { level: 4, name: '金地艺境2', ifCase: true }
-        //           ] },
-        //         { level: 3, name: '上海西' }
-        //       ] }
-        //   ]
-        // },
-        // {
-        //   level: 1,
-        //   name: '华南区2'
-        // }
-      ],
+      treeData: [],
       id: 0 || null, //  组织id 空或0表示新建保存 其他为修改保存
       name: '', //  组织名称 必填
       parentId: 0, // 上级组织 0表示自己为第一级
@@ -217,7 +195,8 @@ export default {
     }
   },
   components: {
-    EbookTreeNode
+    EbookTreeNode,
+    EbookHeader
   }
 }
 

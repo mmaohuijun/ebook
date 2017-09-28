@@ -16,7 +16,9 @@ export default {
     ...mapGetters([
       'loadingStatus',
       'ifShowErrorMsg',
-      'errorMsgText'
+      'errorMsgText',
+      'ifShowSuccessMsg',
+      'successMsgText'
     ])
   },
   watch: {
@@ -34,6 +36,10 @@ export default {
         content: this.errorMsgText,
         duration: 3
       })
+    },
+    ifShowSuccessMsg(flag) {
+      if (!flag) return
+      this.$Message.success(this.successMsgText)
     }
   }
 }
