@@ -19,14 +19,14 @@
          <Form-item label="电话号码：">
            <Input v-model="addForm.mobile"></Input>
          </Form-item>
-         <Form-item label="顾问：" v-if="conShow">
-           <Select v-model="addForm.consultant" @on-change="consultChange">
-             <Option v-for="item in extUserList" :value="item.id" :key="item.id">{{item.label}}</Option>
-           </Select>
-         </Form-item>
          <Form-item label="案场：" v-if="caseShow">
            <Select v-model="addForm.case" @on-change="caseChange">
-             <Option v-for="item in caseList" :value="item.id" :key="item.id">{{item.label}}</Option>
+             <Option v-for="item in caseList" :value="item.id" :key="item.id">{{item.name}}</Option>
+           </Select>
+         </Form-item>
+         <Form-item label="顾问：" v-if="conShow">
+           <Select v-model="addForm.consultant" @on-change="consultChange">
+             <Option v-for="item in extUserList" :value="item.id" :key="item.id">{{item.name}}</Option>
            </Select>
          </Form-item>
          <Form-item>
@@ -56,8 +56,6 @@ export default {
       caseList: [],
       conShow: false,
       caseShow: false,
-      isOut: false, // 是否为外部用户
-      isOutAdmin: false, // 是否为外部用户+管理员
       consultantId: '', // 被选中的顾问id
       caseId: '' // 被选中的案场id
     }
@@ -65,30 +63,22 @@ export default {
   methods: {
     // 获取顾问列表： 工号+姓名
     getExtUserList() {
-      const data = {
-        pageNo: this.pageNo,
-        pageSize: this.pageSize
-      }
-      this.$axios.get('/ext-user/list', { params: data }).then(response => {
+      // this.addData = {
+      //   gender: this.addForm.gender
+      //   name: this.addForm.name
+      //   mobile: this.addForm.mobile
+      // }
+      this.$axios.post('/ext-user/worker-list', this.caseId).then(response => {
         if (response === null) return
-        this.extUserList = []
-        for (const items of response.data.list) {
-          this.extUserList.push({ id: items.id, label: items.no + items.name })
-        }
-        console.log('extUserList', this.extUserList)
       })
     },
     // 获取案场列表： 案场id+案场名
     getCaseList() {
-      const data = {
-        pageNo: this.pageNo,
-        pageSize: this.pageSize
-      }
-      this.$axios.get('/case/list', { params: data }).then(response => {
+      this.$axios.post('case/shortlist').then(response => {
         if (response === null) return
         this.caseList = []
-        for (const items of response.data.list) {
-          this.caseList.push({ id: items.id, label: items.name })
+        for (const items in response.data) {
+          this.caseList.push(response.data[items])
         }
         console.log('caseList', this.caseList)
       })
@@ -102,6 +92,12 @@ export default {
     caseChange(caseId) {
       this.caseId = caseId
       console.log('caseid', this.caseId)
+      this.$axios.post('/ext-user/worker-list', { caseId: this.caseId }).then(response => {
+        if (response === null) return
+        for (const items in response.data) {
+          this.extUserList.push(response.data[items])
+        }
+      })
     },
     // 判断身份 控制显示
     judgeIdentity() {
@@ -116,6 +112,13 @@ export default {
           this.conShow = false
           this.caseShow = false
         }
+        // 直接调用list-worker
+        this.$axios.post('/ext-user/worker-list').then(response => {
+          if (response === null) return
+          for (const items in response.data) {
+            this.extUserList.push(response.data[items])
+          }
+        })
       } else {
         // 内部用户
         this.conShow = true
@@ -132,11 +135,12 @@ export default {
         mobile: this.addForm.mobile
       }
       if (this.conShow === true && this.caseShow === false) {
-        data.consultantId = this.consultantId
+        data.consultantId = this.consultanttantId
       } else if (this.conShow === true && this.caseShow === true) {
         data.consultantId = this.consultantId
         data.caseId = this.caseId
       }
+      console.log('result data', data)
       this.$axios.post('case-cust/add', data).then(response => {
         if (response === null) return
         this.$Message.success('提交成功！')
