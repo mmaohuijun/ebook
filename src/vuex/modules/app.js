@@ -95,7 +95,9 @@ const app = {
     hasLogin: false, // 是否登录
     isLoading: false, // 加载中...
     ifShowErrorMsg: false,
+    ifShowSuccessMsg: false,
     errorMsgText: '',
+    successMsgText: '',
     firstRoute: '',
     authHasChange: false,
     showAuthAlert: false,
@@ -134,6 +136,13 @@ const app = {
       state.errorMsgText = text
       setTimeout(() => {
         state.ifShowErrorMsg = false
+      }, 3000)
+    },
+    SHOW_SUCCESS_MSG(state, text) {
+      state.ifShowSuccessMsg = true
+      state.successMsgText = text
+      setTimeout(() => {
+        state.ifShowSuccessMsg = false
       }, 3000)
     }
   },
@@ -182,6 +191,9 @@ const app = {
     },
     showErrorMsg({ commit }, text) {
       commit('SHOW_ERROR_MSG', text)
+    },
+    showSuccessMsg({ commit }, text) {
+      commit('SHOW_SUCCESS_MSG', text)
     }
   }
 }

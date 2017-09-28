@@ -64,9 +64,9 @@
           <Option v-for="(item, index) in authList" :key="index" :value="item.id">{{item.name}}</Option>
         </Select>
       </Form-item>
-      <Form-item label="工号：" prop="no">
+      <!-- <Form-item label="工号：" prop="no">
         <Input v-model="userInfo.no" placeholder="请您输入" :maxlength="10"></Input>
-      </Form-item>
+      </Form-item> -->
       <Form-item label="禁用：" prop="loginFlag">
         <i-switch v-model="userInfo.loginFlag"></i-switch>
       </Form-item>
@@ -75,6 +75,14 @@
       <Button type="text" size="large" @click="modal.show = false">取消</Button>
       <Button type="primary" size="large" :loading="modal.saveLoading" @click="saveUser('userInfo')">完成</Button>
     </div>
+  </Modal>
+
+  <Modal
+    v-model="confirmModal.show"
+    :closable="false"
+    @on-ok="sendDeleteRequest"
+    width="500">
+    <p class="modal-style">{{confirmModal.title}}</p>
   </Modal>
 </div>
 </template>
@@ -106,6 +114,10 @@ export default {
         show: false,        // 是否显示编辑和查看modal
         saveLoading: false, // 是否正在保存用户中
         title: ''           // modal的标题
+      },
+      confirmModal: {
+        show: false,
+        title: '是否确定删除该用户?'
       },
       startDate: '',    // 开始时间
       endDate: '',      // 结束时间
@@ -144,10 +156,10 @@ export default {
         ],
         roleGroupId: [
           { required: true, message: '请选择权限', trigger: 'blur' }
-        ],
-        no: [
-          { required: true, message: '工号不能为空', trigger: 'blur' }
         ]
+        // no: [
+        //   { required: true, message: '工号不能为空', trigger: 'blur' }
+        // ]
       },
       userListTitle: [
         {
@@ -228,17 +240,15 @@ export default {
     removeUser(selectedId) {
       console.log('removeUser', selectedId)
       // this.userListData.splice(index, 1)
-      const that = this
-      this.$Modal.confirm({
-        content: '此操作不可恢复，确认删除用户？',
-        onOk: () => {
-          that.$axios.get('/int-user/del', { params: { id: selectedId } }).then(response => {
-            if (response === null) return
-            that.$Message.success('删除成功')
-            this.userList()
-            this.isTrash = false
-          })
-        }
+      this.selectedId = selectedId
+      this.confirmModal.show = true
+    },
+    sendDeleteRequest() {
+      this.$axios.get('int-user/del', { params: { id: this.selectedId } }).then(response => {
+        if (response === null) return
+        this.$Message.success('删除成功')
+        this.userList()
+        this.isTrash = false
       })
     },
     // 新增用户modal
@@ -302,7 +312,7 @@ export default {
         mobile: this.userInfo.mobile,
         password: this.userInfo.password,
         email: this.userInfo.email,
-        no: this.userInfo.no,
+        // no: this.userInfo.no,
         roleGroupId: this.userInfo.roleGroupId,
         loginFlag: !this.userInfo.loginFlag
       }

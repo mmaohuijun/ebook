@@ -326,9 +326,20 @@ export default {
     saveEdit() {
       if (this.isLocked) {
         console.log('点击确定Modal 禁用该用户', this.selectedId)
-        // this.$refs.userListTable.selectAll(false)
+        this.$axios.post('ext-user/lock', { id: this.selectedId }).then(response => {
+          if (response === null) return
+          this.$store.dispatch('showSuccessMsg', response.retMsg)
+          console.log('禁用该用户', response)
+          this.initUserList()
+        })
       } else {
         console.log('点击确定Modal 解锁该用户', this.selectedId)
+        this.$axios.post('ext-user/unlock', { id: this.selectedId }).then(response => {
+          if (response === null) return
+          this.$store.dispatch('showSuccessMsg', response.retMsg)
+          console.log('解锁该用户', response)
+          this.initUserList()
+        })
       }
     },
     // 编辑用户改变案场
@@ -429,7 +440,7 @@ export default {
         if (response === null) return
         this.$Message.success(successText)
         this.name = ''
-        this.userList()
+        this.initUserList()
       })
       this.userModal.show = false
       this.userModal.saveLoading = false
@@ -468,7 +479,7 @@ export default {
       this.name = ''
       this.isSearch = true
       this.pageNo = 1
-      this.userList()
+      this.initUserList()
     },
     // 文本搜索
     textSearch(searchText) {
@@ -477,15 +488,15 @@ export default {
       this.endDate = ''
       this.isSearch = true
       this.pageNo = 1
-      this.userList()
+      this.initUserList()
     },
     // 改变分页
     pageChange(currentPage) {
       this.pageNo = currentPage
-      this.userList()
+      this.initUserList()
     },
     // 获取并渲染用户列表
-    userList() {
+    initUserList() {
       const data = {
         name: this.name || '',
         startDate: this.startDate || '',
@@ -506,11 +517,16 @@ export default {
           this.userListData.push(response.data.list[items])
         }
         this.total = response.data.total
+        this.deselectedAll()
       })
+    },
+    // 取消所有选中
+    deselectedAll() {
+      this.$refs.userListTable.selectAll(false)
     }
   },
   mounted() {
-    this.userList()
+    this.initUserList()
     this.getAuthList()
   },
   watch: {
