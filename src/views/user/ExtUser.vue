@@ -488,12 +488,17 @@ export default {
         this.$store.dispatch('showErrorMsg', '请先修改错误!')
         return
       }
+      if (!this.upload.success) {
+        this.$store.dispatch('showErrorMsg', '请先上传文件!')
+        return
+      }
       this.upload.saveLoading = true
       this.$axios.post('ext-user/batch-save').then(response => {
         if (response === null) return
         console.log('批量导入保存', response)
         this.$store.dispatch('showSuccessMsg', '上传成功!')
-        _.delay(this.hideModal, 1000)
+        _.delay(this.hideModal, 500)
+        this.initUserList()
       })
     },
     showUploadModal() {
@@ -639,6 +644,7 @@ export default {
       this.upload.modalShow = false
       this.upload.file = null
       this.upload.previewList = []
+      this.upload.success = false
       this.resetFields('upload')
     },
     // 清空用户信息
