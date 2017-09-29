@@ -253,10 +253,15 @@ export default {
         pageSize: this.pageSize
       }
       console.log(data)
+      // if (!this.isSearch) {
+      //   this.name = ''
+      //   this.startDate = ''
+      //   this.endDate = ''
+      // }
       if (!this.isSearch) {
-        this.name = ''
-        this.startDate = ''
-        this.endDate = ''
+        data.name = ''
+        data.startDate = ''
+        data.endDate = ''
       }
       this.$axios.post('/case-cust/caller-list', data).then(response => {
         if (response === null) return
@@ -289,6 +294,7 @@ export default {
           // this.clientListData.splice(index, 1)
           this.modal1.show = false
           this.clicked1 = false
+          this.isSearch = false
           this.showClientList()
         })
       }
@@ -309,6 +315,7 @@ export default {
           if (response === null) return
           this.modal2.show = false
           this.clicked2 = false
+          this.isSearch = false
           this.showClientList()
         })
       }

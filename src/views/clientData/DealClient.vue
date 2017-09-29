@@ -245,11 +245,10 @@ export default {
         pageNo: this.pageNo || 1,
         pageSize: this.pageSize
       }
-      console.log(data)
       if (!this.isSearch) {
-        this.name = ''
-        this.startDate = ''
-        this.endDate = ''
+        data.name = ''
+        data.startDate = ''
+        data.endDate = ''
       }
       this.$axios.post('/case-cust/deal-list', data).then(response => {
         if (response === null) return
@@ -291,12 +290,14 @@ export default {
       if (this.modal.isDelete) {
         this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
           if (response === null) return
+          this.isSearch = false
           this.showClientList()
           this.isShow = false
         })
       } else {
         this.$axios.post('/case-cust/assign-cancel', { id: this.id }).then(response => {
           if (response == null) return
+          this.isSearch = false
           this.showClientList()
           this.isShow = false
         })

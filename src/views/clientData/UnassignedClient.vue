@@ -99,7 +99,7 @@ export default {
       isSearch: false, // 是否开始条件筛选
       pageNo: 1,
       total: 20,
-      pageSize: 20,
+      pageSize: 1,
       clientListTitle: [
         {
           title: '全选',
@@ -304,12 +304,15 @@ export default {
         pageNo: this.pageNo || 1,
         pageSize: this.pageSize
       }
-      console.log(data)
+      console.log('name', data)
       if (!this.isSearch) {
-        this.name = ''
-        this.startDate = ''
-        this.endDate = ''
+        console.log('此时清空搜索栏')
+        data.name = ''
+        data.startDate = ''
+        data.endDate = ''
       }
+      console.log('data', data)
+      console.log('name', this.name)
       this.$axios.post('/case-cust/unassigned-list', data).then(response => {
         if (response === null) return
         this.clientListData = []
@@ -425,6 +428,7 @@ export default {
     delete() {
       this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
         if (response === null) return
+        this.isSearch = false
         this.showClientList()
         this.isShow = false
       })
@@ -433,6 +437,7 @@ export default {
     distribute(data) {
       this.$axios.post('/case-cust/assign', data).then(response => {
         if (response === null) return
+        this.isSearch = false
         this.showClientList()
         this.isShow = false
       })
