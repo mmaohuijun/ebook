@@ -67,6 +67,10 @@
       font-size: 18px;
       color: #ff5454;
     }
+    &_success {
+      font-size: 18px;
+      color: #1cea35;
+    }
 
     table {
       width: 100%;
@@ -173,15 +177,16 @@
     class="custom__uploadmodal"
     on-cancel="resetFields('uploadInfo')"
     v-model="upload.modalShow"
+    :mask-closable="false"
     :closable="false"
     width="560">
     <p slot="header">批量导入外部用户</p>
-    <Form class="modal-form" ref="uploadInfo" :model="upload" :rules="ruleValidate">
+    <Form class="modal-form" ref="upload" :model="upload" :rules="ruleValidate">
       <p class="custom__uploadmodal_text">您可以先下载模板，填写完成后，上传文件。</p>
       <Form-item>
         <span class="custom__uploadmodal_btn" @click.stop.prevent="downloadDemo">下载模板</span>
       </Form-item>
-      <Form-item prop="caseId" style="width: 320px">
+      <Form-item prop="caseId" style="width: 320px" v-if="userAdminFlag">
         <Select v-model="upload.caseId" placeholder="请先选择案场" @on-change="onChangeCaseId">
           <Option v-for="items in upload.caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
         </Select>
@@ -201,9 +206,10 @@
       </Form-item>
     </Form>
     
-    <div class="custom__uploadmodal_preview" v-if="upload.previewList.length !== 0">
+    <div class="custom__uploadmodal_preview">
+      <p class="custom__uploadmodal_preview_success" v-if="upload.success">您的文件已上传完成，请点击完成按钮进行保存。</p>
       <p class="custom__uploadmodal_preview_error" v-if="upload.previewHasError">以下文件出现错误，请修改后重新上传。</p>
-      <div class="custom__uploadmodal_preview_table">
+      <div class="custom__uploadmodal_preview_table" v-if="upload.previewList.length !== 0">
         <table>
           <tr>
             <th>姓名</th>
@@ -217,8 +223,8 @@
       </div>
     </div>
     <div slot="footer">
-      <Button type="text" size="large" @click="upload.modalShow = false">取消</Button>
-      <Button type="primary" size="large" :loading="upload.saveLoading" @click="saveUser()">完成</Button>
+      <Button type="text" size="large" @click="hideModal">取消</Button>
+      <Button type="primary" size="large" :loading="upload.saveLoading" @click="saveUpload">完成</Button>
     </div>
   </Modal>
 
@@ -262,7 +268,8 @@ export default {
         file: null,
         name: '',
         previewList: [],
-        previewHasError: false
+        previewHasError: false,
+        success: false
       },
       startDate: '',    // 开始时间
       endDate: '',      // 结束时间
@@ -424,6 +431,9 @@ export default {
     }
   },
   computed: {
+    userAdminFlag() {
+      return this.$store.getters.adminFlag
+    },
     uploadAction() {
       return `${process.env.BASE_URL}ext-user/batch-import`
     }
@@ -436,28 +446,54 @@ export default {
     },
     // 下载模板
     downloadDemo() {
-      console.log('downloadDemo')
-      this.$axios.post('ext-user/download-demo').then(response => {
+      window.open(`${process.env.BASE_URL}ext-user/download-demo`)
+    },
+    // 校验上传的data
+    validateUploadData() {
+      let flagV = true
+      if (this.userAdminFlag) { // 如果是内部用户则要验证是否有选择案场
+        this.$refs.upload.validate(valid => {
+          flagV = valid
+        })
+      }
+      if (!flagV) return
+      const formData = new FormData()
+      formData.append('file', this.upload.file)
+      formData.append('caseId', this.upload.caseId)
+      return formData
+    },
+    // 点击'上传'
+    goUpload() {
+      const requestData = this.validateUploadData()
+      if (!requestData) return
+
+      this.upload.previewList = []
+      this.upload.previewHasError = false
+      this.$axios.post('ext-user/batch-import', requestData).then(response => {
         if (response === null) return
+        console.log('上传文件!', response)
+        if (response.data) {
+          this.upload.previewList = response.data
+          this.upload.previewHasError = true
+          return
+        }
+        this.upload.success = true
         this.$store.dispatch('showSuccessMsg', response.retMsg)
       })
     },
-    goUpload() {
-      const formData = new FormData()
-      formData.append('file', this.upload.file)
-      formData.append('caseId', '1')
-      console.log('goUpload', formData)
-      this.$axios.post('ext-user/batch-import', formData).then(response => {
+    // 上传成功点击'完成'
+    saveUpload() {
+      console.log('saveUpload')
+      if (this.upload.previewHasError) {
+        this.$store.dispatch('showErrorMsg', '请先修改错误!')
+        return
+      }
+      this.upload.saveLoading = true
+      this.$axios.post('ext-user/batch-save').then(response => {
         if (response === null) return
-        console.log('上传文件!', response)
-        this.upload.previewList = response.data
-        _.each(response.data, item => {
-          if (item.mobileHasError || item.nameHasError) {
-            this.upload.previewHasError = true
-            return
-          }
-        })
-        // this.$store.dispatch('showSuccessMsg', response.retMsg)
+        console.log('批量导入保存', response)
+        this.$store.dispatch('showSuccessMsg', '上传成功!')
+        _.delay(this.hideModal, 1000)
       })
     },
     showUploadModal() {
@@ -593,8 +629,17 @@ export default {
         this.name = ''
         this.initUserList()
       })
-      this.userModal.show = false
+      this.hideModal()
+    },
+    hideModal() {
       this.userModal.saveLoading = false
+      this.userModal.show = false
+      this.resetFields('userInfo')
+      this.upload.saveLoading = false
+      this.upload.modalShow = false
+      this.upload.file = null
+      this.upload.previewList = []
+      this.resetFields('upload')
     },
     // 清空用户信息
     resetFields(name) {
@@ -677,15 +722,9 @@ export default {
     }
   },
   mounted() {
+    console.log('mounted', this.userAdminFlag)
     this.initUserList()
     this.getAuthList()
-  },
-  watch: {
-    'userModal.show'(val, oldVal) {
-      if (!val) {
-        this.resetFields('userInfo')
-      }
-    }
   },
   components: {
     EbookHeader
