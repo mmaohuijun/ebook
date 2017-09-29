@@ -45,6 +45,7 @@ export default {
       return components
     },
     handleChecked(id) {
+      console.log('处理选中', id)
       // 获取所有的树形节点
       const allEbookTreeNode = this.findComponentsDownward(this, 'EbookTreeNode')
       _.each(allEbookTreeNode, item => {
@@ -60,7 +61,7 @@ export default {
   mounted() {
     // 监听on-checked事件
     this.$on('on-checked', id => {
-      console.log('监听到checked', id)
+      // console.log('监听到checked', id)
       this.handleChecked(id)
     })
   }

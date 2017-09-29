@@ -21,13 +21,22 @@
 
     <Input v-if="textSearch" class="custom__search" icon="search" v-model="seachText" :placeholder="placeholder" @on-click="onTextSearch"></Input>
 
-    <Button v-if="uploadBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="upload" @click="onUpload"></Button>
+    <span v-if="uploadBtn" class="custom__circle-btn--white ivu-btn ivu-btn-primary ivu-btn-circle ivu-btn-icon-only" @click="onUpload">
+      <i class="iconfont icon-piliangshangchuan"></i>
+    </span>
+    
+    <!-- <Button v-if="uploadBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="upload" @click="onUpload"></Button> -->
     <Button v-if="linkBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onLink"></Button>
     <Button v-if="keyBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="key" @click="onKey"></Button>
-    <Button v-if="lockBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="locked" @click="onLock"></Button>
+    <!-- <Button v-if="lockBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="locked" @click="onLock"></Button> -->
+    <span v-if="lockBtn" class="custom__circle-btn--white ivu-btn ivu-btn-primary ivu-btn-circle ivu-btn-icon-only" @click="onLock">
+      <i class="iconfont icon-suoding"></i>
+    </span>
     <Button v-if="deleteBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="onDelete"></Button>
-    <Button v-if="addBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="onAdd"></Button>
-
+    <!-- <Button v-if="addBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click="onAdd"></Button> -->
+    <span v-if="addBtn" class="custom__circle-btn--white ivu-btn ivu-btn-primary ivu-btn-circle ivu-btn-icon-only" @click="onAdd">
+      <i class="iconfont icon-tianjia1"></i>
+    </span>
     <Button v-if="cutBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onCutRelation"></Button>
     <Button v-if="disBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onDistributeClient"></Button>
     <Button v-if="delBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="onDeleteClient"></Button>

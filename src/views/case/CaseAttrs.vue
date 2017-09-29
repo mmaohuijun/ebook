@@ -45,8 +45,8 @@
         <Form-item label="栏目名称：" prop="label">
           <Input v-model="attrsGroup.label" placeholder="请输入栏目名称" :maxlength="64"></Input>
         </Form-item>
-        <Form-item label="名称序号：" prop="index">
-          <Input v-model="attrsGroup.index" placeholder="请输入名称序号(数字)" :maxlength="5"></Input>
+        <Form-item label="名称序号：" prop="sort">
+          <Input v-model="attrsGroup.sort" placeholder="请输入名称序号(数字)" :maxlength="5"></Input>
         </Form-item>
         <Form-item label="是否隐藏：" prop="ifHide">
           <i-switch v-model="attrsGroup.ifHide"></i-switch>
@@ -140,13 +140,13 @@ export default {
       attrsGroup: {
         id: '', // 维度分栏id
         label: '', // 维度分栏名称
-        index: 0, // 维度分栏序号
+        sort: 0, // 维度分栏序号
         ifHide: false // 维度分栏是否隐藏
       },
       attrsDetails: {
         id: '', // 详细维度id
         label: '', // 详细维度名称
-        sort: '', // 详细维度序号
+        sort: 0, // 详细维度序号
         require: '', // 详细维度是否必填
         type: '', // 详细维度类型(文本, 选择)
         textType: '', // 详细维度文本类型
@@ -158,7 +158,7 @@ export default {
       backupData: {},
       attrsGroupRules: {
         label: [{ required: true, message: '请输入栏目名称', trigger: 'blur' }],
-        index: [
+        sort: [
           { required: true, message: '请输入栏目序号', trigger: 'blur' },
           { validator: validateNumber, trigger: 'blur' }
         ]
@@ -210,7 +210,7 @@ export default {
         this.hideModal()
         return
       }
-      console.log('this.attrsGroup.index', typeof this.attrsGroup.index, this.attrsGroup.index)
+      console.log('this.attrsGroup.index', typeof this.attrsGroup.sort, this.attrsGroup.sort)
       this.ifShowLoading = true
       if (name === 'attrsGroup') {
         this.saveAttrsGroup()
@@ -224,30 +224,30 @@ export default {
         caseId: this.caseId,
         id: this.attrsGroup.id,
         label: this.attrsGroup.label,
-        sort: this.attrsGroup.index,
+        sort: this.attrsGroup.sort,
         hidden: this.attrsGroup.ifHide
       }
 
       // 验证标识
-      let flagV = false
+      let vFlag = false
 
       this.$refs.attrsGroup.validate(flag => {
-        console.log('validate', flag)
-        flagV = flag
+        console.log('attrsGroup validate', flag, this.attrsGroup.sort)
+        vFlag = flag
       })
 
-      console.log('flagV', flagV)
+      // 编辑状态下点击'完成', 没有更改则隐藏modal
+      if (vFlag && !this.ifNew) {
+        this.hideModal()
+      }
       // 和备份数据做比较, 如果一样则表示没有改动, 返回false
-      return _.isEqual(requestData, this.backupData) || !flagV ? false : requestData
+      return _.isMatch(requestData, this.backupData) || !vFlag ? false : requestData
     },
     // 栏目信息保存（新建、修改）
     saveAttrsGroup() {
       const requestData = this.verifyAttrsGroupData()
-      console.log('saveAttrsGroup', requestData)
-      if (!requestData) {
-        if (!this.ifNew) this.hideModal() // 判断是新建还是编辑
-        return
-      }
+      if (!requestData) return
+
       console.log('saveAttrsGroup', requestData)
       this.$axios.post('case-attr/group-save', requestData).then(response => {
         if (_.isNull(response)) return
@@ -276,14 +276,15 @@ export default {
       this.modalTitle = `${item.label} - 编辑栏目`
       this.attrsGroup.id = item.id
       this.attrsGroup.label = item.label
-      this.attrsGroup.index = item.sort
+      this.attrsGroup.sort = String(item.sort)
       this.attrsGroup.ifHide = item.hidden
-
+      console.log('typeof item.sort', typeof item.sort)
+      console.log('typeof this.attrsGroup.sort', typeof this.attrsGroup.sort)
       // 备份数据
       this.backupData = {
         id: item.id,
         label: item.label,
-        sort: item.sort,
+        sort: String(item.sort),
         hidden: item.hidden
       }
     },
@@ -343,27 +344,26 @@ export default {
           })
         }
       }
-      console.log('详细维度保存', requestData)
 
       let vFlag = false
       this.$refs.attrsDetails.validate(flag => {
-        console.log('attrsDetails validate', flag)
         vFlag = flag
       })
 
+      // 编辑状态下点击'完成', 没有更改则隐藏modal
+      if (vFlag && !this.ifNew) {
+        this.hideModal()
+      }
+
       // 和备份数据做比较, 如果一样则表示没有改动, 返回false
-      return _.isEqual(this.backupData, requestData) || !vFlag ? false : requestData
+      return _.isMatch(requestData, this.backupData) || !vFlag ? false : requestData
     },
     // 详细维度保存（新建、修改）
     saveAttrsDetails() {
       const requestData = this.verifyAttrsDetailsData()
       console.log('详细维度保存（新建、修改）requestData', requestData)
 
-      if (!requestData) {
-        // 编辑状态下点击'完成', 没有更改则隐藏modal
-        if (!this.ifNew) this.hideModal()
-        return
-      }
+      if (!requestData) return
 
       this.$axios.post('case-attr/save', requestData).then(response => {
         if (_.isNull(response)) return
@@ -388,7 +388,7 @@ export default {
       this.attrsGroup.id = ele.groupId
       this.attrsDetails.id = ele.id
       this.attrsDetails.label = ele.label
-      this.attrsDetails.sort = ele.sort
+      this.attrsDetails.sort = String(ele.sort)
       this.attrsDetails.require = ele.required ? '1' : '0'
       this.attrsDetails.type = ele.type
 
@@ -412,7 +412,7 @@ export default {
         id: ele.id,
         groupId: ele.groupId,
         label: ele.label,
-        sort: ele.sort,
+        sort: String(ele.sort),
         required: ele.required ? '1' : '0',
         type: ele.type
       }
@@ -462,7 +462,7 @@ export default {
       this.attrsEditable = true
       this.attrsGroup.id = ''
       this.attrsGroup.label = ''
-      this.attrsGroup.index = ''
+      this.attrsGroup.sort = 0
       this.attrsGroup.ifHide = false
       this.backupData = {}
     },

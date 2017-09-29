@@ -77,8 +77,8 @@
       <ebook-tree ref="ebTree" :tree-data="orgTreeData" @checked="onSelectedOrg"></ebook-tree>
     </div>
     <div slot="footer">
-      <Button type="text" size="large" @click.stop="orgModal = false">取消</Button>
-      <Button type="primary" size="large" @click.stop="orgModalDone()">完成</Button>
+      <Button type="text" size="large" @click.stop="orgModalCancel">取消</Button>
+      <Button type="primary" size="large" @click.stop="orgModalDone">完成</Button>
     </div>
   </Modal>
 </div>
@@ -102,6 +102,7 @@ export default {
       name: '', // 案场名
       address: '', // 案场地址
       officeId: '',  // 所属组织id
+      officeIdBackup: '',
       officeName: '',  // 所属组织名称
       location: { lng: 121.4806, lat: 31.2408 }, // 案场的经纬度
       logoUrl: '', // 案场logo
@@ -134,20 +135,24 @@ export default {
       return
     }
     this.initCaseInfo()
+    this.initOrg()
   },
   methods: {
     // 点击'+'弹出组织选择
     showOrgSelection() {
-      console.log('showOrgSelection', this.officeId)
+      // 选中现在的组织
+      this.$refs.ebTree.handleChecked(this.officeId)
+      this.officeIdBackup = this.officeId
+      this.orgModal = true
+    },
+    // 初始化组织
+    initOrg() {
       this.$axios.get('office/tree').then(response => {
         if (response === null) return
         console.log('组织 response', response)
         const reData = response.data
         this.orgTreeData = reData
       })
-      // 选中现在的组织
-      this.$refs.ebTree.handleChecked(this.officeId)
-      this.orgModal = true
     },
     // 点击组织选择
     onSelectedOrg(id, orgName) {
@@ -157,6 +162,11 @@ export default {
     },
     orgModalDone() {
       console.log('orgModalDone')
+      this.orgModal = false
+    },
+    orgModalCancel() {
+      this.officeId = this.officeIdBackup
+      this.$refs.ebTree.handleChecked(this.officeId)
       this.orgModal = false
     },
     // 初始化案场详情
@@ -191,15 +201,15 @@ export default {
         appSecret: this.appSecret,
         'location.lng': this.location.lng,
         'location.lat': this.location.lat,
-        officeId: this.officeId
+        officeId: Number(this.officeId) || 0
       }
       return data
     },
     // 案场信息 - 点击保存
     saveCaseInfo() {
-      const data = this.getCaseInfoData()
-      console.log('saveCaseInfo', data)
-      this.$axios.get('case/save', { params: data }).then(response => {
+      const requestData = this.getCaseInfoData()
+      console.log('saveCaseInfo', requestData)
+      this.$axios.get('case/save', { params: requestData }).then(response => {
         if (response === null) return
         console.log('案场详情保存 response', response)
         this.$Message.success({
@@ -260,6 +270,7 @@ export default {
       fmData.append('file', this.data2blob(imgDataUrl), `${field}.png`)
       this.imgUpload(fmData)
     },
+    // 图片上传
     imgUpload(data) {
       this.$axios.post('case/img-upload', data).then(response => {
         if (response === null) return
@@ -284,7 +295,6 @@ export default {
 
 #org-modal-wrap {
   width: 750px;
-  height: 466px;
   margin: 11px 29px 0;
   border-radius: 5px;
   background-color: #ffffff;
