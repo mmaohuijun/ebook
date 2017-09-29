@@ -6,6 +6,7 @@ const getters = {
   no: state => state.user.no,
   type: state => state.user.type,
   auth: state => state.user.auth,
+  adminFlag: state => state.user.adminFlag,
   loginName: () => {
     const loginName = $storage.localStorage.getItem('USER_LOGIN_NAME')
     return loginName

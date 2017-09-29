@@ -32,7 +32,7 @@
 </aside>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'SideBar2',
@@ -40,6 +40,13 @@ export default {
     return {}
   },
   computed: {
+    // sideBarMenu() {
+    //   return this.$store.state.app.sideBarMenu
+    // },
+    ...mapState({
+      sideBarMenu: state => state.app.sideBarMenu,
+      sideBarSelect: state => state.app.sideBarSelect
+    }),
     ...mapGetters([
       'hasUserInfo',
       'name',
@@ -47,9 +54,8 @@ export default {
       'no',
       'auth',
       'loginName',
-      'sideBarMenuMap',
-      'sideBarMenu',
-      'sideBarSelect',
+      // 'sideBarMenu',
+      // 'sideBarSelect',
       'BASE_PATH'
     ])
   },

@@ -134,6 +134,7 @@ export default {
     },
     // 点击'搜索'
     onTextSearch() {
+      if (this.seachText.trim() === '') return
       // 把搜索词传出去
       this.$emit('onTextSearch', this.seachText)
     },
@@ -172,7 +173,19 @@ export default {
     // 点击'分配客户'
     onDistributeClient() {
       this.$emit('onDistributeClient')
+    },
+    enterGoSearch(event) {
+      if (event.key === 'Enter' || event.keyCode === 13) {
+        this.onTextSearch()
+      }
     }
+  },
+  created() {
+    // 绑定按键enter登录
+    document.addEventListener('keyup', this.enterGoSearch)
+  },
+  destroyed() {
+    document.removeEventListener('keyup', this.enterGoSearch)
   }
 }
 </script>

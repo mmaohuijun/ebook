@@ -2,7 +2,7 @@
 <div class="case-project">
   <a href="javascript:;" class="case-add-btn" @click="addProject">新建项目</a>
   <Row :gutter="24" class="case-project__list">
-    <Col :md="12" v-for="(items, index) in caseList" :key="index">
+    <Col :md="24" v-for="(items, index) in caseList" :key="index">
       <div class="case-project__item">
         <div class="case-project__line">
           <div class="case-project__label"><span>项目名称</span></div>
@@ -298,7 +298,7 @@ export default {
 }
 .case-project__item {
   position: relative;
-  height: 240px;
+  height: 300px;
   padding: 15px 0 15px 20px;
   margin-bottom: 25px;
   background:#f8f8f8;
@@ -361,7 +361,7 @@ export default {
 }
 
 .case-project__scroll {
-  height: 179px;
+  height: 210px;
   overflow-y: auto;
 }
 

@@ -25,7 +25,7 @@
     :textSearch="true"
     placeholder="姓名／手机号"
     :addBtn="true"
-    :deleteBtn="isTrash"
+    :deleteBtn="true"
     @onDateSearch="dateSearch"
     @onTextSearch="textSearch"
     @onAdd="addModal"
@@ -33,7 +33,7 @@
 
 
   <div class="layout__body">
-    <Table class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
+    <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
     <Spin size="large" fix v-if="false"></Spin>
     <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
   </div>
@@ -64,9 +64,9 @@
           <Option v-for="(item, index) in authList" :key="index" :value="item.id">{{item.name}}</Option>
         </Select>
       </Form-item>
-      <!-- <Form-item label="工号：" prop="no">
+      <Form-item label="工号：" prop="no">
         <Input v-model="userInfo.no" placeholder="请您输入" :maxlength="10"></Input>
-      </Form-item> -->
+      </Form-item>
       <Form-item label="禁用：" prop="loginFlag">
         <i-switch v-model="userInfo.loginFlag"></i-switch>
       </Form-item>
@@ -123,7 +123,6 @@ export default {
       endDate: '',      // 结束时间
       name: '',         // 搜索关键字
       isSearch: false,  // 是否开始条件筛选
-      isTrash: false,   // 是否显示删除按钮
       selectedId: '',   // 选中的用户Id
       pageNo: 1,        // 页码
       total: 20,        // 数据总条数
@@ -156,10 +155,10 @@ export default {
         ],
         roleGroupId: [
           { required: true, message: '请选择权限', trigger: 'blur' }
+        ],
+        no: [
+          { required: true, message: '工号不能为空', trigger: 'blur' }
         ]
-        // no: [
-        //   { required: true, message: '工号不能为空', trigger: 'blur' }
-        // ]
       },
       userListTitle: [
         {
@@ -248,7 +247,6 @@ export default {
         if (response === null) return
         this.$Message.success('删除成功')
         this.userList()
-        this.isTrash = false
       })
     },
     // 新增用户modal
@@ -271,7 +269,7 @@ export default {
     },
     // 修改用户modal
     editModal(userId) {
-      this.$axios.get('/int-user/detail', { params: { id: userId } }).then(response => {
+      this.$axios.get('int-user/detail', { params: { id: userId } }).then(response => {
         if (response === null) return
         console.log('修改用户', response)
         for (const items in response.data) {
@@ -312,11 +310,11 @@ export default {
         mobile: this.userInfo.mobile,
         password: this.userInfo.password,
         email: this.userInfo.email,
-        // no: this.userInfo.no,
+        no: this.userInfo.no,
         roleGroupId: this.userInfo.roleGroupId,
         loginFlag: !this.userInfo.loginFlag
       }
-      this.$axios.get('/int-user/save', { params: data }).then(response => {
+      this.$axios.post('int-user/save', data).then(response => {
         if (response === null) return
         this.$Message.success(successText)
         this.name = ''
@@ -332,7 +330,6 @@ export default {
     // 监听选中用户
     onSelect(selection) {
       const idList = []
-      this.isTrash = selection.length > 0
       this.selectedId = ''
 
       for (let i = selection.length - 1; i >= 0; i--) {
@@ -390,14 +387,19 @@ export default {
         this.startDate = ''
         this.endDate = ''
       }
-      this.$axios.get('/int-user/list', { params: data }).then(response => {
+      this.$axios.post('int-user/list', data).then(response => {
         if (response === null) return
         this.userListData = []
         for (const items in response.data.list) {
           this.userListData.push(response.data.list[items])
         }
         this.total = response.data.total
+        this.deselectedAll()
       })
+    },
+    // 取消所有选中
+    deselectedAll() {
+      this.$refs.userListTable.selectAll(false)
     }
   },
   mounted() {

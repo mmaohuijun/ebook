@@ -120,22 +120,19 @@ export default {
     }
   },
   computed: {
-    treeOnShow() {
-      return
-    },
     ...mapGetters([
       'caseId',
       'BASE_PATH'
     ])
   },
   mounted() {
+    this.initOrg()
     if (this.caseId === '0') {
       // 新建案场
       this.clearAllData()
       return
     }
     this.initCaseInfo()
-    this.initOrg()
   },
   methods: {
     // 点击'+'弹出组织选择
