@@ -5,17 +5,96 @@
   border-color: #4e546c;
 }
 
-.custom__uploadmodal_text {
-  width: 320px;
-  height: 22px;
-  margin-bottom: 24px;
-  font-family: PingFangSC;
-  font-size: 16px;
-  font-weight: 500;
-  text-align: left;
-  color: #4e546c;
-}
+.custom__uploadmodal {
+  &_text {
+    width: 320px;
+    height: 22px;
+    margin-bottom: 24px;
+    font-family: PingFangSC;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    color: #4e546c;
+  }
+  &_btn {
+    display: block;
+    float: left;
+    width: 120px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 4px;
+    background-color: #4e546c;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+  }
 
+  .ivu-btn {
+    height: 32px;
+    line-height: 20px;
+    font-size: 16px;
+    &>.ivu-icon+span {
+      color: #111;
+    }
+  }
+
+  .ivu-btn:hover {
+    &>.ivu-icon+span {
+      color: #57a3f3;
+    }
+  }
+
+  .ivu-upload {
+    float: left;
+    height: 32px;
+    margin-right: 10px;
+  }
+
+  &_preview {
+    width: 400px;
+    margin-left: 70px;
+    overflow: hidden;
+    
+    &_table {
+      height: 300px;
+      padding: 10px 15px;
+      border: solid 1px #979797;
+      overflow-y: scroll;
+    }
+
+    &_error {
+      font-size: 18px;
+      color: #ff5454;
+    }
+
+    table {
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+
+      th {
+        font-size: 16px;
+        font-weight: 500;
+        color: #6f7387;
+      }
+
+      tr {
+        height: 30px;
+        line-height: 30px;
+        border-bottom: solid 1px #d7d7d7
+      }
+
+      td {
+        font-size: 14px;
+        color: #898989;
+      }
+      td.error_text {
+        color: #ea1c1c;
+      }
+    }
+  }
+}
 </style>
 <template>
 <div class="layout__content">
@@ -91,20 +170,55 @@
   </Modal>
 
   <Modal
+    class="custom__uploadmodal"
     on-cancel="resetFields('uploadInfo')"
-    v-model="uploadModal.show"
+    v-model="upload.modalShow"
     :closable="false"
     width="560">
     <p slot="header">批量导入外部用户</p>
-    <Form :label-width="120" class="modal-form">
+    <Form class="modal-form" ref="uploadInfo" :model="upload" :rules="ruleValidate">
       <p class="custom__uploadmodal_text">您可以先下载模板，填写完成后，上传文件。</p>
-      <Button class="custom__uploadmodal custom__circle-btn--upload" shape="circle" type="ghost" icon="ios-upload-outline"></Button>
-      <!-- <Icon type="ios-upload-outline"></Icon>
-      <Icon type="ios-download-outline"></Icon> -->
+      <Form-item>
+        <span class="custom__uploadmodal_btn" @click.stop.prevent="downloadDemo">下载模板</span>
+      </Form-item>
+      <Form-item prop="caseId" style="width: 320px">
+        <Select v-model="upload.caseId" placeholder="请先选择案场" @on-change="onChangeCaseId">
+          <Option v-for="items in upload.caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
+        </Select>
+      </Form-item>
+      <Form-item>
+        <div style="overflow: hidden;">
+          <Upload 
+            :before-upload="handleUpload"
+            :action="uploadAction">
+            <Button type="ghost" icon="ios-cloud-upload-outline">选择要上传的文件</Button>
+          </Upload>
+          <span type="text" class="custom__uploadmodal_btn" v-if="upload.file !== null" @click="goUpload" :loading="upload.saveLoading">{{ upload.saveLoading ? '上传中' : '点击上传' }}</span>
+        </div>
+        
+        <p v-if="upload.file !== null">待上传文件：{{ upload.file.name }}
+        </p>
+      </Form-item>
     </Form>
+    
+    <div class="custom__uploadmodal_preview" v-if="upload.previewList.length !== 0">
+      <p class="custom__uploadmodal_preview_error" v-if="upload.previewHasError">以下文件出现错误，请修改后重新上传。</p>
+      <div class="custom__uploadmodal_preview_table">
+        <table>
+          <tr>
+            <th>姓名</th>
+            <th>电话</th>
+          </tr>
+          <tr v-for="(item, index) in upload.previewList" :key="index">
+            <td :class="item.nameHasError ? 'error_text' : ''">{{item.name}}</td>
+            <td :class="item.mobileHasError ? 'error_text' : ''">{{item.mobile}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
     <div slot="footer">
-      <Button type="text" size="large" @click="uploadModal.show = false">取消</Button>
-      <Button type="primary" size="large" :loading="uploadModal.saveLoading" @click="saveUser()">完成</Button>
+      <Button type="text" size="large" @click="upload.modalShow = false">取消</Button>
+      <Button type="primary" size="large" :loading="upload.saveLoading" @click="saveUser()">完成</Button>
     </div>
   </Modal>
 
@@ -129,17 +243,6 @@ export default {
         callback()
       }
     }
-    // const EmailVaild = (rule, value, callback) => {
-    //   if (!value) {
-    //     callback()
-    //     return
-    //   }
-    //   if (!/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(value)) {
-    //     callback(new Error('邮箱格式不正确'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
     return {
       confirmModal: {
         show: false,
@@ -150,10 +253,16 @@ export default {
         saveLoading: false, // 是否正在保存用户中
         title: ''           // userModal的标题
       },
-      uploadModal: {
-        show: false,        // 是否显示编辑和查看modal
+      upload: {
+        modalShow: false,        // 是否显示编辑和查看modal
         saveLoading: false, // 是否正在保存用户中
-        title: ''           // modal的标题
+        title: '',           // modal的标题
+        caseId: '',
+        caseList: [],
+        file: null,
+        name: '',
+        previewList: [],
+        previewHasError: false
       },
       startDate: '',    // 开始时间
       endDate: '',      // 结束时间
@@ -314,9 +423,50 @@ export default {
       userListData: [] // 用户列表
     }
   },
+  computed: {
+    uploadAction() {
+      return `${process.env.BASE_URL}ext-user/batch-import`
+    }
+  },
   methods: {
+    handleUpload(file) {
+      console.log('handleUpload', file)
+      this.upload.file = file
+      return false
+    },
+    // 下载模板
+    downloadDemo() {
+      console.log('downloadDemo')
+      this.$axios.post('ext-user/download-demo').then(response => {
+        if (response === null) return
+        this.$store.dispatch('showSuccessMsg', response.retMsg)
+      })
+    },
+    goUpload() {
+      const formData = new FormData()
+      formData.append('file', this.upload.file)
+      formData.append('caseId', '1')
+      console.log('goUpload', formData)
+      this.$axios.post('ext-user/batch-import', formData).then(response => {
+        if (response === null) return
+        console.log('上传文件!', response)
+        this.upload.previewList = response.data
+        _.each(response.data, item => {
+          if (item.mobileHasError || item.nameHasError) {
+            this.upload.previewHasError = true
+            return
+          }
+        })
+        // this.$store.dispatch('showSuccessMsg', response.retMsg)
+      })
+    },
     showUploadModal() {
-      this.uploadModal.show = true
+      this.upload.modalShow = true
+      this.$axios.post('case/shortlist').then(response => {
+        if (response === null) return
+        console.log('案场列表（供外部用户、内部用户操作客户模块数据时的案场选择）', response)
+        this.upload.caseList = response.data
+      })
     },
     showConfirmModal(title) {
       console.log('showConfirmModal')
@@ -355,6 +505,7 @@ export default {
     unlockUser(id) {
       console.log('解锁用户', this.selectedId)
       this.selectedId = id
+      this.isLocked = false
       this.showConfirmModal('是否确定解锁该用户?')
     },
     // 案场列表
@@ -428,7 +579,7 @@ export default {
         id: this.userInfo.id,
         name: this.userInfo.name,
         mobile: this.userInfo.mobile,
-        // password: this.userInfo.password,
+        password: this.userInfo.password,
         // email: this.userInfo.email,
         // no: this.userInfo.no,
         adminFlag: this.userInfo.adminFlag,

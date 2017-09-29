@@ -26,7 +26,7 @@
 
     <div v-else>
       <div :class="level === 1 ? 'ebook-tree__root' : 'ebook-tree__item'">
-        <Checkbox v-model="checked" @click.native.prevent="handleCheck(id)" :disabled="ifHasChildren">{{name}}</Checkbox>
+        <Checkbox v-model="checked" @click.native.prevent="handleCheck(id)">{{name}}</Checkbox>
         <i v-if="ifHasChildren"
           class="ebook-tree__item--expand iconfont"
           :class="showSubMenus ? 'icon-jianshao' : 'icon-zengjia'"
@@ -80,14 +80,9 @@ export default {
     name() {
       return this.treeData.name
     },
-    // 如果有子组织则禁止选择
+    // 是否有子组织
     ifHasChildren() {
-      if (this.treeData.children) {
-        return this.treeData.children.length !== 0
-      } else {
-        return false
-      }
-      // return this.treeData.children.length !== 0
+      return this.treeData.children ? this.treeData.children.length !== 0 : false
     },
     // 层级
     level() {
@@ -100,8 +95,7 @@ export default {
   },
   methods: {
     handleCheck(id) {
-      console.log('handleCheck', id, this.name)
-      if (this.ifHasChildren) return
+      // console.log('handleCheck', id, this.name)
       // 广播事件
       this.dispatch('EbookTree', 'on-checked', id)
     },
