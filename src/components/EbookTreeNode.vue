@@ -60,7 +60,7 @@ export default {
     return {
       isCase: false, // 是否为案场
       showSubMenus: false,
-      mval: 20, //  案场 增加缩进
+      mval: 26, //  案场 增加缩进
       isEdit: false, //  状态  编辑/添加
       checked: false
     }
