@@ -169,7 +169,7 @@ export default {
               h('Button', {
                 props: {
                   type: 'text',
-                  icon: 'link',
+                  icon: 'arrow-swap',
                   size: 'small'
                 },
                 style: {
