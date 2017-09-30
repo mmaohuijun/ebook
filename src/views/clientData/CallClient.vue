@@ -217,30 +217,38 @@ export default {
       this.modal1.show = false
       this.modal2.show = false
     },
-    //  点击确认开始时间按钮
+    // 点击确认开始时间按钮
     startDateOk(data) {
       if (this.endDate) {
         this.dateSearch()
       }
     },
-    //  点击确认结束时间按钮
+    // 点击确认结束时间按钮
     endDateOk(data) {
       if (this.startDate) {
         this.dateSearch()
       }
     },
-    dateSearch() {
+    // 时间段搜索
+    dateSearch(starDate, endDate) {
+      this.startDate = starDate
+      this.endDate = endDate
       this.name = ''
       this.isSearch = true
       this.pageNo = 1
       this.showClientList()
     },
-    //  文本搜索
-    textSearch() {
+    // 文本搜索
+    textSearch(seachText) {
+      this.name = seachText
       this.startDate = ''
       this.endDate = ''
       this.isSearch = true
       this.pageNo = 1
+      this.showClientList()
+    },
+    pageChange(currentPage) {
+      this.pageNo = currentPage
       this.showClientList()
     },
     //  渲染来电客户列表
@@ -332,10 +340,6 @@ export default {
         this.isShow = false
       }
       this.id = idList.join(',')
-    },
-    pageChange(currentPage) {
-      this.pageNo = currentPage
-      this.showClientList()
     }
   },
   mounted() {
