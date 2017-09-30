@@ -99,6 +99,10 @@ export default {
   data() {
     return {
       caseDataSource: [],
+      caseInfo: {
+        name: '', // 案场名
+        officeId: ''  // 所属组织id
+      },
       name: '', // 案场名
       address: '', // 案场地址
       officeId: '',  // 所属组织id

@@ -38,7 +38,10 @@
       <i class="iconfont icon-tianjia1"></i>
     </span>
     <Button v-if="cutBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onCutRelation"></Button>
-    <Button v-if="disBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onDistributeClient"></Button>
+    <!-- <Button v-if="disBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="link" @click="onDistributeClient"></Button> -->
+    <span v-if="disBtn" class="custom__circle-btn--white ivu-btn ivu-btn-primary ivu-btn-circle ivu-btn-icon-only" @click="onDistributeClient">
+      <i class="iconfont icon-fenpei"></i>
+    </span>
     <Button v-if="delBtn" class="custom__circle-btn--white" type="primary" shape="circle" icon="trash-a" @click="onDeleteClient"></Button>
   </div>
 </div>

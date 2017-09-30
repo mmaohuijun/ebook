@@ -110,6 +110,7 @@
     placeholder="姓名／手机号"
     :uploadBtn="true"
     :addBtn="true"
+    :disBtn="true"
     :lockBtn="lockBtn"
     :keyBtn="unlockBtn"
     @onDateSearch="dateSearch"
@@ -744,7 +745,6 @@ export default {
     }
   },
   mounted() {
-    console.log('mounted', this.userAdminFlag)
     this.initUserList()
     this.getAuthList()
   },
