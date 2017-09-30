@@ -215,10 +215,9 @@ export default {
           if (response === null) return
           this.$Message.success('保存成功')
           console.log('权限保存/新建', response)
-          this.initAuthList()
           this.hideModal()
+          this.initAuthList().then(resolve)
           this.$store.dispatch('authHasChange', false)
-          resolve()
         })
       })
     },
@@ -235,11 +234,11 @@ export default {
     confirmAddAuth() {
       console.log('confirmAddAuth')
       this.sendSaveRequest().then(() => {
+        // 新建权限成功后切换到新建的权限
         this.toggleAuth(this.authData[0])
       })
     },
     hideModal() {
-      console.log('hideModal', _.isEmpty(this.backupAuth))
       if (!_.isEmpty(this.backupAuth)) {
         this.toggleAuth(this.backupAuth)
       }
