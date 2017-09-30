@@ -105,14 +105,14 @@ const app = {
   },
   mutations: {
     SET_SIDEBAR_MENU(state, menu) {
-      state.sideBarMenu = menu
+      // state.sideBarMenu = menu
       console.log('设置sideBar', menu, state.sideBarMenu)
-      // if (!_.isEmpty(menu)) {
-      //   // state.sideBarMenu = _.cloneDeep(menu)
-      //   state.sideBarMenu = _.cloneDeep(menu)
-      // } else {
-      //   state.sideBarMenu = []
-      // }
+      if (!_.isEmpty(menu)) {
+        // state.sideBarMenu = _.cloneDeep(menu)
+        state.sideBarMenu = _.cloneDeep(menu)
+      } else {
+        state.sideBarMenu = []
+      }
     },
     SET_SIDEBAR_SELECT(state, str) {
       state.sideBarSelect = str
@@ -158,12 +158,10 @@ const app = {
       commit('SET_SIDEBAR_MENU', [])
       const menu = []
       let hasSameMenu = false
-      // console.log('setSideBarMenu', getters.auth)
       _.each(getters.auth, key => {
         hasSameMenu = false
         console.log('menu', key, menu)
         _.each(menu, menuItem => {
-          // console.log('menuItem', key, menuItem)
           if (menuItem.name === sideBarMenuMap[key].name) {
             _.mergeWith(menuItem, sideBarMenuMap[key], (objValue, srcValue) => {
               if (_.isArray(objValue)) {

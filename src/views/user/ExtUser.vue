@@ -110,8 +110,8 @@
     placeholder="姓名／手机号"
     :uploadBtn="true"
     :addBtn="true"
-    :lockBtn="true"
-    :keyBtn="true"
+    :lockBtn="lockBtn"
+    :keyBtn="unlockBtn"
     @onDateSearch="dateSearch"
     @onTextSearch="textSearch"
     @onUpload="showUploadModal"
@@ -148,7 +148,7 @@
         <Input v-model="userInfo.email" placeholder="请您输入" :maxlength="64"></Input>
       </Form-item> -->
       <Form-item label="权限：" prop="roleGroupId">
-        <Select placeholder="请选择权限" v-model="userInfo.roleGroupId">
+        <Select placeholder="请选择权限" v-model="userInfo.roleGroupId" @on-change="onChangeRoleGroupId">
           <Option v-for="(item, index) in authList" :key="index" :value="item.id">{{item.name}}</Option>
         </Select>
       </Form-item>
@@ -188,7 +188,7 @@
       </Form-item>
       <Form-item prop="caseId" style="width: 320px" v-if="userAdminFlag">
         <Select v-model="upload.caseId" placeholder="请先选择案场" @on-change="onChangeCaseId">
-          <Option v-for="items in upload.caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
+          <Option v-for="items in caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
         </Select>
       </Form-item>
       <Form-item>
@@ -271,6 +271,8 @@ export default {
         previewHasError: false,
         success: false
       },
+      lockBtn: true,
+      unlockBtn: true,
       startDate: '',    // 开始时间
       endDate: '',      // 结束时间
       name: '',         // 搜索关键字
@@ -281,6 +283,7 @@ export default {
       total: 20,        // 数据总条数
       pageSize: 20,     // 每页条数
       caseList: [],     // 案场列表
+      selection: [],    // 选中的用户列表
       userInfo: {
         id: '',           // id
         name: '',         // 姓名
@@ -503,11 +506,7 @@ export default {
     },
     showUploadModal() {
       this.upload.modalShow = true
-      this.$axios.post('case/shortlist').then(response => {
-        if (response === null) return
-        console.log('案场列表（供外部用户、内部用户操作客户模块数据时的案场选择）', response)
-        this.upload.caseList = response.data
-      })
+      this.getCaseList()
     },
     showConfirmModal(title) {
       console.log('showConfirmModal')
@@ -537,23 +536,37 @@ export default {
     onChangeCaseId(id) {
       this.userInfo.caseId = id
     },
+    // 编辑用户改变权限
+    onChangeRoleGroupId(id) {
+      this.userInfo.roleGroupId = id
+    },
     lockUser(id) {
+      if (!id) {
+        this.$store.dispatch('showErrorMsg', '请先选择用户!')
+        return
+      }
       console.log('锁定用户', id)
       this.selectedId = id
       this.isLocked = true
       this.showConfirmModal('是否确定禁用该用户?')
     },
     unlockUser(id) {
-      console.log('解锁用户', this.selectedId)
+      if (!id) {
+        this.$store.dispatch('showErrorMsg', '请先选择用户!')
+        return
+      }
+      console.log('解锁用户', id)
       this.selectedId = id
       this.isLocked = false
       this.showConfirmModal('是否确定解锁该用户?')
     },
     // 案场列表
     getCaseList() {
-      this.$axios.get('case/list', { params: { pageNo: 1, pageSize: 1000 } }).then(response => {
+      this.$axios.post('case/shortlist').then(response => {
         if (response === null) return
-        this.caseList = response.data.list
+        console.log('案场列表（供外部用户、内部用户操作客户模块数据时的案场选择）', response)
+        // this.upload.caseList = response.data
+        this.caseList = response.data
       })
     },
     // 获取权限列表
@@ -572,6 +585,7 @@ export default {
       this.userInfo.adminFlag = false
       this.userInfo.loginFlag = false
       this.getCaseList()
+
       this.userInfo.id = 0
       this.userModal.title = '新建用户'
       this.userModal.show = true
@@ -653,26 +667,26 @@ export default {
     },
     // 监听选中用户
     onSelect(selection) {
+      this.selection = selection
       const idList = []
+      const selectionLength = selection.length
+      let lockCount = 0
+      let unlockCount = 0
       this.selectedId = ''
 
-      for (let i = selection.length - 1; i >= 0; i--) {
-        idList.push(selection[i].id)
-      }
+      _.each(this.selection, (item, index) => {
+        idList.push(item.id)
+        if (item.loginFlag) {
+          lockCount++
+        } else {
+          unlockCount++
+        }
+      })
+      // 判断选中的用户状态, 根据状态显示头部的操作按钮
+      this.lockBtn = selectionLength === 0 || lockCount === selectionLength
+      this.unlockBtn = selectionLength === 0 || unlockCount === selectionLength
 
       this.selectedId = idList.join(',')
-    },
-    // 点击确认开始时间按钮
-    startDateOk(data) {
-      if (this.endDate) {
-        this.dateSearch()
-      }
-    },
-    // 点击确认结束时间按钮
-    endDateOk(data) {
-      if (this.startDate) {
-        this.dateSearch()
-      }
     },
     // 时间段搜索
     dateSearch(starDate, endDate) {
@@ -725,6 +739,8 @@ export default {
     // 取消所有选中
     deselectedAll() {
       this.$refs.userListTable.selectAll(false)
+      this.selection = []
+      this.selectedId = ''
     }
   },
   mounted() {

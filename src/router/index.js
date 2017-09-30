@@ -343,6 +343,12 @@ router.afterEach(route => {
   if (route.path.indexOf('case') !== -1) {
     store.dispatch('setSideBarSelect', 'CaseManage')
   }
+  // if (route.name === 'Login') {
+  //   _.once(() => {
+  //     console.log('我在登录页')
+  //     router.go(0)
+  //   })
+  // }
 })
 
 // export default router

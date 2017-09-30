@@ -74,6 +74,7 @@ export default {
     },
     goLogin() {
       console.log('goLogin', this.loginName, this.password, this.ifRemember)
+      console.log('sideBarMenu', this.$store.state.app.sideBarMenu)
       const data = this.verifyAccountData()
       if (!data) return
       this.loading = true
