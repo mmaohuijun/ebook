@@ -16,8 +16,8 @@
       header-title="客户管理 - 来电客户"
       :dateSearch="true"
       :textSearch="true"
-      :cutBtn="isShow"
-      :delBtn="isShow"
+      :cutBtn="true"
+      :delBtn="true"
       placeholder="姓名/手机号"
       @onDateSearch="dateSearch"
       @onTextSearch="textSearch"
@@ -26,7 +26,7 @@
       </ebook-header>
 
     <div class="layout__body">
-      <Table class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
+      <Table ref="clientListTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
     </div>
@@ -78,7 +78,7 @@ export default {
       },
       clicked1: false,
       clicked2: false,
-      isShow: false,
+      // isShow: false,
       clientListTitle: [  //  表头
         {
           title: '全选',
@@ -276,19 +276,22 @@ export default {
         this.clientListData = []
         for (const items in response.data.list) {
           console.log(response.data.list[items].consultantName)
-          // if (response.data.list[items].consultantName === '--') {
-          //   continue
-          // }
           this.clientListData.push(response.data.list[items])
         }
         this.total = response.data.total
         console.log('clientListData', this.clientListData)
       })
+      this.deselectedAll()
     },
     //  解除置业顾问 关系
     cutRelation(id) {
+      if (!id) {
+        this.$store.dispatch('showErrorMsg', '请先选择客户')
+        return
+      }
       this.modal1.content = '是否解除顾问与客户的关联'
       this.modal1.show = true
+      console.log(id)
     },
     saveRelation() {
       this.clicked1 = !this.clicked1
@@ -311,6 +314,10 @@ export default {
     },
     //  删除客户
     deleteClient(id) {
+      if (!id) {
+        this.$store.dispatch('showErrorMsg', '请先选择客户')
+        return
+      }
       this.modal2.content = '是否确认删除'
       this.modal2.show = true
     },
@@ -334,12 +341,18 @@ export default {
       for (let i = 0; i < selection.length; i++) {
         idList.push(selection[i].id)
       }
-      if (idList.length > 0) {
-        this.isShow = true
-      } else {
-        this.isShow = false
+      if (idList.length === 0) {
+        // this.isShow = true
+        // this.$store.dispatch('showErrorMsg', '请先选择客户')
       }
       this.id = idList.join(',')
+    },
+    // 取消所有选中
+    deselectedAll() {
+      console.log('deselectedAll')
+      this.$refs.clientListTable.selectAll(false)
+      this.selection = []
+      this.id = ''
     }
   },
   mounted() {

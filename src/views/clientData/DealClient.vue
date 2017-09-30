@@ -16,8 +16,8 @@
       header-title="客户管理 - 成交客户"
       :dateSearch="true"
       :textSearch="true"
-      :cutBtn="isShow"
-      :delBtn="isShow"
+      :cutBtn="true"
+      :delBtn="true"
       placeholder="姓名/手机号"
       @onDateSearch="dateSearch"
       @onTextSearch="textSearch"
@@ -26,7 +26,7 @@
       </ebook-header>
 
     <div class="layout__body">
-      <Table class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
+      <Table ref="clientListTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
     </div>
@@ -58,7 +58,7 @@ export default {
         title: '',
         isDelete: false
       },
-      isShow: false,
+      // isShow: false,
       clientListTitle: [
         {
           title: '全选',
@@ -259,13 +259,22 @@ export default {
         this.total = response.data.total
         console.log('clientListData', this.clientListData)
       })
+      this.deselectedAll()
     },
     cutRelation(id) {
+      if (!id) {
+        this.$store.dispatch('showErrorMsg', '请选择客户')
+        return
+      }
       this.modal.show = true
       this.modal.isDelete = false
       this.modal.title = '是否确认解除关系'
     },
     deleteClient(id) {
+      if (!id) {
+        this.$store.dispatch('showErrorMsg', '请选择客户')
+        return
+      }
       this.modal.show = true
       this.modal.isDelete = true
       this.modal.title = '是否确认删除'
@@ -275,11 +284,6 @@ export default {
       const idList = []
       for (let i = 0; i < selection.length; i++) {
         idList.push(selection[i].id)
-      }
-      if (idList.length > 0) {
-        this.isShow = true
-      } else {
-        this.isShow = false
       }
       console.log(idList)
       this.id = idList.join(',')
@@ -292,16 +296,23 @@ export default {
           if (response === null) return
           this.isSearch = false
           this.showClientList()
-          this.isShow = false
+          // this.isShow = false
         })
       } else {
         this.$axios.post('/case-cust/assign-cancel', { id: this.id }).then(response => {
           if (response == null) return
           this.isSearch = false
           this.showClientList()
-          this.isShow = false
+          // this.isShow = false
         })
       }
+    },
+    // 取消所有选中
+    deselectedAll() {
+      console.log('deselectedAll')
+      this.$refs.clientListTable.selectAll(false)
+      this.selection = []
+      this.id = ''
     }
   },
   mounted() {

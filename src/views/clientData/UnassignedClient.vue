@@ -16,17 +16,17 @@
       header-title="客户管理 - 未分配客户"
       :dateSearch="true"
       :textSearch="true"
-      :disBtn="isShow"
-      :delBtn="isShow" 
+      :disBtn="true"
+      :delBtn="true" 
       placeholder="姓名/手机号"
       @onDateSearch="dateSearch"
       @onTextSearch="textSearch"
-      @onDistributeClient="distributeClient(consultant)"
+      @onDistributeClient="distributeClient(caseId)"
       @onDeleteClient="deleteClient(id)">
       </ebook-header>
 
     <div class="layout__body">
-      <Table class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
+      <Table ref="unAssignedTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
     </div>
@@ -91,7 +91,7 @@ export default {
       isEUser: false,
       s1: '',
       s2: '',
-      isShow: false, // 图标显示
+      // isShow: false, // 图标显示
       singleLine: false,  // 点击单行 解除关系
       startDate: '',
       endDate: '',
@@ -99,7 +99,8 @@ export default {
       isSearch: false, // 是否开始条件筛选
       pageNo: 1,
       total: 20,
-      pageSize: 1,
+      pageSize: 20,
+      rowInfo: {},
       clientListTitle: [
         {
           title: '全选',
@@ -182,9 +183,6 @@ export default {
                     that.distributeClient(params.row.caseId)
                     that.id = params.row.id
                     that.caseId = params.row.caseId
-                    console.log('caseId', that.caseId)
-                    // console.log('params', params.row)
-                    // console.log('id', that.id, 'caseId', that.caseId)
                   }
                 }
               }),
@@ -311,8 +309,6 @@ export default {
         data.startDate = ''
         data.endDate = ''
       }
-      console.log('data', data)
-      console.log('name', this.name)
       this.$axios.post('/case-cust/unassigned-list', data).then(response => {
         if (response === null) return
         this.clientListData = []
@@ -321,6 +317,7 @@ export default {
         }
         this.total = response.data.total
         console.log('clientListData', this.clientListData)
+        this.deselectedAll()
       })
     },
     // 点击顾问下拉框选项 获取外部用户id
@@ -337,9 +334,9 @@ export default {
         this.caseIdList.push(selection[i].caseId)
       }
       if (idList.length > 0) {
-        this.isShow = true
+        // this.isShow = true
       } else {
-        this.isShow = false
+        // this.isShow = false
       }
       this.id = idList.join(',')
       // this.caseId = this.caseIdList.join(',')
@@ -361,8 +358,13 @@ export default {
             return
           }
         }
+        console.log('this.caseId', this.caseId)
       } else {
         this.caseId = caseId
+      }
+      if (!this.caseId) {
+        this.$store.dispatch('showErrorMsg', '请选择客户')
+        return
       }
       console.log('singleLine为true', 'caseId', this.caseId)
       this.isDelete = false
@@ -391,6 +393,12 @@ export default {
     },
     // 删除客户
     deleteClient(id) {
+      console.log('id', id)
+      this.id = id
+      if (!id) {
+        this.$store.dispatch('showErrorMsg', '请选择客户')
+        return
+      }
       this.isDelete = true
       this.delModal.show = true
       this.delModal.title = '是否确认删除客户'
@@ -430,7 +438,7 @@ export default {
         if (response === null) return
         this.isSearch = false
         this.showClientList()
-        this.isShow = false
+        // this.isShow = false
       })
     },
     // 分配操作
@@ -439,13 +447,23 @@ export default {
         if (response === null) return
         this.isSearch = false
         this.showClientList()
-        this.isShow = false
+        // this.isShow = false
       })
     },
     resetFields() {
       this.s1 = ''
       this.s2 = ''
       this.singleLine = false
+      this.id = ''
+      this.caseId = ''
+    },
+    // 取消所有选中
+    deselectedAll() {
+      console.log('deselectedAll')
+      this.$refs.unAssignedTable.selectAll(false)
+      this.selection = []
+      this.id = ''
+      this.caseId = ''
     }
   },
   computed: {

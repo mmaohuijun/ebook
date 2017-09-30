@@ -16,8 +16,8 @@
       header-title="客户管理 - 到访客户"
       :dateSearch="true"
       :textSearch="true"
-      :cutBtn="isShow"
-      :delBtn="isShow"
+      :cutBtn="true"
+      :delBtn="true"
       placeholder="姓名/手机号"
       @onDateSearch="dateSearch"
       @onTextSearch="textSearch"
@@ -26,7 +26,7 @@
       </ebook-header>
 
     <div class="layout__body">
-      <Table class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect"></Table>
+      <Table ref="clientListTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect"></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
     </div>
@@ -58,7 +58,7 @@ export default {
         title: '',
         isDelete: false
       },
-      isShow: false,
+      // isShow: false,
       clientListTitle: [
         {
           title: '全选',
@@ -264,6 +264,10 @@ export default {
     },
     //  解除关系
     cutRelation(id) {
+      if (!id) {
+        this.$store.dispatch('showErrorMsg', '请选择客户')
+        return
+      }
       console.log(id)
       this.modal.show = true
       this.modal.title = '确认解除关系吗'
@@ -271,6 +275,10 @@ export default {
     },
     //  删除客户
     deleteClient(id) {
+      if (!id) {
+        this.$store.dispatch('showErrorMsg', '请选择客户')
+        return
+      }
       console.log(id)
       this.modal.show = true
       this.modal.title = '确认删除吗'
@@ -300,12 +308,19 @@ export default {
         idList.push(selection[i].id)
       }
       if (idList.length > 0) {
-        this.isShow = true
+        // this.isShow = true
       } else {
-        this.isShow = false
+        // this.isShow = false
       }
       this.id = idList.join(',')
       console.log(this.id)
+    },
+    // 取消所有选中
+    deselectedAll() {
+      console.log('deselectedAll')
+      this.$refs.clientListTable.selectAll(false)
+      this.selection = []
+      this.id = ''
     }
   },
   mounted() {
