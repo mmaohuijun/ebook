@@ -436,9 +436,8 @@ export default {
   .ivu-modal .ivu-select-dropdown {
     position: fixed!important;
   }
-}
-
-.ivu-table-sort {
+  
+  .ivu-table-sort {
   top: -2px;
   width: 14px;
   height: 16px;
@@ -447,6 +446,10 @@ export default {
     height: 7px;
   }
 }
+
+}
+
+
 
 .ivu-checkbox-indeterminate .ivu-checkbox-inner {
 

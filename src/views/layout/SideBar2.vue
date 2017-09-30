@@ -15,7 +15,7 @@
         </li>
       </ul>
     </div>
-    <ul class="laylout__aside-menu">
+    <ul class="laylout__aside-menu" v-if="sideBarMenu.length !== 0">
       <li class="menu__item" v-for="(ele, index) in sideBarMenu" :key="index">
         <ul>
           <li @click="ele.children.length === 0 ? onClickMenu(ele.name) : ''">
@@ -37,14 +37,13 @@ import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'SideBar2',
   data() {
-    return {}
+    return {
+      sideBarMenu: []
+    }
   },
   computed: {
-    // sideBarMenu() {
-    //   return this.$store.state.app.sideBarMenu
-    // },
     ...mapState({
-      sideBarMenu: state => state.app.sideBarMenu,
+      // sideBarMenu: state => state.app.sideBarMenu,
       sideBarSelect: state => state.app.sideBarSelect
     }),
     ...mapGetters([
@@ -54,6 +53,7 @@ export default {
       'no',
       'auth',
       'loginName',
+      'sideBarMenuMap',
       // 'sideBarMenu',
       // 'sideBarSelect',
       'BASE_PATH'
@@ -69,12 +69,42 @@ export default {
         if (response === null) return
         this.$store.dispatch('toggleLoginStatus', false)
         this.$store.dispatch('clearUserInfo')
-        this.$router.push({ name: 'Login' })
+        this.$router.replace('/')
+      })
+    },
+    setSideBarMenu() {
+      console.log('setSideBarMenu', this.sideBarMenu)
+      this.sideBarMenu = []
+      let hasSameMenu = false
+      _.each(this.auth, key => {
+        hasSameMenu = false
+        if (!_.isEmpty(this.sideBarMenu)) {
+          _.each(this.sideBarMenu, menuItem => {
+            if (menuItem.name === this.sideBarMenuMap[key].name) {
+              _.mergeWith(menuItem, this.sideBarMenuMap[key], (objValue, srcValue) => {
+                if (_.isArray(objValue)) {
+                  return _.uniq(objValue.concat(srcValue))
+                }
+              })
+              hasSameMenu = true
+            }
+          })
+        }
+        if (hasSameMenu) return
+        this.sideBarMenu.push(this.sideBarMenuMap[key])
       })
     }
   },
   mounted() {
-    this.$store.dispatch('setSideBarMenu')
+    console.log('侧边栏', this.sideBarMenu)
+    this.setSideBarMenu()
+    // this.$store.dispatch('setSideBarMenu')
+    setTimeout(() => {
+      console.log('2s侧边栏', this.sideBarMenu)
+    }, 2000)
+  },
+  destroyed() {
+    this.$router.go(0)
   }
 }
 </script>

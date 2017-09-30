@@ -238,6 +238,10 @@ export default {
     // 删除用户
     removeUser(selectedId) {
       console.log('removeUser', selectedId)
+      if (!selectedId) {
+        this.$store.dispatch('showErrorMsg', '请先选择用户!')
+        return
+      }
       // this.userListData.splice(index, 1)
       this.selectedId = selectedId
       this.confirmModal.show = true

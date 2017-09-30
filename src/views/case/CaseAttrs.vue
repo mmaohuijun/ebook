@@ -232,7 +232,6 @@ export default {
       let vFlag = false
 
       this.$refs.attrsGroup.validate(flag => {
-        console.log('attrsGroup validate', flag, this.attrsGroup.sort)
         vFlag = flag
       })
 
@@ -240,12 +239,19 @@ export default {
       if (vFlag && !this.ifNew) {
         this.hideModal()
       }
-      // 和备份数据做比较, 如果一样则表示没有改动, 返回false
-      return _.isMatch(requestData, this.backupData) || !vFlag ? false : requestData
+
+      if (this.ifNew) { // 新建
+        return vFlag ? requestData : false
+      } else { // 编辑
+        // 和备份数据做比较, 如果一样则表示没有改动, 返回false
+        return _.isMatch(requestData, this.backupData) || !vFlag ? false : requestData
+      }
+      // console.log('_.isMatch(requestData, this.backupData)', _.isMatch(requestData, this.backupData))
     },
     // 栏目信息保存（新建、修改）
     saveAttrsGroup() {
       const requestData = this.verifyAttrsGroupData()
+      console.log('栏目信息保存', requestData)
       if (!requestData) return
 
       console.log('saveAttrsGroup', requestData)
@@ -355,8 +361,12 @@ export default {
         this.hideModal()
       }
 
-      // 和备份数据做比较, 如果一样则表示没有改动, 返回false
-      return _.isMatch(requestData, this.backupData) || !vFlag ? false : requestData
+      if (this.ifNew) { // 新建
+        return vFlag ? requestData : false
+      } else { // 编辑
+        // 和备份数据做比较, 如果一样则表示没有改动, 返回false
+        return _.isMatch(requestData, this.backupData) || !vFlag ? false : requestData
+      }
     },
     // 详细维度保存（新建、修改）
     saveAttrsDetails() {
@@ -462,7 +472,7 @@ export default {
       this.attrsEditable = true
       this.attrsGroup.id = ''
       this.attrsGroup.label = ''
-      this.attrsGroup.sort = 0
+      this.attrsGroup.sort = ''
       this.attrsGroup.ifHide = false
       this.backupData = {}
     },
