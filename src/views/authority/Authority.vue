@@ -111,6 +111,7 @@ export default {
           }
         }
       })
+      console.log('currentAuthMenus', menus)
       return menus
     }
   },
@@ -137,6 +138,7 @@ export default {
     },
     initAuthList() {
       return new Promise(resolve => {
+        this.authData = []
         this.$axios.post('role/list').then(response => {
           if (response === null) return
           console.log('权限列表', response)
@@ -147,6 +149,11 @@ export default {
       })
     },
     addAuth() {
+      if (this.authHasChange) {
+        // 弹出提示框是否保存
+        this.confirmAuthChangeModal = true
+        return
+      }
       this.ifNew = true
       this.addAuthModal.show = true
     },
@@ -178,10 +185,12 @@ export default {
     // 更新权限checked菜单
     updateAuthMenus() {
       this.authMenus = _.cloneDeep(this.currentAuthMenus)
+      console.log('更新权限checked菜单', this.authMenus)
     },
     // 切换权限
     toggleAuth(auth) {
       this.currentAuth = _.cloneDeep(auth)
+      console.log('切换权限', this.currentAuth)
       this.updateAuthMenus()
     },
     getAuthSaveData() {

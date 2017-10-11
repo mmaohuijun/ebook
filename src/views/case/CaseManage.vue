@@ -45,17 +45,14 @@ export default {
           title: 'ID',
           key: 'id',
           ellipsis: false,
-          sortable: true // 开启排序
-          // filters: [
-          //   {
-          //     label: '大于4000',
-          //     value: 1
-          //   },
-          //   {
-          //     label: '小于4000',
-          //     value: 2
-          //   }
-          // ]
+          sortable: true, // 开启排序
+          sortMethod(a, b, type) {
+            if (type === 'desc') {
+              return parseInt(b, 10) - parseInt(a, 10)
+            } else if (type === 'asc') {
+              return parseInt(a, 10) - parseInt(b, 10)
+            }
+          }
         },
         {
           title: '案场',
