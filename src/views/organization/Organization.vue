@@ -54,6 +54,16 @@ import EbookHeader from 'components/EbookHeader'
 export default {
   name: 'Organization',
   data() {
+    const vmobile = (rule, value, callback) => {
+      if (value) {
+        const reg = /^1[34578]\d{9}$/
+        if (!reg.test(value)) {
+          callback(new Error('请输入正确的电话号码'))
+        } else {
+          callback()
+        }
+      } else callback()
+    }
     return {
       orgForm: {
         name: '',
@@ -64,6 +74,9 @@ export default {
       orgRule: {
         name: [
           { required: true, message: '组织名不能为空', trigger: 'blur' }
+        ],
+        mobile: [
+          { validator: vmobile, trigger: 'blur' }
         ]
       },
       modal: {
@@ -160,7 +173,7 @@ export default {
           this.$Message.success('提交成功！')
           this.editSave()
         } else {
-          this.$Message.error('组织名不能为空')
+          this.$Message.error('表单验证失败')
           this.saveLoading = false
         }
       })
