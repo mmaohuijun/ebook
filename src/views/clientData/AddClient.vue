@@ -24,7 +24,8 @@
              <Option v-for="item in caseList" :value="item.id" :key="item.id">{{item.name}}</Option>
            </Select>
          </Form-item>
-         <Form-item label="顾问：" v-if="conShow" prop="consultant">
+         <!-- <Form-item label="顾问：" v-if="conShow" prop="consultant"> -->
+         <Form-item label="顾问：" v-if="userAdminFlag" prop="consultant">
            <Select v-model="addForm.consultant" @on-change="consultChange">
              <Option v-for="item in extUserList" :value="item.id" :key="item.id">{{item.name}}</Option>
            </Select>

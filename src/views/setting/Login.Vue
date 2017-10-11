@@ -90,7 +90,7 @@ export default {
           no: reData.no,
           auth: reData.menus,
           type: reData.type,
-          adminFlag: reData.adminFlag || true
+          adminFlag: _.has(reData, 'adminFlag') ? reData.adminFlag : true
         }
         // 保存用户信息到全局
         this.$store.dispatch('setUserInfo', loginInfo)
