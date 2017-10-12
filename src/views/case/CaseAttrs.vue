@@ -43,7 +43,7 @@
       <p slot="header">{{modalTitle}}</p>
       <Form ref="attrsGroup" :model="attrsGroup" :rules="attrsGroupRules" :label-width="120" class="modal-form">
         <Form-item label="栏目名称：" prop="label">
-          <Input v-model="attrsGroup.label" placeholder="请输入栏目名称" :maxlength="64"></Input>
+          <Input v-model="attrsGroup.label" placeholder="请输入栏目名称" :maxlength="8"></Input>
         </Form-item>
         <Form-item label="名称序号：" prop="sort">
           <Input v-model="attrsGroup.sort" placeholder="请输入名称序号(数字)" :maxlength="5"></Input>
@@ -68,7 +68,7 @@
       <p slot="header">{{modalTitle}}</p>
       <Form ref="attrsDetails" :model="attrsDetails" :rules="attrsDetailsRules" :label-width="120" class="modal-form">
         <Form-item label="维度名称：" prop="label">
-          <Input placeholder="请输入维度名称" v-model="attrsDetails.label" :readonly="!attrsEditable" :maxlength="64"></Input>
+          <Input placeholder="请输入维度名称" v-model="attrsDetails.label" :readonly="!attrsEditable" :maxlength="8"></Input>
         </Form-item>
         <Form-item label="名称序号：" prop="sort">
           <Input placeholder="请输入维度序号" v-model="attrsDetails.sort" :readonly="!attrsEditable" :maxlength="5"></Input>
@@ -115,13 +115,6 @@
 export default {
   name: 'CaseAttrs',
   data() {
-    const validateNumber = (rule, value, callback) => {
-      if (!_.isFinite(parseInt(value))) {
-        callback(new Error('请输入数字'))
-      } else {
-        callback()
-      }
-    }
     const validateOptions = (rule, value, callback) => {
       if (_.isEmpty(this.attrsDetails.options)) {
         callback(new Error('请填写详细维度'))
@@ -157,22 +150,48 @@ export default {
       ifNew: false, // 新建还是编辑
       backupData: {},
       attrsGroupRules: {
-        label: [{ required: true, message: '请输入栏目名称', trigger: 'blur' }],
+        label: [{
+          required: true,
+          message: '请输入栏目名称',
+          transform(value) {
+            return value.trim()
+          }
+        }],
         sort: [
           { required: true, message: '请输入栏目序号', trigger: 'blur' },
-          { validator: validateNumber, trigger: 'blur' }
+          {
+            type: 'number',
+            message: '请输入数字',
+            trigger: 'blur',
+            transform(value) {
+              return parseInt(value, 10)
+            }
+          }
         ]
       },
       attrsDetailsRules: {
-        label: [{ required: true, message: '请输入维度名称', trigger: 'blur' }],
+        label: [{
+          required: true,
+          message: '请输入维度名称',
+          transform(value) {
+            return value.trim()
+          }
+        }],
         sort: [
           { required: true, message: '请输入维度序号', trigger: 'blur' },
-          { validator: validateNumber, trigger: 'blur' }
+          {
+            type: 'number',
+            message: '请输入数字',
+            trigger: 'blur',
+            transform(value) {
+              return parseInt(value, 10)
+            }
+          }
         ],
-        require: [{ required: true, message: '请选择填写要求', trigger: 'blur' }],
-        type: [{ required: true, message: '请选择类型', trigger: 'blur' }],
-        textType: [{ required: true, message: '请选择文本类型', trigger: 'blur' }],
-        optionsText: [{ validator: validateOptions, trigger: 'blur' }]
+        require: [{ required: true, message: '请选择填写要求' }],
+        type: [{ required: true, message: '请选择类型' }],
+        textType: [{ required: true, message: '请选择文本类型' }],
+        optionsText: [{ validator: validateOptions }]
       }
     }
   },

@@ -47,7 +47,7 @@
     </p>
     <Form ref="userInfo" :model="userInfo" :rules="ruleValidate" :label-width="120" class="modal-form">
       <Form-item label="姓名：" prop="name">
-        <Input v-model="userInfo.name" placeholder="请您输入..." :maxlength="64"></Input>
+        <Input v-model="userInfo.name" placeholder="请您输入..." :maxlength="8"></Input>
       </Form-item>
       <Form-item label="电话号码：" prop="mobile">
         <Input v-model="userInfo.mobile" placeholder="请您输入..." :maxlength="11"></Input>
@@ -65,7 +65,7 @@
         </Select>
       </Form-item>
       <Form-item label="工号：" prop="no">
-        <Input v-model="userInfo.no" placeholder="请您输入" :maxlength="10"></Input>
+        <Input v-model="userInfo.no" placeholder="请您输入" :maxlength="5"></Input>
       </Form-item>
       <Form-item label="禁用：" prop="loginFlag">
         <i-switch v-model="userInfo.loginFlag"></i-switch>
@@ -91,20 +91,16 @@ import EbookHeader from 'components/EbookHeader'
 
 export default {
   data() {
+    // const validateNumber = (rule, value, callback) => {
+    //   if (!_.isFinite(parseInt(value))) {
+    //     callback(new Error('请输入数字'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     const MobileVaild = (rule, value, callback) => {
       if (!/^1(?:3|5|7|8)\d{9}$/.test(value)) {
         callback(new Error('电话号码格式不正确'))
-      } else {
-        callback()
-      }
-    }
-    const EmailVaild = (rule, value, callback) => {
-      if (!value) {
-        callback()
-        return
-      }
-      if (!/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(value)) {
-        callback(new Error('邮箱格式不正确'))
       } else {
         callback()
       }
@@ -123,6 +119,7 @@ export default {
       endDate: '',      // 结束时间
       name: '',         // 搜索关键字
       isSearch: false,  // 是否开始条件筛选
+      afterSearch: false,  // 点击搜索后
       selectedId: '',   // 选中的用户Id
       pageNo: 1,        // 页码
       total: 20,        // 数据总条数
@@ -134,30 +131,45 @@ export default {
         mobile: '',       // 电话
         email: '',        // 邮箱
         password: '123456',     // 密码
-        roleGroupId: 0,    // 权限
+        roleGroupId: '',    // 权限
         loginFlag: false,  // 是否禁用, 返回的data里 true表示可以登录, false表示禁止登录
-        no: ''            // 工号
+        no: 0            // 工号
       },
       authList: {},      // 权限列表
       ruleValidate: {
         name: [
-          { required: true, message: '姓名不能为空', trigger: 'blur' }
+          {
+            required: true,
+            message: '姓名不能为空',
+            transform(value) {
+              return value.trim()
+            }
+          }
         ],
         mobile: [
-          { required: true, message: '电话号码不能为空', trigger: 'blur' },
+          { required: true, message: '电话号码不能为空' },
           { validator: MobileVaild, trigger: 'blur' }
         ],
         email: [
-          { validator: EmailVaild, trigger: 'blur' }
+          { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
         ],
         password: [
           // { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
         roleGroupId: [
-          { required: true, message: '请选择权限', trigger: 'blur' }
+          { required: true, message: '请选择权限' }
         ],
         no: [
-          { required: true, message: '工号不能为空', trigger: 'blur' }
+          { required: true, message: '工号不能为空', trigger: 'blur' },
+          {
+            type: 'number',
+            message: '请输入数字',
+            trigger: 'blur',
+            transform(value) {
+              return parseInt(value, 10)
+            }
+          }
+          // { validator: validateNumber, trigger: 'blur' }
         ]
       },
       userListTitle: [
@@ -250,7 +262,7 @@ export default {
       this.$axios.get('int-user/del', { params: { id: this.selectedId } }).then(response => {
         if (response === null) return
         this.$Message.success('删除成功')
-        this.userList()
+        this.initUserList()
       })
     },
     // 新增用户modal
@@ -293,6 +305,7 @@ export default {
 
     // 点击用户完成按钮
     saveUser(name) {
+      console.log(typeof this.userInfo.no, this.userInfo.no)
       this.$refs[name].validate(valid => {
         if (valid) {
           this.modal.saveLoading = true
@@ -322,7 +335,7 @@ export default {
         if (response === null) return
         this.$Message.success(successText)
         this.name = ''
-        this.userList()
+        this.initUserList()
       })
       this.modal.show = false
       this.modal.saveLoading = false
@@ -342,43 +355,50 @@ export default {
 
       this.selectedId = idList.join(',')
     },
-    // 点击确认开始时间按钮
-    startDateOk(data) {
-      if (this.endDate) {
-        this.dateSearch()
-      }
-    },
-    // 点击确认结束时间按钮
-    endDateOk(data) {
-      if (this.startDate) {
-        this.dateSearch()
-      }
-    },
     // 时间段搜索
     dateSearch(starDate, endDate) {
-      this.startDate = starDate
-      this.endDate = endDate
+      // 如果没有传参数, 说明要清空搜索条件
+      if (_.isUndefined(starDate)) {
+        this.afterSearch = false
+      } else {
+        this.afterSearch = true
+      }
+      this.startDate = starDate || ''
+      this.endDate = endDate || ''
       this.name = ''
       this.isSearch = true
       this.pageNo = 1
-      this.userList()
+      this.initUserList()
     },
     // 文本搜索
     textSearch(seachText) {
       this.name = seachText
+      // 判断是否有搜索词
+      if (_.isEmpty(this.name.trim())) {
+        if (this.afterSearch) { // 搜索后清空搜索词, 初始化列表
+          this.pageNo = 1
+          this.initUserList()
+          this.afterSearch = false
+        } else {
+          this.$Message.error('请输入姓名/手机号!')
+        }
+        this.name = ''
+        return
+      }
+      this.afterSearch = true
       this.startDate = ''
       this.endDate = ''
       this.isSearch = true
       this.pageNo = 1
-      this.userList()
+      this.initUserList()
     },
     // 改变分页
     pageChange(currentPage) {
       this.pageNo = currentPage
-      this.userList()
+      this.initUserList()
     },
     // 获取并渲染用户列表
-    userList() {
+    initUserList() {
       const data = {
         name: this.name || '',
         startDate: this.startDate || '',
@@ -407,7 +427,7 @@ export default {
     }
   },
   mounted() {
-    this.userList()
+    this.initUserList()
     this.getAuthList()
   },
   watch: {
