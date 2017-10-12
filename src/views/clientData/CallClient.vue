@@ -65,7 +65,7 @@ export default {
       isSearch: false, // 是否开始条件筛选
       pageNo: 1,  //  当前页码
       total: 20,  //  总页数
-      pageSize: 2,  //  每页显示信息数
+      pageSize: 20,  //  每页显示信息数
       // clicked: false,
       // confirmed: false,
       modal1: {  //  模态框对象
