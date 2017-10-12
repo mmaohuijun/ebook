@@ -24,7 +24,6 @@
       @onDistributeClient="distributeClient(caseId)"
       @onDeleteClient="deleteClient(id)">
       </ebook-header>
-
     <div class="layout__body">
       <Table ref="unAssignedTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect"></Table>
       <Spin size="large" fix v-if="false"></Spin>

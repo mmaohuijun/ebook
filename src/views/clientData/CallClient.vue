@@ -65,7 +65,7 @@ export default {
       isSearch: false, // 是否开始条件筛选
       pageNo: 1,  //  当前页码
       total: 20,  //  总页数
-      pageSize: 20,  //  每页显示信息数
+      pageSize: 2,  //  每页显示信息数
       // clicked: false,
       // confirmed: false,
       modal1: {  //  模态框对象
@@ -163,53 +163,7 @@ export default {
           }
         }
       ],
-      clientListData: [  //  客户信息
-    //     {
-    //       id: 1,  //  客户id
-    //       consultantId: 1,  //  置业顾问id
-    //       name: '张磊',  //  客户姓名
-    //       mobile: '1234567',  //  客户手机号
-    //       caseName: '金地精益',  //  案场名
-    //       consultantName: '小丽',  //  置业顾问姓名
-    //       createTime: '2017-1-1'  //  创建时间
-    //     },
-    //     {
-    //       id: 2,
-    //       consultantId: 2,
-    //       name: '张磊',
-    //       mobile: '1234567',
-    //       caseName: '金地精益',
-    //       consultantName: '小丽',
-    //       createTime: '2017-1-1'
-    //     },
-    //     {
-    //       id: 3,
-    //       consultantId: 3,
-    //       name: '张磊',
-    //       mobile: '1234567',
-    //       caseName: '金地精益',
-    //       consultantName: '小丽',
-    //       createTime: '2017-1-1'
-    //     },
-    //     {
-    //       id: 4,
-    //       consultantId: 4,
-    //       name: '张磊',
-    //       mobile: '1234567',
-    //       caseName: '金地精益',
-    //       consultantName: '小丽',
-    //       createTime: '2017-1-1'
-    //     },
-    //     {
-    //       id: 5,
-    //       consultantId: 5,
-    //       name: '张磊',
-    //       mobile: '1234567',
-    //       caseName: '金地精益',
-    //       consultantName: '小丽',
-    //       createTime: '2017-1-1'
-    //     }
-      ]
+      clientListData: [] //  客户信息
     }
   },
   methods: {
@@ -241,11 +195,15 @@ export default {
     // 文本搜索
     textSearch(seachText) {
       this.name = seachText
-      this.startDate = ''
-      this.endDate = ''
+      // this.startDate = ''
+      // this.endDate = ''
       this.isSearch = true
       this.pageNo = 1
-      this.showClientList()
+      if (this.endDate && this.startDate && this.name === null) {
+        return
+      } else {
+        this.showClientList()
+      }
     },
     pageChange(currentPage) {
       this.pageNo = currentPage
@@ -306,7 +264,8 @@ export default {
           this.modal1.show = false
           this.clicked1 = false
           this.isSearch = false
-          this.showClientList()
+          // this.showClientList()
+          this.pageChange()
         })
       }
       this.clicked1 = false
@@ -331,7 +290,8 @@ export default {
           this.modal2.show = false
           this.clicked2 = false
           this.isSearch = false
-          this.showClientList()
+          // this.showClientList()
+          this.pageChange()
         })
       }
     },
