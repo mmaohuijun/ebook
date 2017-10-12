@@ -1,15 +1,18 @@
 <template>
 <td>
   <div class="authority-check-all">
-    <Checkbox v-if="!hasSubMenus" :value="selfAuthData.checked === 1" @on-change="checkAuth" :disabled="!display">{{selfAuthData.name}}</Checkbox>
+    <Checkbox v-if="!hasSubMenus" v-model="authChecked" @on-change="checkAuth" :disabled="!display">{{selfAuthData.name}}</Checkbox>
     <Checkbox v-else :indeterminate="indeterminate" :value="ifCheckAll" @click.prevent.native.stop="handleCheckAll" :disabled="!display">{{selfAuthData.name}}</Checkbox>
+    <Icon v-if="hasSubMenus && !display" type="arrow-right-b" style="font-size: 18px;"></Icon>
+    <Icon v-if="hasSubMenus && display" type="arrow-down-b" style="font-size: 18px;"></Icon>
   </div>
   <CheckboxGroup class="authority-check-items" v-if="hasSubMenus" v-model="subAuthCheckedId" @on-change="subAuthCheckedIdChange">
     <Checkbox class="authority-check-item"
       v-for="(subAuth, subAuthIndex) in selfAuthData.subMenus"
       :key="subAuthIndex"
       :label="subAuth.id"
-      :disabled="!display">{{subAuth.name}}</Checkbox>
+      :disabled="!display">{{subAuth.name}}
+    </Checkbox>
   </CheckboxGroup>
 </td>
 </template>
@@ -31,6 +34,14 @@ export default {
   computed: {
     authId() {
       return this.selfAuthData.id
+    },
+    authChecked: {
+      get() {
+        return this.selfAuthData.checked === 1
+      },
+      set(value) {
+        return value
+      }
     },
     // 是否有子权限菜单
     hasSubMenus() {

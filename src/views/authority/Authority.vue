@@ -13,11 +13,13 @@
       <tr :class="auth.id === currentAuthId ? 'authority-row-current' : ''" v-for="(auth, index) in authData" :key="index" @click.stop="toggleAuthCfm(auth)"> 
         <td class="authority-row-title">{{auth.name}}</td>
         <ebook-authority-item
+          ref="authItem"
           v-for="(item, indexNum) in auth.menus"
           :key="indexNum"
           :auth-data="item"
           :display="auth.id === currentAuthId"
-          @authChange="authChange"></ebook-authority-item>
+          @authChange="authChange">
+        </ebook-authority-item>
       </tr>
     </table>
   </div>
@@ -26,6 +28,7 @@
     :closable="false"
     :mask-closable="false"
     :styles="{top: '200px'}"
+    @on-cancel="cancelSaveAuth"
     @on-ok="confirmSaveAuth">
     <p class="auth-alert-text">是否保存已更改的操作</p>
   </Modal>
@@ -65,7 +68,6 @@ export default {
     return {
       ifNew: false, // 是否为新建
       authMenus: [], // 所选权限菜单的已选择项
-      authMenusBackup: [], // 备份
       currentAuth: {}, // 现在展示的权限
       backupAuth: {}, // 将要展示的权限
       confirmAuthChangeModal: false,
@@ -111,7 +113,6 @@ export default {
           }
         }
       })
-      console.log('currentAuthMenus', menus)
       return menus
     }
   },
@@ -125,8 +126,10 @@ export default {
   mounted() {
     console.log('authHasChange', this.$store.state.app.authHasChange)
     this.initAuthList().then(() => {
-      // 初始化后默认展开第一个权限
-      this.toggleAuth(this.authData[0])
+      if (!_.isEmpty(this.authData)) {
+        // 初始化后默认展开第一个权限
+        this.toggleAuth(this.authData[0])
+      }
     })
   },
   methods: {
@@ -157,17 +160,26 @@ export default {
       this.ifNew = true
       this.addAuthModal.show = true
     },
-    // 响应子组件改变的事件
+    // 响应子组件checked事件
     authChange(flag, changeId) {
       console.log('authChange', flag, changeId)
-      // 标记为有更改
-      this.$store.dispatch('authHasChange', true)
-
       if (flag) { // 增加
         this.authMenus = _.uniq(_.concat(this.authMenus, changeId))
-      } else {
+      } else { // 减少
         this.authMenus = _.pull(this.authMenus, ...changeId)
       }
+      this.checkAuthMenusIfChange()
+    },
+    checkAuthMenusIfChange() {
+      let diff = []
+      // authMenus.length(当前状态) > currentAuthMenus.length(初始状态) 表示增加了权限
+      if (this.authMenus.length > this.currentAuthMenus.length) {
+        diff = _.difference(this.authMenus, this.currentAuthMenus)
+      } else {
+        diff = _.difference(this.currentAuthMenus, this.authMenus)
+      }
+      // 标记是否有更改
+      this.$store.dispatch('authHasChange', !_.isEmpty(diff))
     },
     toggleAuthCfm(auth) {
       if (this.currentAuthId === auth.id) return
@@ -185,12 +197,10 @@ export default {
     // 更新权限checked菜单
     updateAuthMenus() {
       this.authMenus = _.cloneDeep(this.currentAuthMenus)
-      console.log('更新权限checked菜单', this.authMenus)
     },
     // 切换权限
     toggleAuth(auth) {
       this.currentAuth = _.cloneDeep(auth)
-      console.log('切换权限', this.currentAuth)
       this.updateAuthMenus()
     },
     getAuthSaveData() {
@@ -230,12 +240,24 @@ export default {
         })
       })
     },
-    // toggle权限时确认
+    // toggle时确认保存权限
     confirmSaveAuth() {
       console.log('confirmSaveAuth')
       this.sendSaveRequest().then(() => {
         if (!_.isEmpty(this.backupAuth)) {
           this.toggleAuth(this.backupAuth)
+        }
+      })
+    },
+    // toggle时取消保存权限
+    cancelSaveAuth() {
+      console.log('cancelSaveAuth')
+      this.$store.dispatch('authHasChange', false)
+      this.initAuthList().then(() => {
+        if (!_.isEmpty(this.backupAuth)) {
+          this.toggleAuth(this.backupAuth)
+        } else {
+          this.toggleAuth(this.authData[0])
         }
       })
     },
