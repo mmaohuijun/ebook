@@ -124,11 +124,10 @@ export default {
             return value.trim()
           }
         }],
-        officeName: [{ required: true, message: '请选择所属组织', trigger: 'blur' }],
+        officeName: [{ required: true, message: '请选择所属组织' }],
         address: [{
           required: true,
           message: '请填写案场位置',
-          trigger: 'blur',
           transform(value) {
             return value.trim()
           }

@@ -374,7 +374,7 @@ export default {
     textSearch(seachText) {
       this.name = seachText
       // 判断是否有搜索词
-      if (_.isEmpty(this.name.trim())) {
+      if (this.name.trim() === '') {
         if (this.afterSearch) { // 搜索后清空搜索词, 初始化列表
           this.pageNo = 1
           this.initUserList()

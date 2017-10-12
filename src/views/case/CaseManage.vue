@@ -63,7 +63,23 @@ export default {
         {
           title: '所属组织',
           key: 'officeName',
-          ellipsis: true
+          ellipsis: true,
+          renderHeader: (h, params) => [
+            h('span', params.column.title),
+            h('Tooltip', {
+              props: {
+                content: '案场的上一级组织'
+              }
+            }, [h('Icon', {
+              props: {
+                type: 'ios-information-outline'
+              },
+              style: {
+                marginLeft: '5px',
+                cursor: 'pointer'
+              }
+            })])
+          ]
         },
         // {
         //   title: '项目名称',
@@ -88,10 +104,7 @@ export default {
               },
               on: {
                 click: event => {
-                  console.log('进入维度')
                   this.ifClickIcon = true
-                  // event.cancelBubble = true
-                  // this.$router.push({ name: 'CaseAttrs', params: { caseId: this.caseId } })
                 }
               }
             })
@@ -129,7 +142,7 @@ export default {
       this.searchText = searchText
       console.log('goSearch', this.searchText)
       // 判断是否有搜索词
-      if (_.isEmpty(this.searchText.trim())) {
+      if (this.searchText.trim() === '') {
         if (this.afterSearch) { // 搜索后清空搜索词, 初始化列表
           this.pageNo = 1
           this.initCaseList()

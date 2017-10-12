@@ -104,6 +104,7 @@
 <div class="layout__content">
 
   <ebook-header
+    ref="ebookHeader"
     header-title="用户 - 外部用户"
     :dateSearch="true"
     :textSearch="true"
@@ -509,7 +510,8 @@ export default {
         console.log('批量导入保存', response)
         this.$store.dispatch('showSuccessMsg', '上传成功!')
         _.delay(this.hideModal, 500)
-        this.initUserList()
+        // 清空搜索关键字并刷新用户列表
+        this.$refs.ebookHeader.clearSearchText()
       })
     },
     showUploadModal() {
@@ -716,7 +718,7 @@ export default {
     textSearch(searchText) {
       this.name = searchText
       // 判断是否有搜索词
-      if (_.isEmpty(this.name.trim())) {
+      if (this.name.trim() === '') {
         if (this.afterSearch) { // 搜索后清空搜索词, 初始化列表
           this.pageNo = 1
           this.initUserList()
