@@ -26,7 +26,7 @@
       </ebook-header>
 
     <div class="layout__body">
-      <Table ref="unAssignedTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
+      <Table ref="unAssignedTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect"></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
     </div>
@@ -99,7 +99,7 @@ export default {
       isSearch: false, // 是否开始条件筛选
       pageNo: 1,
       total: 20,
-      pageSize: 20,
+      pageSize: 2,
       rowInfo: {},
       clientListTitle: [
         {
@@ -144,8 +144,10 @@ export default {
           ],
           filterMultiple: false,
           filterMethod(value, row) {
+            console.log('row', row)
             if (value === 1) {
               return row.status === '来电'
+              // this.showClientList()
             } else if (value === 2) {
               return row.status === '到访'
             } else {
@@ -208,54 +210,16 @@ export default {
         }
       ],
       extUserList: [
-        {
-          id: 123,
-          label: '123张三'
-        },
-        {
-          id: 222,
-          label: '222小二'
-        }
-      ],
-      // caseList: [
-      //   {
-      //     id: 2012,
-      //     label: '中南售楼处'
-      //   },
-      //   {
-      //     id: 2000,
-      //     label: '金地集团'
-      //   }
-      // ],
-      clientListData: [
         // {
-        //   caseId: 1001,
-        //   id: 1,
-        //   name: '张磊',
-        //   mobile: '1234567',
-        //   caseName: '金地精益',
-        //   status: '成交',
-        //   createTime: '2017-1-1'
+        //   id: 123,
+        //   label: '123张三'
         // },
         // {
-        //   caseId: 1002,
-        //   id: 2,
-        //   name: '张磊1',
-        //   mobile: '1234567',
-        //   caseName: '金地精益',
-        //   status: '成交',
-        //   createTime: '2017-1-1'
-        // },
-        // {
-        //   caseId: 1002,
-        //   id: 3,
-        //   name: '张磊2',
-        //   mobile: '1234567',
-        //   caseName: '金地精益',
-        //   status: '到访',
-        //   createTime: '2017-1-1'
+        //   id: 222,
+        //   label: '222小二'
         // }
-      ]
+      ],
+      clientListData: []
     }
   },
   methods: {
@@ -282,11 +246,15 @@ export default {
     // 文本搜索
     textSearch(seachText) {
       this.name = seachText
-      this.startDate = ''
-      this.endDate = ''
+      // this.startDate = ''
+      // this.endDate = ''
       this.isSearch = true
       this.pageNo = 1
-      this.showClientList()
+      if (this.endDate && this.startDate && this.name === null) {
+        return
+      } else {
+        this.showClientList()
+      }
     },
     pageChange(currentPage) {
       this.pageNo = currentPage
@@ -294,6 +262,7 @@ export default {
     },
     //  获取未分配客户列表
     showClientList() {
+      console.log('issearch', this.isSearch)
       const data = {
         status: this.status,
         name: this.name || '',
@@ -308,6 +277,7 @@ export default {
         data.name = ''
         data.startDate = ''
         data.endDate = ''
+        data.pageNo = this.pageNo
       }
       this.$axios.post('/case-cust/unassigned-list', data).then(response => {
         if (response === null) return
@@ -316,7 +286,7 @@ export default {
           this.clientListData.push(response.data.list[items])
         }
         this.total = response.data.total
-        console.log('clientListData', this.clientListData)
+        console.log('total', this.total)
         this.deselectedAll()
       })
     },
@@ -437,7 +407,8 @@ export default {
       this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
         if (response === null) return
         this.isSearch = false
-        this.showClientList()
+        this.pageChange()
+        // this.showClientList()
         // this.isShow = false
       })
     },
@@ -446,7 +417,8 @@ export default {
       this.$axios.post('/case-cust/assign', data).then(response => {
         if (response === null) return
         this.isSearch = false
-        this.showClientList()
+        this.pageChange()
+        // this.showClientList()
         // this.isShow = false
       })
     },
