@@ -226,11 +226,15 @@ export default {
     // 文本搜索
     textSearch(seachText) {
       this.name = seachText
-      this.startDate = ''
-      this.endDate = ''
+      // this.startDate = ''
+      // this.endDate = ''
       this.isSearch = true
       this.pageNo = 1
-      this.showClientList()
+      if (this.endDate && this.startDate && this.name === null) {
+        return
+      } else {
+        this.showClientList()
+      }
     },
     pageChange(currentPage) {
       this.pageNo = currentPage
@@ -295,14 +299,14 @@ export default {
         this.$axios.post('/case-cust/del', { id: this.id }).then(response => {
           if (response === null) return
           this.isSearch = false
-          this.showClientList()
+          this.pageChange()
           // this.isShow = false
         })
       } else {
         this.$axios.post('/case-cust/assign-cancel', { id: this.id }).then(response => {
           if (response == null) return
           this.isSearch = false
-          this.showClientList()
+          this.pageChange()
           // this.isShow = false
         })
       }
