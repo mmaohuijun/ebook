@@ -19,7 +19,7 @@
           <Input placeholder="请输入" v-model="caseInfo.name"></Input>
         </Form-item>
         <Form-item label="所属组织：" prop="officeName">
-          <Input placeholder="请输入" v-model="caseInfo.officeName" icon="plus-circled" @on-click="showOrgSelection" readonly></Input>
+          <Input placeholder="请选择" v-model="caseInfo.officeName" icon="plus-circled" @on-click="showOrgSelection" readonly></Input>
         </Form-item>
         <Form-item label="公众号ID：">
           <Input placeholder="请输入" v-model="caseInfo.appID"></Input>
@@ -111,19 +111,6 @@ export default {
         appSecret: '', // 公众号密码
         location: { lng: 121.4806, lat: 31.2408 } // 案场的经纬度
       },
-      // name: '', // 案场名
-      // address: '', // 案场地址
-      // officeIdBackup: '',
-      // officeId: '',  // 所属组织id
-      // officeName: '',  // 所属组织名称
-      // location: { lng: 121.4806, lat: 31.2408 }, // 案场的经纬度
-      // logoUrl: '', // 案场logo
-      // bgImgUrl: '', // 案场背景图
-      // checkCust: false, // 是否开启短信验证
-      // remark: '', // 描述
-      // appName: '', // 公众号名称
-      // appID: '', // 公众号id
-      // appSecret: '', // 公众号密码
       uploadMode: '', // 上传标识 logo或者bg
       logoUploadShow: false,
       bgUploadShow: false,
@@ -204,7 +191,7 @@ export default {
         const reData = response.data
         this.caseDataSource = reData
         for (const key in reData) {
-          this[key] = reData[key]
+          this.caseInfo[key] = reData[key]
         }
         // 全局设置案场名称
         this.$store.dispatch('setCaseName', this.caseInfo.name)
