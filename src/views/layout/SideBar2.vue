@@ -32,20 +32,14 @@
 </aside>
 </template>
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'SideBar2',
   data() {
-    return {
-      sideBarMenu: []
-    }
+    return {}
   },
   computed: {
-    ...mapState({
-      // sideBarMenu: state => state.app.sideBarMenu,
-      sideBarSelect: state => state.app.sideBarSelect
-    }),
     ...mapGetters([
       'hasUserInfo',
       'name',
@@ -54,8 +48,8 @@ export default {
       'auth',
       'loginName',
       'sideBarMenuMap',
-      // 'sideBarMenu',
-      // 'sideBarSelect',
+      'sideBarMenu',
+      'sideBarSelect',
       'BASE_PATH'
     ])
   },
@@ -71,39 +65,13 @@ export default {
         this.$store.dispatch('clearUserInfo')
         this.$router.replace('/')
       })
-    },
-    setSideBarMenu() {
-      console.log('setSideBarMenu', this.sideBarMenu)
-      this.sideBarMenu = []
-      let hasSameMenu = false
-      _.each(this.auth, key => {
-        hasSameMenu = false
-        if (!_.isEmpty(this.sideBarMenu)) {
-          _.each(this.sideBarMenu, menuItem => {
-            if (menuItem.name === this.sideBarMenuMap[key].name) {
-              _.mergeWith(menuItem, this.sideBarMenuMap[key], (objValue, srcValue) => {
-                if (_.isArray(objValue)) {
-                  return _.uniq(objValue.concat(srcValue))
-                }
-              })
-              hasSameMenu = true
-            }
-          })
-        }
-        if (hasSameMenu) return
-        this.sideBarMenu.push(this.sideBarMenuMap[key])
-      })
     }
   },
   mounted() {
-    console.log('侧边栏', this.sideBarMenu)
-    this.setSideBarMenu()
-    // this.$store.dispatch('setSideBarMenu')
-    setTimeout(() => {
-      console.log('2s侧边栏', this.sideBarMenu)
-    }, 2000)
+    this.$store.dispatch('setSideBarMenu')
   },
   destroyed() {
+    // 销毁后强制刷新一下使vuex初始化
     this.$router.go(0)
   }
 }

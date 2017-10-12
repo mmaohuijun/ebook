@@ -277,6 +277,7 @@ export default {
       endDate: '',      // 结束时间
       name: '',         // 搜索关键字
       isSearch: false,  // 是否开始条件筛选
+      afterSearch: false,  // 点击搜索后
       isLocked: false,  // 是否点击了禁用
       selectedId: '',   // 选中的用户Id
       pageNo: 1,        // 页码
@@ -301,7 +302,14 @@ export default {
       authList: {},   // 权限列表
       ruleValidate: {
         name: [
-          { required: true, message: '姓名不能为空', trigger: 'blur' }
+          {
+            required: true,
+            message: '姓名不能为空',
+            trigger: 'blur',
+            transform(value) {
+              return value.trim()
+            }
+          }
         ],
         mobile: [
           { required: true, message: '电话号码不能为空', trigger: 'blur' },
@@ -314,7 +322,7 @@ export default {
           // { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
         roleGroupId: [
-          { required: true, message: '请选择权限', trigger: 'blur' }
+          { required: true, message: '请选择权限' }
         ],
         // no: [
         //   { required: true, message: '工号不能为空', trigger: 'blur' }
@@ -690,8 +698,15 @@ export default {
     },
     // 时间段搜索
     dateSearch(starDate, endDate) {
-      this.startDate = starDate
-      this.endDate = endDate
+      console.log('dateSearch', starDate, endDate)
+      // 如果没有传参数, 说明要清空搜索条件
+      if (_.isUndefined(starDate)) {
+        this.afterSearch = false
+      } else {
+        this.afterSearch = true
+      }
+      this.startDate = starDate || ''
+      this.endDate = endDate || ''
       this.name = ''
       this.isSearch = true
       this.pageNo = 1
@@ -700,6 +715,19 @@ export default {
     // 文本搜索
     textSearch(searchText) {
       this.name = searchText
+      // 判断是否有搜索词
+      if (_.isEmpty(this.name.trim())) {
+        if (this.afterSearch) { // 搜索后清空搜索词, 初始化列表
+          this.pageNo = 1
+          this.initUserList()
+          this.afterSearch = false
+        } else {
+          this.$Message.error('请输入姓名/手机号!')
+        }
+        this.name = ''
+        return
+      }
+      this.afterSearch = true
       this.startDate = ''
       this.endDate = ''
       this.isSearch = true

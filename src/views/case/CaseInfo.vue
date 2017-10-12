@@ -1,9 +1,9 @@
 <template>
 <div>
-  <Form :label-width="120" label-position="left">
+  <Form ref="caseInfo" :model="caseInfo" :label-width="120" label-position="left" :rules="caseInfoRules">
     <div style="overflow: hidden; margin-bottom: 30px;">
       <div class="field-logo">
-        <img v-if="logoUrl !== ''" :src="logoUrl">
+        <img v-if="caseInfo.logoUrl !== ''" :src="caseInfo.logoUrl">
         <img v-else :src="`${BASE_PATH}static/img/field_logo.png`">
         <Button type="primary" class="custom-btn" @click="toggleUploadShow('logo')">更换LOGO</Button>
         <!-- url="http://172.18.84.75:88/admin/case/img-upload"  -->
@@ -15,32 +15,29 @@
           img-format="png"></img-upload>
       </div>
       <div style="float: left; padding-left: 21px;">
-        <Form-item label="案场名称：">
-          <Input placeholder="请输入" v-model="name"></Input>
+        <Form-item label="案场名称：" prop="name">
+          <Input placeholder="请输入" v-model="caseInfo.name"></Input>
         </Form-item>
-        <Form-item label="所属组织：">
-          <Input placeholder="请输入" v-model="officeName" icon="plus-circled" @on-click="showOrgSelection"></Input>
+        <Form-item label="所属组织：" prop="officeName">
+          <Input placeholder="请输入" v-model="caseInfo.officeName" icon="plus-circled" @on-click="showOrgSelection" readonly></Input>
         </Form-item>
         <Form-item label="公众号ID：">
-          <Input placeholder="请输入" v-model="appID"></Input>
+          <Input placeholder="请输入" v-model="caseInfo.appID"></Input>
         </Form-item>
         <Form-item label="公众号名称：">
-          <Input placeholder="请输入" v-model="appName"></Input>
+          <Input placeholder="请输入" v-model="caseInfo.appName"></Input>
         </Form-item>
         <!-- <Form-item label="Secretkey：">
-          <Input placeholder="请输入" v-model="appSecret"></Input>
+          <Input placeholder="请输入" v-model="caseInfo.appSecret"></Input>
         </Form-item> -->
         <Form-item label="短信验证：">
-          <i-switch v-model="checkCust">
-            <span slot="open"></span>
-            <span slot="close"></span>
-          </i-switch>
+          <i-switch v-model="caseInfo.checkCust"></i-switch>
         </Form-item>
       </div>
       <div class="field-bg">
         <div class="field-bg__title">案场图片：</div>
         <div class="field-bg__img">
-          <img v-if="bgImgUrl !== ''" :src="bgImgUrl" alt="">
+          <img v-if="caseInfo.bgImgUrl !== ''" :src="caseInfo.bgImgUrl" alt="">
           <img v-else :src="`${BASE_PATH}static/img/field_bg.png`" alt="">
           <Button type="ghost" class="btn-upload-field-bg" @click="toggleUploadShow('bg')">上传图片</Button>
           <img-upload field="file"
@@ -52,15 +49,15 @@
         </div>
       </div>
     </div>
-    <div style="width: 540px; height: 43px;">
-      <Form-item label="案场位置：" style="width: 440px; float: left;">
-        <Input placeholder="请输入" v-model="address"></Input>
+    <div style="width: 540px; height: 43px; margin-bottom: 10px;">
+      <Form-item label="案场位置：" style="width: 440px; float: left;" prop="address">
+        <Input placeholder="请输入" v-model="caseInfo.address"></Input>
       </Form-item>
       <!-- <Button type="primary" class="custom-btn" style="float: right; margin-top: -2px;">确定</Button> -->
     </div>
     <div class="field-map" style="width: 100%; height:430px;">
-      <div class="field-location">北纬N{{location.lat}}<br>东经E{{location.lng}}</div>
-      <case-map v-if="caseDataSource.length !== 0 || caseId === '0'" :location="location" @changeMarkerPoint="changeCaseLocation"></case-map>
+      <div class="field-location">北纬N{{caseInfo.location.lat}}<br>东经E{{caseInfo.location.lng}}</div>
+      <case-map v-if="caseDataSource.length !== 0 || caseId === '0'" :location="caseInfo.location" @changeMarkerPoint="changeCaseLocation"></case-map>
     </div>
     <div class="field-bottom-btn">
       <Button type="primary" class="custom-btn" @click="saveCaseInfo">保存</Button>
@@ -101,26 +98,55 @@ export default {
       caseDataSource: [],
       caseInfo: {
         name: '', // 案场名
-        officeId: ''  // 所属组织id
+        officeId: '',  // 所属组织id
+        officeIdBackup: '',
+        officeName: '',  // 所属组织名称
+        address: '', // 案场地址
+        logoUrl: '', // 案场logo
+        bgImgUrl: '', // 案场背景图
+        checkCust: false, // 是否开启短信验证
+        remark: '', // 描述
+        appID: '', // 公众号id
+        appName: '', // 公众号名称
+        appSecret: '', // 公众号密码
+        location: { lng: 121.4806, lat: 31.2408 } // 案场的经纬度
       },
-      name: '', // 案场名
-      address: '', // 案场地址
-      officeId: '',  // 所属组织id
-      officeIdBackup: '',
-      officeName: '',  // 所属组织名称
-      location: { lng: 121.4806, lat: 31.2408 }, // 案场的经纬度
-      logoUrl: '', // 案场logo
-      bgImgUrl: '', // 案场背景图
-      checkCust: false, // 是否开启短信验证
-      remark: '', // 描述
-      appName: '', // 公众号名称
-      appID: '', // 公众号id
-      appSecret: '', // 公众号密码
+      // name: '', // 案场名
+      // address: '', // 案场地址
+      // officeIdBackup: '',
+      // officeId: '',  // 所属组织id
+      // officeName: '',  // 所属组织名称
+      // location: { lng: 121.4806, lat: 31.2408 }, // 案场的经纬度
+      // logoUrl: '', // 案场logo
+      // bgImgUrl: '', // 案场背景图
+      // checkCust: false, // 是否开启短信验证
+      // remark: '', // 描述
+      // appName: '', // 公众号名称
+      // appID: '', // 公众号id
+      // appSecret: '', // 公众号密码
       uploadMode: '', // 上传标识 logo或者bg
       logoUploadShow: false,
       bgUploadShow: false,
       orgModal: false,
-      orgTreeData: []
+      orgTreeData: [],
+      caseInfoRules: {
+        name: [{
+          required: true,
+          message: '请输入案场名称',
+          transform(value) {
+            return value.trim()
+          }
+        }],
+        officeName: [{ required: true, message: '请选择所属组织', trigger: 'blur' }],
+        address: [{
+          required: true,
+          message: '请填写案场位置',
+          trigger: 'blur',
+          transform(value) {
+            return value.trim()
+          }
+        }]
+      }
     }
   },
   computed: {
@@ -142,8 +168,8 @@ export default {
     // 点击'+'弹出组织选择
     showOrgSelection() {
       // 选中现在的组织
-      this.$refs.ebTree.handleChecked(this.officeId)
-      this.officeIdBackup = this.officeId
+      this.$refs.ebTree.handleChecked(this.caseInfo.officeId)
+      this.caseInfo.officeIdBackup = this.caseInfo.officeId
       this.orgModal = true
     },
     // 初始化组织
@@ -158,15 +184,15 @@ export default {
     // 点击组织选择
     onSelectedOrg(id, orgName) {
       console.log('onSelectedOrg', id, orgName)
-      this.officeId = id
-      this.officeName = orgName
+      this.caseInfo.officeId = id
+      this.caseInfo.officeName = orgName
     },
     orgModalDone() {
       console.log('orgModalDone')
       this.orgModal = false
     },
     orgModalCancel() {
-      this.officeId = this.officeIdBackup
+      this.caseInfo.officeId = this.caseInfo.officeIdBackup
       this.$refs.ebTree.handleChecked(this.officeId)
       this.orgModal = false
     },
@@ -181,34 +207,42 @@ export default {
           this[key] = reData[key]
         }
         // 全局设置案场名称
-        this.$store.dispatch('setCaseName', this.name)
+        this.$store.dispatch('setCaseName', this.caseInfo.name)
       })
     },
     // 改变地图坐标点
     changeCaseLocation(point) {
-      this.location = point
+      this.caseInfo.location = point
     },
     getCaseInfoData() {
       const data = {
         id: this.caseId,
-        name: this.name,
-        address: this.address,
-        logoUrl: this.logoUrl,
-        bgImgUrl: this.bgImgUrl,
-        checkCust: this.checkCust,
-        remark: this.remark,
-        appName: this.appName,
-        appID: this.appID,
-        appSecret: this.appSecret,
-        'location.lng': this.location.lng,
-        'location.lat': this.location.lat,
-        officeId: Number(this.officeId) || 0
+        name: this.caseInfo.name,
+        address: this.caseInfo.address,
+        logoUrl: this.caseInfo.logoUrl,
+        bgImgUrl: this.caseInfo.bgImgUrl,
+        checkCust: this.caseInfo.checkCust,
+        remark: this.caseInfo.remark,
+        appName: this.caseInfo.appName,
+        appID: this.caseInfo.appID,
+        appSecret: this.caseInfo.appSecret,
+        'location.lng': this.caseInfo.location.lng,
+        'location.lat': this.caseInfo.location.lat,
+        officeId: parseInt(this.caseInfo.officeId, 10) || 0
       }
-      return data
+      // 验证标识
+      let vFlag = false
+
+      this.$refs.caseInfo.validate(flag => {
+        vFlag = flag
+      })
+      console.log('vFlag', vFlag)
+      return vFlag ? data : false
     },
     // 案场信息 - 点击保存
     saveCaseInfo() {
       const requestData = this.getCaseInfoData()
+      if (!requestData) return
       console.log('saveCaseInfo', requestData)
       this.$axios.get('case/save', { params: requestData }).then(response => {
         if (response === null) return
@@ -223,18 +257,18 @@ export default {
       })
     },
     clearAllData() {
-      this.name = ''
-      this.address = ''
-      this.logoUrl = ''
-      this.bgImgUrl = ''
-      this.checkCust = false
-      this.remark = ''
-      this.appName = ''
-      this.appID = ''
-      this.appSecret = ''
-      this.officeId = ''
-      this.officeName = ''
-      this.location = { lng: 121.4806, lat: 31.2408 }
+      this.caseInfo.name = ''
+      this.caseInfo.address = ''
+      this.caseInfo.logoUrl = ''
+      this.caseInfo.bgImgUrl = ''
+      this.caseInfo.checkCust = false
+      this.caseInfo.remark = ''
+      this.caseInfo.appName = ''
+      this.caseInfo.appID = ''
+      this.caseInfo.appSecret = ''
+      this.caseInfo.officeId = ''
+      this.caseInfo.officeName = ''
+      this.caseInfo.location = { lng: 121.4806, lat: 31.2408 }
     },
     toggleUploadShow(key) {
       this.uploadMode = key
@@ -277,9 +311,9 @@ export default {
         if (response === null) return
         console.log('图片上传 response', response)
         if (this.uploadMode === 'logo') {
-          this.logoUrl = response.data
+          this.caseInfo.logoUrl = response.data
         } else if (this.uploadMode === 'bg') {
-          this.bgImgUrl = response.data
+          this.caseInfo.bgImgUrl = response.data
         }
       })
     }

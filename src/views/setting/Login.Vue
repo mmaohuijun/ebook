@@ -71,7 +71,6 @@ export default {
     },
     goLogin() {
       console.log('goLogin', this.loginName, this.password, this.ifRemember)
-      console.log('sideBarMenu', this.$store.state.app.sideBarMenu)
       const data = this.verifyAccountData()
       if (!data) return
       this.loading = true
@@ -102,12 +101,8 @@ export default {
           this.$store.dispatch('clearLoginName')
         }
 
+        // 根据用户权限跳转其第一个对应的菜单
         this.$router.push({ name: this.firstRoute })
-
-        // this.$store.dispatch('GenerateRoutes').then(() => {
-        //   /** 根据用户权限跳转对应的菜单 */
-        //   this.$router.push({ name: this.firstRoute })
-        // })
       })
     },
     checkIfHadRemeber() {

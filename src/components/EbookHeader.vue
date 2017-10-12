@@ -17,6 +17,7 @@
       placeholder="选择日期"
       style="width: 190px; margin-right: 30px"
       @on-change="onDateChange"
+      @on-clear="onDateClear"
       @on-ok="onDateSearch"></Date-picker>
 
     <Input v-if="textSearch" class="custom__search" icon="search" v-model="seachText" :placeholder="placeholder" @on-click="onTextSearch"></Input>
@@ -51,7 +52,7 @@ export default {
   name: 'EbookHeader',
   data() {
     return {
-      date: '',
+      date: [],
       startDate: '',
       endDate: '',
       seachText: ''
@@ -127,17 +128,25 @@ export default {
   methods: {
     // 选择了时间范围, 返回daterange是一个数组[开始日期, 结束日期]
     onDateChange(daterange) {
-      console.log('onDateChange', daterange)
-      this.startDate = daterange[0]
-      this.endDate = daterange[1]
+      console.log('onDateChange', daterange, _.isEmpty(daterange))
+      if (daterange[0] !== '') {
+        this.startDate = daterange[0]
+        this.endDate = daterange[1]
+      }
     },
     // 点击'确认'进行日期搜索
     onDateSearch() {
+      this.seachText = ''
       this.$emit('onDateSearch', this.startDate, this.endDate)
+    },
+    // 清空日期
+    onDateClear() {
+      this.seachText = ''
+      this.$emit('onDateSearch')
     },
     // 点击'搜索'
     onTextSearch() {
-      if (this.seachText.trim() === '') return
+      this.date = []
       // 把搜索词传出去
       this.$emit('onTextSearch', this.seachText)
     },

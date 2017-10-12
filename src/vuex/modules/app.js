@@ -105,7 +105,6 @@ const app = {
   },
   mutations: {
     SET_SIDEBAR_MENU(state, menu) {
-      console.log('_.isEmpty(menu)', _.isEmpty(menu))
       state.sideBarMenu = menu
     },
     SET_SIDEBAR_SELECT(state, str) {
@@ -153,7 +152,6 @@ const app = {
       let hasSameMenu = false
       _.each(getters.auth, key => {
         hasSameMenu = false
-        // console.log('menu', key, menu)
         _.each(menu, menuItem => {
           if (menuItem.name === sideBarMenuMap[key].name) {
             _.mergeWith(menuItem, sideBarMenuMap[key], (objValue, srcValue) => {
