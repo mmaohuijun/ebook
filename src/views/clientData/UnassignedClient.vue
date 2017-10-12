@@ -75,6 +75,7 @@ export default {
       consultant: '',  // 被选中置业顾问id
       caseId: '', // 被选中案场id
       caseIdList: [], // 多项选择时 案场id数组
+      status: '', // 客户状态：来电、到访、成交
       modal: {
         show: false,
         title: ''
@@ -99,7 +100,7 @@ export default {
       isSearch: false, // 是否开始条件筛选
       pageNo: 1,
       total: 20,
-      pageSize: 2,
+      pageSize: 20,
       rowInfo: {},
       clientListTitle: [
         {
@@ -131,28 +132,22 @@ export default {
           filters: [
             {
               label: '来电',
-              value: 1
+              value: '来电'
             },
             {
               label: '到访',
-              value: 2
+              value: '到访'
             },
             {
               label: '成交',
-              value: 3
+              value: '成交'
             }
           ],
           filterMultiple: false,
-          filterMethod(value, row) {
-            console.log('row', row)
-            if (value === 1) {
-              return row.status === '来电'
-              // this.showClientList()
-            } else if (value === 2) {
-              return row.status === '到访'
-            } else {
-              return row.status === '成交'
-            }
+          filterRemote: value => {
+            console.log('filterRemote', value)
+            this.status = value[0]
+            this.showClientList()
           }
         },
         {
@@ -279,7 +274,7 @@ export default {
         data.endDate = ''
         data.pageNo = this.pageNo
       }
-      this.$axios.post('/case-cust/unassigned-list', data).then(response => {
+      this.$axios.post('case-cust/unassigned-list', data).then(response => {
         if (response === null) return
         this.clientListData = []
         for (const items in response.data.list) {
