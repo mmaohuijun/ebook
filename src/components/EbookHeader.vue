@@ -135,23 +135,21 @@ export default {
     },
     // 点击'确认'进行日期搜索
     onDateSearch() {
-      this.searchText = ''
       this.$emit('onDateSearch', this.startDate, this.endDate)
     },
     // 清空日期
     onDateClear() {
-      this.searchText = ''
       this.$emit('onDateSearch')
     },
     // 点击'搜索'
     onTextSearch() {
-      this.date = []
       // 把搜索词传出去
       this.$emit('onTextSearch', this.searchText)
     },
-    clearSearchText() {
+    // 清除搜索条件
+    clearSearchTerms() {
       this.searchText = ''
-      this.$emit('onTextSearch', this.searchText)
+      this.date = []
     },
     // 点击'上传'
     onUpload() {

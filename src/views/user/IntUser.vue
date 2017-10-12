@@ -119,7 +119,7 @@ export default {
       endDate: '',      // 结束时间
       name: '',         // 搜索关键字
       isSearch: false,  // 是否开始条件筛选
-      afterSearch: false,  // 点击搜索后
+      // afterSearch: false,  // 点击搜索后
       selectedId: '',   // 选中的用户Id
       pageNo: 1,        // 页码
       total: 20,        // 数据总条数
@@ -357,38 +357,14 @@ export default {
     },
     // 时间段搜索
     dateSearch(starDate, endDate) {
-      // 如果没有传参数, 说明要清空搜索条件
-      if (_.isUndefined(starDate)) {
-        this.afterSearch = false
-      } else {
-        this.afterSearch = true
-      }
       this.startDate = starDate || ''
       this.endDate = endDate || ''
-      this.name = ''
-      this.isSearch = true
       this.pageNo = 1
       this.initUserList()
     },
     // 文本搜索
     textSearch(seachText) {
       this.name = seachText
-      // 判断是否有搜索词
-      if (this.name.trim() === '') {
-        if (this.afterSearch) { // 搜索后清空搜索词, 初始化列表
-          this.pageNo = 1
-          this.initUserList()
-          this.afterSearch = false
-        } else {
-          this.$Message.error('请输入姓名/手机号!')
-        }
-        this.name = ''
-        return
-      }
-      this.afterSearch = true
-      this.startDate = ''
-      this.endDate = ''
-      this.isSearch = true
       this.pageNo = 1
       this.initUserList()
     },
@@ -400,16 +376,11 @@ export default {
     // 获取并渲染用户列表
     initUserList() {
       const data = {
-        name: this.name || '',
-        startDate: this.startDate || '',
-        endDate: this.endDate || '',
+        name: this.name,
+        startDate: this.startDate,
+        endDate: this.endDate,
         pageNo: this.pageNo || 1,
         pageSize: this.pageSize
-      }
-      if (!this.isSearch) {
-        this.name = ''
-        this.startDate = ''
-        this.endDate = ''
       }
       this.$axios.post('int-user/list', data).then(response => {
         if (response === null) return
