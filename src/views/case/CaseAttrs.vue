@@ -33,7 +33,7 @@
     </div>
   </div>
 
-    <Modal
+  <Modal
     v-model="attrsGroupModal"
     :closable="false"
     :mask-closable="false"

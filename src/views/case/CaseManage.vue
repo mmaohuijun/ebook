@@ -180,7 +180,7 @@ export default {
     onClickCaseItem(item) {
       console.log('onClickCaseItem', item)
       this.$store.dispatch('setCaseId', item.id)
-      this.$store.dispatch('setCaseName', item.projectName)
+      this.$store.dispatch('setCaseName', item.name)
 
       // 判断是否点击'查看维度'按钮
       if (this.ifClickIcon) {
