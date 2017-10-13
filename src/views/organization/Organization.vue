@@ -164,6 +164,9 @@ export default {
           this.treeData.push(response.data[items])
         }
         console.log('treeData', this.treeData)
+        if (this.treeData === null) {
+          this.$Message.error('暂无数据，请点击右上角+按钮添加')
+        }
       })
     },
     hideModal() {  // 隐藏模态框

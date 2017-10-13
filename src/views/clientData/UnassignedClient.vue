@@ -146,7 +146,8 @@ export default {
           filterRemote: value => {
             console.log('filterRemote', value)
             this.status = value[0]
-            this.showClientList()
+            // this.showClientList()
+            this.pageChange()
           }
         },
         {
