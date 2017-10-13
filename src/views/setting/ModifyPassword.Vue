@@ -23,6 +23,13 @@
       </Form>
     </div>
   </div>
+  <Modal
+    v-model="confirmModal.show"
+    :closable="false"
+    @on-ok="ok"
+    width="500">
+    <p class="modal-style">{{confirmModal.title}}</p>
+  </Modal>
 </div>
 </template>
 <script>
@@ -69,6 +76,10 @@ export default {
         confirmPwd: [
           { validator: vConfirmPwd, trigger: 'blur' }
         ]
+      },
+      confirmModal: {
+        show: false,
+        title: '密码已修改成功，请重新登录。'
       }
     }
   },
@@ -88,9 +99,8 @@ export default {
         if (valid) {
           this.$axios.post('/chg-passwd', { password: this.modifyPwd.oldPwd, newPassword: this.modifyPwd.newPwd }).then(response => {
             if (response === null) return
-            this.$router.push({ name: 'Login' })
+            this.confirmModal.show = true
           })
-          this.$Message.success('提交成功！')
         } else {
           this.$Message.error('表单验证失败')
         }
@@ -98,6 +108,9 @@ export default {
     },
     cancel() {
       this.$router.go(-1)
+    },
+    ok() {
+      this.$router.push({ name: 'login' })
     }
   }
 }
