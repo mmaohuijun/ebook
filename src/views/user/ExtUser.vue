@@ -448,7 +448,116 @@ export default {
       return `${process.env.BASE_URL}ext-user/batch-import`
     }
   },
+  mounted() {
+    this.initUserList()
+    this.getAuthList()
+  },
   methods: {
+    // 获取并渲染用户列表
+    initUserList() {
+      const data = {
+        name: this.name,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        pageNo: this.pageNo || 1,
+        pageSize: this.pageSize
+      }
+      this.$axios.get('ext-user/list', { params: data }).then(response => {
+        if (response === null) return
+        console.log('用户列表', response.data)
+        this.userListData = []
+        for (const items in response.data.list) {
+          this.userListData.push(response.data.list[items])
+        }
+        this.total = response.data.total
+        this.deselectedAll()
+      })
+    },
+    // 取消所有选中
+    deselectedAll() {
+      this.$refs.userListTable.selectAll(false)
+      this.selection = []
+      this.selectedId = ''
+    },
+        // 新增用户
+    showAddUserModal() {
+      for (const item in this.userInfo) {
+        this.userInfo[item] = ''
+      }
+      this.userInfo.password = '123456'
+      this.userInfo.adminFlag = false
+      this.userInfo.loginFlag = false
+      this.getCaseList()
+
+      this.userInfo.id = 0
+      this.userModal.title = '新建用户'
+      this.userModal.show = true
+    },
+    // 修改用户
+    editModal(userId) {
+      this.$axios.get('/ext-user/detail', { params: { id: userId } }).then(response => {
+        if (response === null) return
+        console.log('editModal', response)
+        for (const items in response.data) {
+          // 将数字类型强制转换为字符串类型
+          if (_.isNumber(response.data[items])) {
+            this.userInfo[items] = String(response.data[items])
+          } else {
+            this.userInfo[items] = response.data[items]
+          }
+        }
+        if (this.userInfo.caseId !== 0 && this.userInfo.caseId !== '0') {
+          this.userInfo.caseId = String(this.userInfo.caseId)
+        }
+        this.userInfo.loginFlag = !response.data.loginFlag
+        this.userInfo.password = '123456'
+      })
+      this.getCaseList()
+      this.userModal.title = '修改用户'
+      this.userModal.show = true
+    },
+    // 点击用户'完成'按钮
+    saveUser(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          this.userModal.saveLoading = true
+          if (this.userInfo.id === 0) {
+            this.saveUserInfo('新建用户成功')
+            this.pageNo = 1
+          } else {
+            this.saveUserInfo('修改用户成功')
+          }
+        } else {
+          this.userModal.saveLoading = false
+        }
+      })
+    },
+    saveUserInfo(successText) {
+      const data = {
+        id: this.userInfo.id,
+        name: this.userInfo.name,
+        mobile: this.userInfo.mobile,
+        password: this.userInfo.password,
+        // email: this.userInfo.email,
+        // no: this.userInfo.no,
+        adminFlag: this.userInfo.adminFlag,
+        caseId: this.userInfo.caseId,
+        roleGroupId: this.userInfo.roleGroupId,
+        loginFlag: !this.userInfo.loginFlag
+      }
+      this.$axios.get('/ext-user/save', { params: data }).then(response => {
+        if (response === null) return
+        this.$Message.success(successText)
+        this.initUserList()
+      })
+      this.hideModal()
+    },
+    // 清空搜索条件
+    clearSearchTerms() {
+      this.name = ''
+      this.startDate = ''
+      this.endDate = ''
+    },
     handleUpload(file) {
       this.upload.file = file
     },
@@ -508,6 +617,7 @@ export default {
         _.delay(this.hideModal, 500)
         // 清空所有搜索条件
         this.$refs.ebookHeader.clearSearchTerms()
+        this.clearSearchTerms()
         this.initUserList()
       })
     },
@@ -520,8 +630,9 @@ export default {
       this.confirmModal.title = title
       this.confirmModal.show = true
     },
+    // 点击'锁'按钮的'确认'
     saveEdit() {
-      if (this.isLocked) {
+      if (this.isLocked) { // 禁用该用户
         console.log('点击确定Modal 禁用该用户', this.selectedId)
         this.$axios.post('ext-user/lock', { id: this.selectedId }).then(response => {
           if (response === null) return
@@ -529,7 +640,7 @@ export default {
           console.log('禁用该用户', response)
           this.initUserList()
         })
-      } else {
+      } else { // 解锁该用户
         console.log('点击确定Modal 解锁该用户', this.selectedId)
         this.$axios.post('ext-user/unlock', { id: this.selectedId }).then(response => {
           if (response === null) return
@@ -581,80 +692,6 @@ export default {
         const responseData = response.data
         this.authList = responseData
       })
-    },
-    // 新增用户
-    showAddUserModal() {
-      for (const item in this.userInfo) {
-        this.userInfo[item] = ''
-      }
-      this.userInfo.password = '123456'
-      this.userInfo.adminFlag = false
-      this.userInfo.loginFlag = false
-      this.getCaseList()
-
-      this.userInfo.id = 0
-      this.userModal.title = '新建用户'
-      this.userModal.show = true
-    },
-    // 修改用户
-    editModal(userId) {
-      this.$axios.get('/ext-user/detail', { params: { id: userId } }).then(response => {
-        if (response === null) return
-        console.log('editModal', response)
-        for (const items in response.data) {
-          // 将数字类型强制转换为字符串类型
-          if (_.isNumber(response.data[items])) {
-            this.userInfo[items] = String(response.data[items])
-          } else {
-            this.userInfo[items] = response.data[items]
-          }
-        }
-        if (this.userInfo.caseId !== 0 && this.userInfo.caseId !== '0') {
-          this.userInfo.caseId = String(this.userInfo.caseId)
-        }
-        this.userInfo.loginFlag = !response.data.loginFlag
-        this.userInfo.password = '123456'
-      })
-      this.getCaseList()
-      this.userModal.title = '修改用户'
-      this.userModal.show = true
-    },
-    // 点击用户完成按钮
-    saveUser(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          this.userModal.saveLoading = true
-          if (this.userInfo.id === 0) {
-            this.saveUserInfo('新建用户成功')
-            this.pageNo = 1
-          } else {
-            this.saveUserInfo('修改用户成功')
-          }
-        } else {
-          this.userModal.saveLoading = false
-        }
-      })
-    },
-    saveUserInfo(successText) {
-      const data = {
-        id: this.userInfo.id,
-        name: this.userInfo.name,
-        mobile: this.userInfo.mobile,
-        password: this.userInfo.password,
-        // email: this.userInfo.email,
-        // no: this.userInfo.no,
-        adminFlag: this.userInfo.adminFlag,
-        caseId: this.userInfo.caseId,
-        roleGroupId: this.userInfo.roleGroupId,
-        loginFlag: !this.userInfo.loginFlag
-      }
-      this.$axios.get('/ext-user/save', { params: data }).then(response => {
-        if (response === null) return
-        this.$Message.success(successText)
-        this.name = ''
-        this.initUserList()
-      })
-      this.hideModal()
     },
     hideModal() {
       this.userModal.saveLoading = false
@@ -712,37 +749,7 @@ export default {
     pageChange(currentPage) {
       this.pageNo = currentPage
       this.initUserList()
-    },
-    // 获取并渲染用户列表
-    initUserList() {
-      const data = {
-        name: this.name,
-        startDate: this.startDate,
-        endDate: this.endDate,
-        pageNo: this.pageNo || 1,
-        pageSize: this.pageSize
-      }
-      this.$axios.get('ext-user/list', { params: data }).then(response => {
-        if (response === null) return
-        console.log('用户列表', response.data)
-        this.userListData = []
-        for (const items in response.data.list) {
-          this.userListData.push(response.data.list[items])
-        }
-        this.total = response.data.total
-        this.deselectedAll()
-      })
-    },
-    // 取消所有选中
-    deselectedAll() {
-      this.$refs.userListTable.selectAll(false)
-      this.selection = []
-      this.selectedId = ''
     }
-  },
-  mounted() {
-    this.initUserList()
-    this.getAuthList()
   },
   components: {
     EbookHeader
