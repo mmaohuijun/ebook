@@ -64,6 +64,16 @@ export default {
         }
       } else callback()
     }
+    const vremark = (rule, value, callback) => {
+      if (value) {
+        console.log('value length', value.length)
+        if (value.length > 240) {
+          callback(new Error('描述请在240字以内'))
+        } else {
+          callback()
+        }
+      } else callback()
+    }
     return {
       orgForm: {
         name: '',
@@ -77,6 +87,9 @@ export default {
         ],
         mobile: [
           { validator: vmobile, trigger: 'blur' }
+        ],
+        remark: [
+          { validator: vremark, trigger: 'blur' }
         ]
       },
       modal: {
