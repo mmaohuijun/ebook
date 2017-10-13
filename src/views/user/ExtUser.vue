@@ -545,12 +545,19 @@ export default {
         roleGroupId: this.userInfo.roleGroupId,
         loginFlag: !this.userInfo.loginFlag
       }
-      this.$axios.get('/ext-user/save', { params: data }).then(response => {
+
+      this.$axios.get('ext-user/save', { params: data }).then(response => {
+        this.userModal.saveLoading = false
         if (response === null) return
-        this.$Message.success(successText)
+        this.$store.dispatch('showSuccessMsg', successText)
+        if (this.userModal.title === '新建用户') {
+          // 清空所有搜索条件
+          this.$refs.ebookHeader.clearSearchTerms()
+          this.clearSearchTerms()
+        }
         this.initUserList()
+        _.delay(this.hideModal, 500)
       })
-      this.hideModal()
     },
     // 清空搜索条件
     clearSearchTerms() {
@@ -611,6 +618,7 @@ export default {
       }
       this.upload.saveLoading = true
       this.$axios.post('ext-user/batch-save').then(response => {
+        this.upload.saveLoading = false
         if (response === null) return
         console.log('批量导入保存', response)
         this.$store.dispatch('showSuccessMsg', '上传成功!')
