@@ -25,10 +25,13 @@
   </div>
   <Modal
     v-model="confirmModal.show"
+    :mask-closable="false"
     :closable="false"
-    @on-ok="ok"
-    width="500">
+    width="450">
     <p class="modal-style">{{confirmModal.title}}</p>
+    <div slot="footer">
+      <Button type="primary" size="large" style="color:#fff;background:#1c93ea;text-align:center;margin-right:0" @click="ok">完成</Button>
+    </div> 
   </Modal>
 </div>
 </template>
@@ -85,15 +88,6 @@ export default {
   },
   methods: {
     save(name) {
-      // if (this.newPwd !== this.confirmPwd) {
-      //   this.$Message.error('两次密码不相同')
-      //   return
-      // }
-
-      // if (this.newPwd === null || this.confirmPwd === null) {
-      //   this.$Message.error('密码不能为空')
-      //   return
-      // }
       this.$refs[name].validate(valid => {
         console.log(valid)
         if (valid) {
@@ -131,4 +125,5 @@ export default {
     padding: 20px 0 25px;
     text-align: center;
   }
+
 </style>
