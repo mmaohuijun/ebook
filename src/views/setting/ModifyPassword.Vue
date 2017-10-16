@@ -104,7 +104,8 @@ export default {
       this.$router.go(-1)
     },
     ok() {
-      this.$router.push({ name: 'login' })
+      // this.$router.push({ name: 'login' })
+      this.$router.push({ name: 'Login' })
     }
   }
 }
