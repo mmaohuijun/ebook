@@ -290,7 +290,6 @@ router.beforeEach((to, from, next) => {
 
   if (from.name === 'Authority') {
     if (store.getters.authHasChange) {
-      console.log('有权限没有保存')
       store.dispatch('showAuthAlert')
       return
     }
@@ -310,8 +309,6 @@ router.beforeEach((to, from, next) => {
         }
         // 检查是否有权限
         if (_.indexOf(store.getters.auth, toName) !== -1) {
-          console.log('有权限')
-
           // 判断url后面是否带有参数
           if (!_.isEmpty(to.params)) {
             if (to.params.caseId) {
@@ -321,7 +318,6 @@ router.beforeEach((to, from, next) => {
           }
           next()
         } else {
-          console.log('没有权限')
           store.dispatch('showErrorMsg', '抱歉, 您没有权限访问!')
         }
       } else {

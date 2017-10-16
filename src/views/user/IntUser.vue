@@ -20,6 +20,7 @@
   </div>  -->
 
   <ebook-header
+    ref="ebookHeader"
     header-title="用户 - 内部用户"
     :dateSearch="true"
     :textSearch="true"
@@ -39,11 +40,11 @@
   </div>
   <Modal
     on-cancel="resetFields('userInfo')"
-    v-model="modal.show"
+    v-model="userModal.show"
     :closable="false"
     width="560">
     <p slot="header">
-      {{modal.title}}
+      {{userModal.title}}
     </p>
     <Form ref="userInfo" :model="userInfo" :rules="ruleValidate" :label-width="120" class="modal-form">
       <Form-item label="姓名：" prop="name">
@@ -72,8 +73,8 @@
       </Form-item>
     </Form>
     <div slot="footer">
-      <Button type="text" size="large" @click="modal.show = false">取消</Button>
-      <Button type="primary" size="large" :loading="modal.saveLoading" @click="saveUser('userInfo')">完成</Button>
+      <Button type="text" size="large" @click="userModal.show = false">取消</Button>
+      <Button type="primary" size="large" :loading="userModal.saveLoading" @click="saveUser('userInfo')">完成</Button>
     </div>
   </Modal>
 
@@ -106,10 +107,10 @@ export default {
       }
     }
     return {
-      modal: {
-        show: false,        // 是否显示编辑和查看modal
+      userModal: {
+        show: false,        // 是否显示编辑和查看userModal
         saveLoading: false, // 是否正在保存用户中
-        title: ''           // modal的标题
+        title: ''           // userModal的标题
       },
       confirmModal: {
         show: false,
@@ -119,7 +120,6 @@ export default {
       endDate: '',      // 结束时间
       name: '',         // 搜索关键字
       isSearch: false,  // 是否开始条件筛选
-      // afterSearch: false,  // 点击搜索后
       selectedId: '',   // 选中的用户Id
       pageNo: 1,        // 页码
       total: 20,        // 数据总条数
@@ -151,7 +151,7 @@ export default {
           { validator: MobileVaild, trigger: 'blur' }
         ],
         email: [
-          { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+          { type: 'email', message: '邮箱格式不正确' }
         ],
         password: [
           // { required: true, message: '密码不能为空', trigger: 'blur' }
@@ -254,18 +254,17 @@ export default {
         this.$store.dispatch('showErrorMsg', '请先选择用户!')
         return
       }
-      // this.userListData.splice(index, 1)
       this.selectedId = selectedId
       this.confirmModal.show = true
     },
     sendDeleteRequest() {
       this.$axios.get('int-user/del', { params: { id: this.selectedId } }).then(response => {
         if (response === null) return
-        this.$Message.success('删除成功')
+        this.$store.dispatch('showSuccessMsg', '删除成功')
         this.initUserList()
       })
     },
-    // 新增用户modal
+    // 新增用户
     addModal() {
       for (const item in this.userInfo) {
         this.userInfo[item] = ''
@@ -273,8 +272,8 @@ export default {
       this.userInfo.password = '123456'
       this.userInfo.id = 0
       this.userInfo.loginFlag = false
-      this.modal.title = '新建用户'
-      this.modal.show = true
+      this.userModal.title = '新建用户'
+      this.userModal.show = true
     },
     // 获取权限列表
     getAuthList() {
@@ -283,7 +282,7 @@ export default {
         this.authList = responseData
       })
     },
-    // 修改用户modal
+    // 修改用户
     editModal(userId) {
       this.$axios.get('int-user/detail', { params: { id: userId } }).then(response => {
         if (response === null) return
@@ -299,8 +298,8 @@ export default {
         this.userInfo.loginFlag = !response.data.loginFlag
         this.userInfo.password = '123456'
       })
-      this.modal.title = '修改用户'
-      this.modal.show = true
+      this.userModal.title = '修改用户'
+      this.userModal.show = true
     },
 
     // 点击用户完成按钮
@@ -308,7 +307,7 @@ export default {
       console.log(typeof this.userInfo.no, this.userInfo.no)
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.modal.saveLoading = true
+          this.userModal.saveLoading = true
           if (this.userInfo.id === 0) {
             this.saveUserInfo('新建用户成功')
             this.pageNo = 1
@@ -316,7 +315,7 @@ export default {
             this.saveUserInfo('修改用户成功')
           }
         } else {
-          this.modal.saveLoading = false
+          this.userModal.saveLoading = false
         }
       })
     },
@@ -332,13 +331,23 @@ export default {
         loginFlag: !this.userInfo.loginFlag
       }
       this.$axios.post('int-user/save', data).then(response => {
+        this.userModal.saveLoading = false
         if (response === null) return
-        this.$Message.success(successText)
-        this.name = ''
+        this.$store.dispatch('showSuccessMsg', successText)
+        this.userModal.show = false
+        if (this.userModal.title === '新建用户') {
+          // 清空所有搜索条件
+          this.$refs.ebookHeader.clearSearchTerms()
+          this.clearSearchTerms()
+        }
         this.initUserList()
       })
-      this.modal.show = false
-      this.modal.saveLoading = false
+    },
+    // 清空搜索条件
+    clearSearchTerms() {
+      this.name = ''
+      this.startDate = ''
+      this.endDate = ''
     },
     // 清空用户信息
     resetFields(name) {
@@ -402,7 +411,7 @@ export default {
     this.getAuthList()
   },
   watch: {
-    'modal.show'(val, oldVal) {
+    'userModal.show'(val, oldVal) {
       if (!val) {
         this.resetFields('userInfo')
       }
