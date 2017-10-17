@@ -69,10 +69,6 @@ export default {
   },
   mounted() {
     this.$store.dispatch('setSideBarMenu')
-  },
-  destroyed() {
-    // 销毁后强制刷新一下使vuex初始化
-    this.$router.go(0)
   }
 }
 </script>

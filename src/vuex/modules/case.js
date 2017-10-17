@@ -1,4 +1,4 @@
-import $storage from 'api/storage'
+import $storage from 'mixins/storage'
 
 const cases = {
   state: {

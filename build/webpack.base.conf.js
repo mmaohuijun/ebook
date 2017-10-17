@@ -27,7 +27,8 @@ module.exports = {
       'components': resolve('src/components'),
       'views': resolve('src/views'),
       'assets': resolve('src/assets'),
-      'api': resolve('src/api')
+      'api': resolve('src/api'),
+      'mixins': resolve('src/mixins')
     }
   },
   plugins: [

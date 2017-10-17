@@ -105,6 +105,7 @@ const app = {
   },
   mutations: {
     SET_SIDEBAR_MENU(state, menu) {
+      // console.log('设置SIDEBAR_MENU', menu)
       state.sideBarMenu = menu
     },
     SET_SIDEBAR_SELECT(state, str) {
@@ -164,6 +165,20 @@ const app = {
         })
         if (hasSameMenu) return
         menu.push(sideBarMenuMap[key])
+      })
+
+      // 侧边栏菜单组装完成后再和权限列表比对, 把不在权限列表内的菜单移除
+      _.each(menu, (menuItem, index) => {
+        if (menuItem.children.length !== 0) {
+          const child = []
+          _.each(menuItem.children, (subMenuItem, index) => {
+            // 子菜单是否在权限列表内
+            if (_.indexOf(getters.auth, subMenuItem.name) !== -1) {
+              child.push(subMenuItem)
+            }
+          })
+          menuItem.children = child
+        }
       })
       commit('SET_SIDEBAR_MENU', menu)
     },
