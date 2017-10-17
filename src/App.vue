@@ -1,5 +1,7 @@
 <template>
-  <router-view></router-view>
+  <transition name="fade" mode="out-in">
+    <router-view></router-view>
+  </transition>
 </template>
 
 <script>
@@ -14,7 +16,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'loadingStatus',
       'ifShowErrorMsg',
       'errorMsgText',
       'ifShowSuccessMsg',
@@ -22,14 +23,6 @@ export default {
     ])
   },
   watch: {
-    // loadingStatus(flag) {
-    //   if (!flag) return
-    //   this.msg = this.$Message.loading({
-    //     content: '正在加载中...',
-    //     duration: 0
-    //   })
-    //   _.delay(this.msg, 500)
-    // },
     ifShowErrorMsg(flag) {
       if (!flag) return
       this.$Message.error({

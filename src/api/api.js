@@ -30,7 +30,7 @@ const responseStatus = {
 // 添加请求拦截器
 $axios.interceptors.request.use(config => {
   NProgress.start() // 开启Progress
-  store.dispatch('toggleLoadingStatus', true)
+
   // 在发送请求之前做些什么
   // console.log('axios Config', config)
   return config
@@ -43,7 +43,7 @@ $axios.interceptors.request.use(config => {
 // 添加响应拦截器
 $axios.interceptors.response.use(response => {
   NProgress.done() // 结束Progress
-  store.dispatch('toggleLoadingStatus', false)
+
   // 对响应数据做点什么
   const retCode = response.data.retCode
   const retMsg = response.data.retMsg
@@ -52,7 +52,7 @@ $axios.interceptors.response.use(response => {
     return response.data
   } else if (retCode === responseStatus.sessiontimeout) {
     console.log('sessiontimeout')
-    store.dispatch('toggleLoginStatus', false)
+
     store.dispatch('clearUserInfo')
     router.push({ name: 'Login' })
     return null
@@ -63,7 +63,7 @@ $axios.interceptors.response.use(response => {
 }, error => {
   // store.commit('hideLoading')
   NProgress.done() // 结束Progress
-  store.dispatch('toggleLoadingStatus', false)
+
   // 对请求错误做些什么
   console.log(error)
   return Promise.reject(error)

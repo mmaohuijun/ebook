@@ -96,7 +96,11 @@ export default {
           key: 'action',
           width: 150,
           align: 'center',
-          render: (h, params) => h('div', [
+          render: (h, params) => h('Tooltip', {
+            props: {
+              content: '客户维度'
+            }
+          }, [
             h('i', {
               class: 'iconfont icon-weidu',
               style: {

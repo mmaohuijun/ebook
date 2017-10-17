@@ -93,7 +93,6 @@ const app = {
     sideBarSelect: '', // 侧边栏当前选择
     currentPathName: '', // 当前路径
     hasLogin: false, // 是否登录
-    isLoading: false, // 加载中...
     ifShowErrorMsg: false,
     ifShowSuccessMsg: false,
     errorMsgText: '',
@@ -128,9 +127,6 @@ const app = {
     },
     TOGGLE_LOGIN_STATUS(state, flag) {
       state.hasLogin = flag
-    },
-    TOGGLE_LOADING_STATUS(state, flag) {
-      state.isLoading = flag
     },
     SHOW_ERROR_MSG(state, text) {
       state.ifShowErrorMsg = true
@@ -199,9 +195,6 @@ const app = {
     },
     toggleLoginStatus({ commit }, flag) {
       commit('TOGGLE_LOGIN_STATUS', flag)
-    },
-    toggleLoadingStatus({ commit }, flag) {
-      commit('TOGGLE_LOADING_STATUS', flag)
     },
     showErrorMsg({ commit }, text) {
       commit('SHOW_ERROR_MSG', text)
