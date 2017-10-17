@@ -40,9 +40,6 @@ export default {
       ]
     }
   },
-  mounted() {
-    console.log('caseName', this.caseName)
-  },
   computed: {
     ...mapGetters([
       'caseId',

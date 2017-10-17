@@ -593,6 +593,7 @@ export default {
 
       this.upload.previewList = []
       this.upload.previewHasError = false
+      this.upload.success = false
       this.$axios.post('ext-user/batch-import', requestData).then(response => {
         if (response === null) return
         console.log('上传文件!', response)
