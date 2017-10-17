@@ -35,7 +35,6 @@
 
   <div class="layout__body">
     <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
-    <Spin size="large" fix v-if="false"></Spin>
     <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
   </div>
   <Modal
@@ -92,13 +91,6 @@ import EbookHeader from 'components/EbookHeader'
 
 export default {
   data() {
-    // const validateNumber = (rule, value, callback) => {
-    //   if (!_.isFinite(parseInt(value))) {
-    //     callback(new Error('请输入数字'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
     const MobileVaild = (rule, value, callback) => {
       if (!/^1(?:3|5|7|8)\d{9}$/.test(value)) {
         callback(new Error('电话号码格式不正确'))

@@ -1,28 +1,12 @@
 <template>
   <div class="layout">
     <side-bar></side-bar>
-    <router-view></router-view>
+    <div class="layout__content-wrap">
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
+    </div>
   </div>
-  <!-- <div class="layout">
-    <Row type="flex" class-name="full-height">
-      <i-col span="5" class="layout-menu-left">
-        <side-bar></side-bar>
-      </i-col>
-      <i-col span="19">
-        <div class="layout-header">
-          <head-bar></head-bar>
-        </div>
-        <div class="layout-breadcrumb">
-          <breadcrumb></breadcrumb>
-        </div>
-        <div class="layout-content">
-          <div class="layout-content-main">内容区域
-            <router-view></router-view>
-          </div>
-        </div>
-      </i-col>
-    </Row>
-  </div> -->
 </template>
 
 <script>
@@ -32,8 +16,7 @@ import HeadBar from './HeadBar'
 export default {
   name: 'layout',
   data() {
-    return {
-    }
+    return {}
   },
   components: {
     SideBar,
@@ -64,7 +47,6 @@ export default {
 
   .layout__content {
     height: 100%;
-    margin-left: 260px;
   }
 
   .layout__header {
@@ -449,8 +431,6 @@ export default {
 
 }
 
-
-
 .ivu-checkbox-indeterminate .ivu-checkbox-inner {
 
   &::before {
@@ -472,5 +452,12 @@ export default {
   text-align: center;
   padding-top: 15px;
   color: #4E546C;
+}
+
+.layout__content-wrap {
+  float: left;
+  height: 100%;
+  width: ~'calc(100% - 260px)';
+  position: relative;
 }
 </style>

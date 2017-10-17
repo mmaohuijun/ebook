@@ -1,11 +1,5 @@
 <template>
-<div class="layout__content auth">
-  <!-- <div class="layout__header">
-    <h2 class="layout__header-title">权限</h2>
-    <div class="layout__header-tool">
-      <Button class="custom__circle-btn--white" type="primary" shape="circle" icon="plus" @click.stop="addAuth"></Button>
-    </div>
-  </div> -->
+<div class="layout__content auth" v-if="!loadingStatus">
   <ebook-header header-title="权限" :addBtn="true" @onAdd="addAuth"></ebook-header>
   
   <div class="layout__body" @click="onClickTable">
@@ -85,6 +79,9 @@ export default {
     }
   },
   computed: {
+    loadingStatus() {
+      return this.$store.getters.loadingStatus
+    },
     authHasChange() { // 权限是否有变更
       return this.$store.state.app.authHasChange
     },
@@ -124,7 +121,7 @@ export default {
     }
   },
   mounted() {
-    console.log('authHasChange', this.$store.state.app.authHasChange)
+    console.log('loadingStatus', this.loadingStatus)
     this.initAuthList().then(() => {
       if (!_.isEmpty(this.authData)) {
         // 初始化后默认展开第一个权限

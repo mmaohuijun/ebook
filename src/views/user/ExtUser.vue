@@ -30,6 +30,10 @@
     cursor: pointer;
   }
 
+  .ivu-modal-body {
+    min-height: 500px;
+  }
+
   .ivu-btn {
     height: 32px;
     line-height: 20px;
@@ -123,7 +127,6 @@
 
   <div class="layout__body">
     <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
-    <Spin size="large" fix v-if="false"></Spin>
     <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
   </div>
   <Modal
@@ -710,6 +713,7 @@ export default {
       this.upload.modalShow = false
       this.upload.file = null
       this.upload.previewList = []
+      this.upload.previewHasError = false
       this.upload.success = false
       this.resetFields('upload')
     },

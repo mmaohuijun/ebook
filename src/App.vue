@@ -22,14 +22,14 @@ export default {
     ])
   },
   watch: {
-    loadingStatus(flag) {
-      if (!flag) return
-      this.msg = this.$Message.loading({
-        content: '正在加载中...',
-        duration: 0
-      })
-      _.delay(this.msg, 500)
-    },
+    // loadingStatus(flag) {
+    //   if (!flag) return
+    //   this.msg = this.$Message.loading({
+    //     content: '正在加载中...',
+    //     duration: 0
+    //   })
+    //   _.delay(this.msg, 500)
+    // },
     ifShowErrorMsg(flag) {
       if (!flag) return
       this.$Message.error({

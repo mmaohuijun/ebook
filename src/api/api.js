@@ -3,6 +3,9 @@ import store from '../vuex/store'
 import { router } from '../router'
 import qs from 'qs'
 
+import NProgress from 'nprogress' // Progress 进度条
+import 'nprogress/nprogress.css'// Progress 进度条样式
+
 const $axios = axios.create({
   baseURL: process.env.BASE_URL,
   timeout: 30000,
@@ -26,6 +29,7 @@ const responseStatus = {
 
 // 添加请求拦截器
 $axios.interceptors.request.use(config => {
+  NProgress.start() // 开启Progress
   store.dispatch('toggleLoadingStatus', true)
   // 在发送请求之前做些什么
   // console.log('axios Config', config)
@@ -38,6 +42,7 @@ $axios.interceptors.request.use(config => {
 
 // 添加响应拦截器
 $axios.interceptors.response.use(response => {
+  NProgress.done() // 结束Progress
   store.dispatch('toggleLoadingStatus', false)
   // 对响应数据做点什么
   const retCode = response.data.retCode
@@ -57,6 +62,7 @@ $axios.interceptors.response.use(response => {
   }
 }, error => {
   // store.commit('hideLoading')
+  NProgress.done() // 结束Progress
   store.dispatch('toggleLoadingStatus', false)
   // 对请求错误做些什么
   console.log(error)
