@@ -190,7 +190,7 @@
       <Form-item>
         <span class="custom__uploadmodal_btn" @click.stop.prevent="downloadDemo">下载模板</span>
       </Form-item>
-      <Form-item prop="caseId" style="width: 320px" v-if="userAdminFlag">
+      <Form-item prop="caseId" style="width: 320px" v-if="!ifCaseWorker">
         <Select v-model="upload.caseId" placeholder="请先选择案场" @on-change="onChangeCaseId">
           <Option v-for="items in caseList" :value="items.id" :key="items.id" :label="items.name">{{items.name}}</Option>
         </Select>
@@ -444,8 +444,12 @@ export default {
     }
   },
   computed: {
-    userAdminFlag() {
-      return this.$store.getters.adminFlag
+    // userAdminFlag() {
+    //   return this.$store.getters.adminFlag
+    // },
+    // 是否为案场置业顾问
+    ifCaseWorker() {
+      return this.$store.getters.ifCaseWorker
     },
     uploadAction() {
       return `${process.env.BASE_URL}ext-user/batch-import`
@@ -578,7 +582,7 @@ export default {
     // 校验上传的data
     validateUploadData() {
       let flagV = true
-      if (this.userAdminFlag) { // 如果是内部用户则要验证是否有选择案场
+      if (!this.ifCaseWorker) { // 如果是内部用户则要验证是否有选择案场
         this.$refs.upload.validate(valid => {
           flagV = valid
         })

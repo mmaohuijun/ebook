@@ -5,6 +5,7 @@ const getters = {
   mobile: state => state.user.mobile,
   no: state => state.user.no,
   type: state => state.user.type,
+  ifCaseWorker: state => state.user.type === 'case-worker',
   auth: state => state.user.auth,
   adminFlag: state => state.user.adminFlag,
   loginName: () => {
