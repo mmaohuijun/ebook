@@ -55,14 +55,14 @@
           </Form-item>
           <Form-item>
             <Select placeholder="" style="width: 74px;" v-show="isVilla" v-model="inputModel.apartTypes3">
-              <Option v-for="n in (1000 / 50)" :value="(n * 50)" :key="n">{{n * 50}}</Option>
+              <Option v-for="n in (1000 / 10)" :value="(n * 10)" :key="n">{{n * 10}}</Option>
             </Select>
             <Select placeholder="" style="width: 74px;" v-show="!isVilla" v-model="inputModel.apartTypes3">
               <Option v-for="n in (300 / 10)" :value="(n * 10)" :key="n">{{n * 10}}</Option>
             </Select>
             <span style="margin: 0 10px; font-size: 16px; vertical-align: middle;">-</span>
             <Select placeholder="" style="width: 74px;" v-show="isVilla" v-model="inputModel.apartTypes4">
-              <Option v-for="n in (1000 / 50)" :value="(n * 50)" :key="n">{{n * 50}}</Option>
+              <Option v-for="n in (1000 / 10)" :value="(n * 10)" :key="n">{{n * 10}}</Option>
             </Select>
             <Select placeholder="" style="width: 74px;" v-show="!isVilla" v-model="inputModel.apartTypes4">
               <Option v-for="n in (300 / 10)" :value="(n * 10)" :key="n">{{n * 10}}</Option>

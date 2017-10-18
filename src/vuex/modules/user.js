@@ -18,7 +18,7 @@ const user = {
       state.no = json.no
       state.auth = json.auth
       state.type = json.type
-      state.adminFlag = json.adminFlag
+      state.adminFlag = json.adminFlag || false
     },
     SET_LOGIN_NAME(state, name) {
       state.loginName = name
