@@ -29,7 +29,7 @@
            <Input v-model="addForm.name"></Input>
          </Form-item>
          <Form-item label="电话号码：" prop="mobile">
-           <Input v-model="addForm.mobile"></Input>
+           <Input v-model="addForm.mobile" :maxlength="11"></Input>
          </Form-item>
          <Form-item label="案场：" v-if="caseShow" prop="case">
            <Select v-model="addForm.case" @on-change="caseChange">
@@ -202,7 +202,7 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.add()
-          this.$Message.success('提交成功！')
+          // this.$Message.success('提交成功！')
           this.resetFields('addForm')
         } else {
           this.$Message.error('表单验证失败')
@@ -302,7 +302,7 @@ export default {
 
     div.sex{
       display:flex;
-      flex-direction:column
+      flex-direction:column;
     }
   }
   input[type=radio] {
@@ -310,6 +310,7 @@ export default {
     width: 30px;
     height: 30px;
     position: absolute;
+    cursor: pointer;
   }
   .btn-box{
     margin-left:-65px;
