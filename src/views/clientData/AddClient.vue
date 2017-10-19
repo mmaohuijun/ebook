@@ -5,19 +5,26 @@
     </div>
   <div class="layout__body">
    <div class="addClient">
-    <h1>新建客户</h1>
+    <!-- <h1>新建客户</h1> -->
+     <div class="user-logo">
+       <span><i style="font-size:90px;color:#4e546c" class="iconfont icon-kehu"></i></span>
+     </div>
      <Form ref="addForm" :model="addForm" :rules="ruleForm" :label-width="120" style="width:350px;margin: 0 auto">
-       <Form-item label="性别：" prop="gender">
-         <Radio-group v-model="addForm.gender">
-           <Radio label="2">女</Radio>
-           <Radio label="1">男</Radio>
-         </Radio-group>
-         <span><i class="iconfont icon-kehu"></i></span>
-         <span><i class="iconfont icon-male"></i></span>
-         <span><i class="iconfont icon-female"></i></span>
-         <span><i class="iconfont icon-male-copy" style="color: #1296db"></i></span>
-         <span><i class="iconfont icon-female-copy" style="color: #d4237a"></i></span>
+       <Form-item prop="gender">
+         <div class="sex-box">
+           <div class="sex" @click="chooseF">
+            <input type="radio" value="2" v-model="addForm.gender">
+            <i class="iconfont icon-female defaultStyle" :class="{fStyle: isFemale}"  ></i>  
+            <label for="2" style="color:#888" :style="isFemale?'color:#555':''">女</label>
+           </div>
+           <div class="sex" @click="chooseM">
+            <input type="radio" value="1" v-model="addForm.gender">
+            <i class="iconfont icon-male defaultStyle" :class="{mStyle: isMale}"></i>
+            <label for="1" style="color:#888" :style="isMale?'color:#555':''">男</label>
+           </div> 
+         </div>     
        </Form-item>
+       
        <Form-item label="姓名：" prop="name">
            <Input v-model="addForm.name"></Input>
          </Form-item>
@@ -35,9 +42,9 @@
              <Option v-for="item in extUserList" :value="item.id" :key="item.id">{{item.name}}</Option>
            </Select>
          </Form-item>
-         <Form-item>
+         <Form-item class="btn-box">
            <Button type="primary" class="custom-secondary-btn" @click="cancel" >取消</Button>
-           <Button type="primary" class="custom-btn" @click="saveAdd('addForm')" style="float: right">完成</Button>
+           <Button type="primary" class="custom-btn" @click="saveAdd('addForm')" style="margin-left:70px;">完成</Button>
          </Form-item>
      </Form>
    </div> 
@@ -121,10 +128,20 @@ export default {
       conShow: false,
       caseShow: false,
       consultant: '', // 被选中的顾问id
-      caseId: '' // 被选中的案场id
+      caseId: '', // 被选中的案场id
+      isFemale: false,
+      isMale: false
     }
   },
   methods: {
+    chooseF() {
+      this.isFemale = true
+      this.isMale = false
+    },
+    chooseM() {
+      this.isMale = true
+      this.isFemale = false
+    },
     // 获取案场列表： 案场id+案场名
     getCaseList() {
       this.$axios.post('case/shortlist').then(response => {
@@ -207,8 +224,10 @@ export default {
       console.log('result data', data)
       this.$axios.post('case-cust/add', data).then(response => {
         if (response === null) return
-        // this.$Message.success('提交成功！')
-        // this.resetFields('addForm')
+        this.$Message.success('提交成功！')
+        this.isMale = false
+        this.isFemale = false
+        this.resetFields('addForm')
       })
     },
     // 重置表单
@@ -238,7 +257,7 @@ export default {
   }
 }
 </script>
-<style lang="css">
+<style lang="less">
   h1{
     text-align: center;
     font-size: 20px;
@@ -247,16 +266,64 @@ export default {
   }
   .addClient{
     width: 600px;
-    height: 480px;
+    height: 660px;
     border: 1px solid #979797;
     border-radius: 4px;
     margin: 40px auto 0;
     background: #fff;
     box-sizing: border-box;
+    text-align:center;
   }
   .btnWrapper{
     width: 270px;
     margin-left: 40px;
     padding-top:25px;
+  }
+  .user-logo{
+    height:262px;
+
+    span{
+      width: 180px;
+      height: 180px;
+      border: 1px solid #979797;
+      display: inline-block;
+      padding-top: 25px;
+      margin-top: 82px;
+      border-radius: 50%;
+    }
+  }
+  .sex-box{
+    display:flex;
+    height:85px;
+    width:90px;
+    justify-content: space-between;
+    margin-left:15px;
+    padding-top:30px;
+
+    div.sex{
+      display:flex;
+      flex-direction:column
+    }
+  }
+  input[type=radio] {
+    opacity:0;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+  }
+  .btn-box{
+    margin-left:-65px;
+    display:flex;
+    width:600px;
+  }
+  .defaultStyle{
+    font-size:30px;
+    color:#bbb
+  }
+  .fStyle{
+    color:#d4237a
+  }
+  .mStyle{
+    color:#1296db
   }
 </style>
