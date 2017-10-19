@@ -12,6 +12,7 @@
            <Radio label="2">女</Radio>
            <Radio label="1">男</Radio>
          </Radio-group>
+         <span><i class="iconfont icon-kehu"></i></span>
          <span><i class="iconfont icon-male"></i></span>
          <span><i class="iconfont icon-female"></i></span>
          <span><i class="iconfont icon-male-copy" style="color: #1296db"></i></span>
