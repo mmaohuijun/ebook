@@ -12,6 +12,10 @@
            <Radio label="2">女</Radio>
            <Radio label="1">男</Radio>
          </Radio-group>
+         <span><i class="iconfont icon-male"></i></span>
+         <span><i class="iconfont icon-female"></i></span>
+         <span><i class="iconfont icon-male-copy" style="color: #1296db"></i></span>
+         <span><i class="iconfont icon-female-copy" style="color: #d4237a"></i></span>
        </Form-item>
        <Form-item label="姓名：" prop="name">
            <Input v-model="addForm.name"></Input>
