@@ -32,13 +32,13 @@
            <Input v-model="addForm.mobile" :maxlength="11"></Input>
          </Form-item>
          <Form-item label="案场：" v-if="caseShow" prop="case">
-           <Select v-model="addForm.case" @on-change="caseChange">
+           <Select v-model="addForm.case" @on-change="caseChange" style="text-align:left">
              <Option v-for="item in caseList" :value="item.id" :key="item.id">{{item.name}}</Option>
            </Select>
          </Form-item>
          <!-- <Form-item label="顾问：" v-if="conShow" prop="consultant"> -->
          <Form-item label="顾问：" v-if="userAdminFlag" prop="consultant">
-           <Select v-model="addForm.consultant" @on-change="consultChange">
+           <Select v-model="addForm.consultant" @on-change="consultChange" style="text-align:left">
              <Option v-for="item in extUserList" :value="item.id" :key="item.id">{{item.name}}</Option>
            </Select>
          </Form-item>
@@ -258,12 +258,6 @@ export default {
 }
 </script>
 <style lang="less">
-  h1{
-    text-align: center;
-    font-size: 20px;
-    font-weight: normal;
-    padding:20px 0 25px 0
-  }
   .addClient{
     width: 600px;
     height: 660px;
@@ -322,9 +316,12 @@ export default {
     color:#bbb
   }
   .fStyle{
-    color:#d4237a
+    color:#ff7daf
   }
   .mStyle{
-    color:#1296db
+    color:#7dbaff
+
+
+
   }
 </style>
