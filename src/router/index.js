@@ -32,6 +32,9 @@ const DealClient = () => import('views/clientData/DealClient')
 const UnassignedClient = () => import('views/clientData/UnassignedClient')
 const AddClient = () => import('views/clientData/AddClient')
 
+/* status界面 */
+const NotFound = () => import('views/status/404')
+
 Vue.use(Router)
 
 // 全局路径
@@ -271,6 +274,15 @@ const routesMap2 = [
       { path: 'add', name: 'AddClient', component: AddClient }
     ],
     meta: { requiresLogin: true, requiresAuth: true }
+  },
+  {
+    path: `${path}404`,
+    component: Layout,
+    name: '路径不存在',
+    children: [
+      { path: '', name: 'NotFound', component: NotFound }
+    ],
+    meta: { requiresLogin: true }
   },
   {
     path: '*',
