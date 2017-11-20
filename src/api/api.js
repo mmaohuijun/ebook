@@ -56,6 +56,12 @@ $axios.interceptors.response.use(response => {
     store.dispatch('clearUserInfo')
     router.push({ name: 'Login' })
     return null
+  } else if (response.status === '404') {
+    console.log('404错误')
+
+    store.dispatch('clearUserInfo')
+    router.push({ name: 'NotFound' })
+    return null
   } else { // 请求不成功, 提示错误信息
     store.dispatch('showErrorMsg', retMsg)
     return null
