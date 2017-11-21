@@ -129,7 +129,7 @@
   </ebook-header>
 
   <div class="layout__body">
-    <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
+    <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-sort-change="customSort" @on-selection-change="onSelect"></Table>
     <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
   </div>
   <Modal
@@ -371,7 +371,8 @@ export default {
         {
           title: '生成时间',
           key: 'createTime',
-          ellipsis: true
+          ellipsis: true,
+          sortable: 'custom'
         },
         {
           title: '状态',
@@ -444,7 +445,8 @@ export default {
           }
         }
       ],
-      userListData: [] // 用户列表
+      userListData: [], // 用户列表
+      dateOrder: ''
     }
   },
   computed: {
@@ -469,6 +471,7 @@ export default {
     // 获取并渲染用户列表
     initUserList() {
       const data = {
+        dateOrder: this.dateOrder,
         caseName: this.caseName,
         name: this.name,
         startDate: this.startDate,
@@ -790,6 +793,14 @@ export default {
         console.log('内部用户')
         this.isCaseSearch = true
       }
+    },
+    customSort(val) {
+      if (val.order === 'desc') {
+        this.dateOrder = 'desc'
+      } else {
+        this.dateOrder = 'asc'
+      }
+      this.initUserList()
     }
   },
   components: {

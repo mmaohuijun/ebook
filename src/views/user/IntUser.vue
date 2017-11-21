@@ -237,7 +237,7 @@ export default {
         }
       ],
       userListData: [],
-      sort: ''
+      dateOrder: ''
     }
   },
   methods: {
@@ -384,7 +384,7 @@ export default {
         endDate: this.endDate,
         pageNo: this.pageNo || 1,
         pageSize: this.pageSize,
-        sort: this.sort
+        dateOrder: this.dateOrder
       }
       this.$axios.post('int-user/list', data).then(response => {
         if (response === null) return
@@ -404,10 +404,11 @@ export default {
     customSort(val) {
       console.log('customSort', val.order)
       if (val.order === 'desc') {
-        this.sort = 'desc'
+        this.dateOrder = 'desc'
       } else {
-        this.sort = 'asc'
+        this.dateOrder = 'asc'
       }
+      this.initUserList()
     }
   },
   mounted() {
