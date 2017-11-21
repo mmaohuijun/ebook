@@ -20,8 +20,14 @@
       @on-clear="onDateClear"
       @on-ok="onDateSearch"></Date-picker>
 
-    <Input v-if="textSearch" class="custom__search" icon="search" v-model="searchText" :placeholder="placeholder" @on-click="onTextSearch"></Input>
+    <span style="font-size:16px; color:#fff; padding: 0 10px;" v-if="caseSearch">案场</span>
 
+    <Select @on-change="onCaseChange" style="width:200px;margin-right:30px;" v-if="caseSearch">
+      <Option v-for="(item, index) in caseList" :value="item.name" :key="item.id">{{item.name}}</Option>
+    </Select>
+
+    <Input v-if="textSearch" class="custom__search" icon="search" v-model="searchText" :placeholder="placeholder" @on-click="onTextSearch"></Input>
+    
     <span v-if="uploadBtn" class="custom__circle-btn--white ivu-btn ivu-btn-primary ivu-btn-circle ivu-btn-icon-only" @click="onUpload">
       <i class="iconfont icon-piliangshangchuan"></i>
     </span>
@@ -52,6 +58,7 @@ export default {
   name: 'EbookHeader',
   data() {
     return {
+      value: '',
       date: [],
       startDate: '',
       endDate: '',
@@ -59,6 +66,11 @@ export default {
     }
   },
   props: {
+    // 案场列表
+    caseList: {
+      type: Array,
+      default: () => []
+    },
     // 头部标题
     headerTitle: {
       type: String,
@@ -71,6 +83,11 @@ export default {
     },
     // 文字搜索
     textSearch: {
+      type: Boolean,
+      default: false
+    },
+    // 案场搜索
+    caseSearch: {
       type: Boolean,
       default: false
     },
@@ -132,6 +149,9 @@ export default {
         this.startDate = daterange[0]
         this.endDate = daterange[1]
       }
+    },
+    onCaseChange(value) {
+      this.$emit('onCaseChange', value)
     },
     // 点击'确认'进行日期搜索
     onDateSearch() {
@@ -196,6 +216,7 @@ export default {
   created() {
     // 绑定按键enter登录
     document.addEventListener('keyup', this.enterGoSearch)
+    console.log('caseList', this.caseList)
   },
   destroyed() {
     document.removeEventListener('keyup', this.enterGoSearch)

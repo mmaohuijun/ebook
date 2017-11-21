@@ -34,7 +34,7 @@
 
 
   <div class="layout__body">
-    <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
+    <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-sort-change="customSort" @on-selection-change="onSelect"></Table>
     <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
   </div>
   <Modal
@@ -188,7 +188,8 @@ export default {
         {
           title: '生成时间',
           key: 'createTime',
-          ellipsis: true
+          ellipsis: true,
+          sortable: 'custom'
         },
         {
           title: ' ',
@@ -235,7 +236,8 @@ export default {
           }
         }
       ],
-      userListData: []
+      userListData: [],
+      dateOrder: 'desc'
     }
   },
   methods: {
@@ -381,7 +383,8 @@ export default {
         startDate: this.startDate,
         endDate: this.endDate,
         pageNo: this.pageNo || 1,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        dateOrder: this.dateOrder
       }
       this.$axios.post('int-user/list', data).then(response => {
         if (response === null) return
@@ -396,6 +399,16 @@ export default {
     // 取消所有选中
     deselectedAll() {
       this.$refs.userListTable.selectAll(false)
+    },
+    // 自定义排序
+    customSort(val) {
+      console.log('customSort', val.order)
+      if (val.order === 'desc') {
+        this.dateOrder = 'desc'
+      } else {
+        this.dateOrder = 'asc'
+      }
+      this.initUserList()
     }
   },
   mounted() {

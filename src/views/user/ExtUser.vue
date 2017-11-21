@@ -112,11 +112,14 @@
     header-title="用户 - 外部用户"
     :dateSearch="true"
     :textSearch="true"
+    :caseSearch="isCaseSearch"
+    :caseList="caseList"
     placeholder="姓名／手机号"
     :uploadBtn="true"
     :addBtn="true"
     :lockBtn="lockBtn"
     :keyBtn="unlockBtn"
+    @onCaseChange="selectCase"
     @onDateSearch="dateSearch"
     @onTextSearch="textSearch"
     @onUpload="showUploadModal"
@@ -126,7 +129,7 @@
   </ebook-header>
 
   <div class="layout__body">
-    <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-selection-change="onSelect"></Table>
+    <Table ref="userListTable" class="custom__table" :columns="userListTitle" :data="userListData" @on-sort-change="customSort" @on-selection-change="onSelect"></Table>
     <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
   </div>
   <Modal
@@ -254,6 +257,8 @@ export default {
       }
     }
     return {
+      isCaseSearch: true,
+      caseList: [],
       confirmModal: {
         show: false,
         title: ''
@@ -285,7 +290,6 @@ export default {
       pageNo: 1,        // 页码
       total: 20,        // 数据总条数
       pageSize: 20,     // 每页条数
-      caseList: [],     // 案场列表
       selection: [],    // 选中的用户列表
       userInfo: {
         id: '',           // id
@@ -367,7 +371,8 @@ export default {
         {
           title: '生成时间',
           key: 'createTime',
-          ellipsis: true
+          ellipsis: true,
+          sortable: 'custom'
         },
         {
           title: '状态',
@@ -440,7 +445,8 @@ export default {
           }
         }
       ],
-      userListData: [] // 用户列表
+      userListData: [], // 用户列表
+      dateOrder: 'desc'
     }
   },
   computed: {
@@ -458,11 +464,15 @@ export default {
   mounted() {
     this.initUserList()
     this.getAuthList()
+    this.getCaseList()
+    this.justifyUser()
   },
   methods: {
     // 获取并渲染用户列表
     initUserList() {
       const data = {
+        dateOrder: this.dateOrder,
+        caseName: this.caseName,
         name: this.name,
         startDate: this.startDate,
         endDate: this.endDate,
@@ -762,9 +772,34 @@ export default {
       this.pageNo = 1
       this.initUserList()
     },
+    // 案场搜索
+    selectCase(value) {
+      console.log('selectCase', value)
+      this.caseName = value
+      this.pageNo = 1
+      this.initUserList()
+    },
     // 改变分页
     pageChange(currentPage) {
       this.pageNo = currentPage
+      this.initUserList()
+    },
+    // 判断是否为外部用户
+    justifyUser() {
+      if (this.ifCaseWorker) {
+        console.log('外部用户')
+        this.isCaseSearch = false
+      } else {
+        console.log('内部用户')
+        this.isCaseSearch = true
+      }
+    },
+    customSort(val) {
+      if (val.order === 'desc') {
+        this.dateOrder = 'desc'
+      } else {
+        this.dateOrder = 'asc'
+      }
       this.initUserList()
     }
   },
