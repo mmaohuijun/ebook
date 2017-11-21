@@ -53,6 +53,8 @@ export default {
       pageNo: 1,
       total: 20,
       pageSize: 20,
+      scType: 'desc',
+      tmType: '',
       modal: {
         show: false,
         title: '',
@@ -90,11 +92,30 @@ export default {
           title: '次数',
           key: 'visits',
           sortable: true,
+          sortMethod: (a, b, type) => {
+            console.log('a,b', a, b)
+            this.tmType = type
+            if (type === 'desc') {
+              return (b + '').localeCompare(a + '')
+            } else {
+              return (a + '').localeCompare(b + '')
+            }
+          },
           ellipsis: true
         },
         {
           title: '到访时间',
           key: 'lastRecordDate',
+          sortable: true,
+          sortMethod: (a, b, type) => {
+            console.log('a,b', a, b)
+            this.scType = type
+            if (type === 'desc') {
+              return (b + '').localeCompare(a + '')
+            } else {
+              return (a + '').localeCompare(b + '')
+            }
+          },
           ellipsis: true
         },
         {
@@ -197,7 +218,20 @@ export default {
       ]
     }
   },
+  watch: {
+    scType() {
+      console.log(this.scType)
+      this.sorted()
+    },
+    tmType() {
+      console.log(this.tmType)
+      this.sorted()
+    }
+  },
   methods: {
+    sorted() {
+      this.showClientList()
+    },
     // 点击确认开始时间按钮
     startDateOk(data) {
       if (this.endDate) {
@@ -243,7 +277,9 @@ export default {
         startDate: this.startDate || '',
         endDate: this.endDate || '',
         pageNo: this.pageNo || 1,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        dateOrder: this.scType,
+        timeOrder: this.tmType
       }
       console.log(data)
       // if (!this.isSearch) {

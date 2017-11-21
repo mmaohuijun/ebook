@@ -66,6 +66,8 @@ export default {
       pageNo: 1,  //  当前页码
       total: 20,  //  总页数
       pageSize: 20,  //  每页显示信息数
+      scType: 'desc',
+      tmType: '',
       // clicked: false,
       // confirmed: false,
       modal1: {  //  模态框对象
@@ -109,6 +111,15 @@ export default {
         {
           title: '来电时间',
           key: 'lastRecordDate',
+          sortable: true, // 开启排序
+          sortMethod: (a, b, type) => {
+            this.scType = type
+            if (type === 'desc') {
+              return (b + '').localeCompare(a + '')
+            } else {
+              return (a + '').localeCompare(b + '')
+            }
+          },
           ellipsis: true
         },
         {
@@ -166,7 +177,20 @@ export default {
       clientListData: [] //  客户信息
     }
   },
+  watch: {
+    scType() {
+      console.log(this.scType)
+      this.sorted()
+    },
+    tmType() {
+      console.log(this.tmType)
+      this.sorted()
+    }
+  },
   methods: {
+    sorted() {
+      this.showClientList()
+    },
     hideModal() {
       this.modal1.show = false
       this.modal2.show = false
@@ -216,7 +240,9 @@ export default {
         startDate: this.startDate || '',
         endDate: this.endDate || '',
         pageNo: this.pageNo || 1,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        dateOrder: this.scType,
+        timeOrder: this.tmType
       }
       console.log(data)
       // if (!this.isSearch) {
