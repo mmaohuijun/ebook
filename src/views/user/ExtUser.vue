@@ -446,7 +446,7 @@ export default {
         }
       ],
       userListData: [], // 用户列表
-      dateOrder: ''
+      dateOrder: 'desc'
     }
   },
   computed: {

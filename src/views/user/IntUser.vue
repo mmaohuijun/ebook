@@ -237,7 +237,7 @@ export default {
         }
       ],
       userListData: [],
-      dateOrder: ''
+      dateOrder: 'desc'
     }
   },
   methods: {
