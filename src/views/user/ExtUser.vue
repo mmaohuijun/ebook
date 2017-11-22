@@ -795,11 +795,12 @@ export default {
       }
     },
     customSort(val) {
-      if (val.order === 'desc') {
+      if (val.order === 'desc' || val.order === 'normal') {
         this.dateOrder = 'desc'
-      } else {
+      } else if (val.order === 'asc') {
         this.dateOrder = 'asc'
       }
+      console.log('dateOrder', this.dateOrder)
       this.initUserList()
     }
   },

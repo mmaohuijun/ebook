@@ -402,10 +402,9 @@ export default {
     },
     // 自定义排序
     customSort(val) {
-      console.log('customSort', val.order)
-      if (val.order === 'desc') {
+      if (val.order === 'desc' || val.order === 'normal') {
         this.dateOrder = 'desc'
-      } else {
+      } else if (val.order === 'asc') {
         this.dateOrder = 'asc'
       }
       this.initUserList()
