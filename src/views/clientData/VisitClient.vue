@@ -26,7 +26,7 @@
       </ebook-header>
 
     <div class="layout__body">
-      <Table ref="clientListTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect"></Table>
+      <Table ref="clientListTable" class="custom__table" @on-sort-change="customSort" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect"></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
     </div>
@@ -53,8 +53,8 @@ export default {
       pageNo: 1,
       total: 20,
       pageSize: 20,
-      scType: 'desc',
-      tmType: '',
+      dateOrder: 'desc',
+      timeOrder: '',
       modal: {
         show: false,
         title: '',
@@ -91,31 +91,31 @@ export default {
         {
           title: '次数',
           key: 'visits',
-          sortable: true,
-          sortMethod: (a, b, type) => {
-            console.log('a,b', a, b)
-            this.tmType = type
-            if (type === 'desc') {
-              return (b + '').localeCompare(a + '')
-            } else {
-              return (a + '').localeCompare(b + '')
-            }
-          },
+          sortable: 'custom',
+          // sortMethod: (a, b, type) => {
+          //   console.log('a,b', a, b)
+          //   this.tmType = type
+          //   if (type === 'desc') {
+          //     return (b + '').localeCompare(a + '')
+          //   } else {
+          //     return (a + '').localeCompare(b + '')
+          //   }
+          // },
           ellipsis: true
         },
         {
           title: '到访时间',
           key: 'lastRecordDate',
-          sortable: true,
-          sortMethod: (a, b, type) => {
-            console.log('a,b', a, b)
-            this.scType = type
-            if (type === 'desc') {
-              return (b + '').localeCompare(a + '')
-            } else {
-              return (a + '').localeCompare(b + '')
-            }
-          },
+          sortable: 'custom',
+          // sortMethod: (a, b, type) => {
+          //   console.log('a,b', a, b)
+          //   this.scType = type
+          //   if (type === 'desc') {
+          //     return (b + '').localeCompare(a + '')
+          //   } else {
+          //     return (a + '').localeCompare(b + '')
+          //   }
+          // },
           ellipsis: true
         },
         {
@@ -218,20 +218,20 @@ export default {
       ]
     }
   },
-  watch: {
-    scType() {
-      console.log(this.scType)
-      this.sorted()
-    },
-    tmType() {
-      console.log(this.tmType)
-      this.sorted()
-    }
-  },
+  // watch: {
+  //   scType() {
+  //     console.log(this.scType)
+  //     this.sorted()
+  //   },
+  //   tmType() {
+  //     console.log(this.tmType)
+  //     this.sorted()
+  //   }
+  // },
   methods: {
-    sorted() {
-      this.showClientList()
-    },
+    // sorted() {
+    //   this.showClientList()
+    // },
     // 点击确认开始时间按钮
     startDateOk(data) {
       if (this.endDate) {
@@ -278,8 +278,8 @@ export default {
         endDate: this.endDate || '',
         pageNo: this.pageNo || 1,
         pageSize: this.pageSize,
-        dateOrder: this.scType,
-        timeOrder: this.tmType
+        dateOrder: this.dateOrder,
+        timeOrder: this.timeOrder
       }
       console.log(data)
       // if (!this.isSearch) {
@@ -363,6 +363,26 @@ export default {
       this.$refs.clientListTable.selectAll(false)
       this.selection = []
       this.id = ''
+    },
+    // 排序
+    customSort(val) {
+      console.log(val)
+      if (val.key === 'visits') {
+        this.dateOrder = ''
+        if (val.order === 'desc' || val.order === 'normal') {
+          this.timeOrder = 'desc'
+        } else if (val.order === 'asc') {
+          this.timeOrder = 'asc'
+        }
+      } else if (val.key === 'lastRecordDate') {
+        this.timeOrder = ''
+        if (val.order === 'desc' || val.order === 'normal') {
+          this.dateOrder = 'desc'
+        } else if (val.order === 'asc') {
+          this.dateOrder = 'asc'
+        }
+      }
+      this.showClientList()
     }
   },
   mounted() {
