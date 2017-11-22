@@ -27,7 +27,6 @@
 
     <div class="layout__body">
       <Table ref="clientListTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-sort-change="clientSort" @on-selection-change="onSelect"></Table>
-      <Table ref="clientListTable" class="custom__table" @on-sort-change="customSort" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect"></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
     </div>
@@ -54,8 +53,8 @@ export default {
       pageNo: 1,
       total: 20,
       pageSize: 20,
-      dateOrder: 'desc',
-      timeOrder: '',
+      scType: 'desc', // 日期筛选
+      tmType: '', // 次数筛选
       modal: {
         show: false,
         title: '',
@@ -93,7 +92,6 @@ export default {
           title: '次数',
           key: 'visits',
           sortable: 'client',
-          sortable: 'custom',
           // sortMethod: (a, b, type) => {
           //   console.log('a,b', a, b)
           //   this.tmType = type
@@ -109,7 +107,6 @@ export default {
           title: '到访时间',
           key: 'lastRecordDate',
           sortable: 'client',
-          sortable: 'custom',
           // sortMethod: (a, b, type) => {
           //   console.log('a,b', a, b)
           //   this.scType = type
@@ -222,20 +219,6 @@ export default {
     }
   },
   methods: {
-  // watch: {
-  //   scType() {
-  //     console.log(this.scType)
-  //     this.sorted()
-  //   },
-  //   tmType() {
-  //     console.log(this.tmType)
-  //     this.sorted()
-  //   }
-  // },
-  methods: {
-    // sorted() {
-    //   this.showClientList()
-    // },
     // 点击确认开始时间按钮
     startDateOk(data) {
       if (this.endDate) {
@@ -282,8 +265,8 @@ export default {
         endDate: this.endDate || '',
         pageNo: this.pageNo || 1,
         pageSize: this.pageSize,
-        dateOrder: this.dateOrder,
-        timeOrder: this.timeOrder
+        dateOrder: this.scType,
+        timeOrder: this.tmType
       }
       console.log(data)
       // if (!this.isSearch) {
@@ -382,6 +365,8 @@ export default {
           this.scType = 'desc'
         } else if (val.order === 'asc') {
           this.scType = 'asc'
+        }
+      }
       this.showClientList()
     }
   },
