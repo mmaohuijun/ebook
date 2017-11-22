@@ -91,13 +91,13 @@ export default {
         {
           title: '次数',
           key: 'deals',
-          sortable: true,
+          sortable: 'client',
           ellipsis: true
         },
         {
           title: '成交时间',
           key: 'lastRecordDate',
-          sortable: true,
+          sortable: 'client',
           ellipsis: true
         },
         {
