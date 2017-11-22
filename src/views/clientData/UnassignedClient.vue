@@ -75,6 +75,8 @@ export default {
       caseId: '', // 被选中案场id
       caseIdList: [], // 多项选择时 案场id数组
       status: '', // 客户状态：来电、到访、成交
+      scType: 'desc',
+      tmType: '',
       modal: {
         show: false,
         title: ''
@@ -153,6 +155,16 @@ export default {
         {
           title: '生成时间',
           key: 'createTime',
+          sortable: true,
+          sortMethod: (a, b, type) => {
+            console.log('a,b', a, b)
+            this.scType = type
+            if (type === 'desc') {
+              return (b + '').localeCompare(a + '')
+            } else {
+              return (a + '').localeCompare(b + '')
+            }
+          },
           ellipsis: true
         },
         {
@@ -218,6 +230,9 @@ export default {
     }
   },
   methods: {
+    sorted() {
+      this.showClientList()
+    },
     startDateOk(data) {
       if (this.endDate) {
         this.dateSearch()
@@ -264,7 +279,9 @@ export default {
         startDate: this.startDate || '',
         endDate: this.endDate || '',
         pageNo: this.pageNo || 1,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        dateOrder: this.scType,
+        timeOrder: this.tmType
       }
       console.log('name', data)
       if (!this.isSearch) {
@@ -448,6 +465,14 @@ export default {
       if (!val) {
         this.resetFields()
       }
+    },
+    scType() {
+      console.log(this.scType)
+      this.sorted()
+    },
+    tmType() {
+      console.log(this.tmType)
+      this.sorted()
     }
   },
   components: {
