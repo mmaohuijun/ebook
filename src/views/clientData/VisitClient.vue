@@ -91,7 +91,7 @@ export default {
         {
           title: '次数',
           key: 'visits',
-          sortable: 'client',
+          sortable: 'custom',
           // sortMethod: (a, b, type) => {
           //   console.log('a,b', a, b)
           //   this.tmType = type
@@ -106,7 +106,7 @@ export default {
         {
           title: '到访时间',
           key: 'lastRecordDate',
-          sortable: 'client',
+          sortable: 'custom',
           // sortMethod: (a, b, type) => {
           //   console.log('a,b', a, b)
           //   this.scType = type
