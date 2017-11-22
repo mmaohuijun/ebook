@@ -26,7 +26,7 @@
       </ebook-header>
 
     <div class="layout__body">
-      <Table ref="clientListTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect"></Table>
+      <Table ref="clientListTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-sort-change="clientSort" @on-selection-change="onSelect"></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
     </div>
@@ -91,31 +91,13 @@ export default {
         {
           title: '次数',
           key: 'visits',
-          sortable: true,
-          sortMethod: (a, b, type) => {
-            console.log('a,b', a, b)
-            this.tmType = type
-            if (type === 'desc') {
-              return (b + '').localeCompare(a + '')
-            } else {
-              return (a + '').localeCompare(b + '')
-            }
-          },
+          sortable: 'client',
           ellipsis: true
         },
         {
           title: '到访时间',
           key: 'lastRecordDate',
-          sortable: true,
-          sortMethod: (a, b, type) => {
-            console.log('a,b', a, b)
-            this.scType = type
-            if (type === 'desc') {
-              return (b + '').localeCompare(a + '')
-            } else {
-              return (a + '').localeCompare(b + '')
-            }
-          },
+          sortable: 'client',
           ellipsis: true
         },
         {
@@ -218,21 +200,7 @@ export default {
       ]
     }
   },
-  watch: {
-    scType() {
-      console.log(this.scType)
-      this.sorted()
-    },
-    tmType() {
-      console.log(this.tmType)
-      this.sorted()
-    }
-  },
   methods: {
-    sorted() {
-      this.showClientList()
-    },
-    // 点击确认开始时间按钮
     startDateOk(data) {
       if (this.endDate) {
         this.dateSearch()
@@ -363,6 +331,24 @@ export default {
       this.$refs.clientListTable.selectAll(false)
       this.selection = []
       this.id = ''
+    },
+    clientSort(val) {
+      if (val.key === 'visits') {
+        this.scType = ''
+        if (val.order === 'desc' || val.order === 'normal') {
+          this.tmType = 'desc'
+        } else if (val.order === 'asc') {
+          this.tmType = 'asc'
+        }
+      } else {
+        this.tmType = ''
+        if (val.order === 'desc' || val.order === 'normal') {
+          this.scType = 'desc'
+        } else if (val.order === 'asc') {
+          this.scType = 'asc'
+        }
+      }
+      this.showClientList()
     }
   },
   mounted() {
