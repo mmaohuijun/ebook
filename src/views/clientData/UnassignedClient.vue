@@ -155,7 +155,7 @@ export default {
         {
           title: '生成时间',
           key: 'createTime',
-          sortable: true,
+          sortable: 'custom',
           ellipsis: true
         },
         {
