@@ -123,7 +123,7 @@ export default {
         {
           title: '案场',
           key: 'caseName',
-          sortable: true,
+          // sortable: true,
           ellipsis: true
         },
         {
