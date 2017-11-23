@@ -26,7 +26,7 @@
       </ebook-header>
 
     <div class="layout__body">
-      <Table ref="clientListTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect" ></Table>
+      <Table ref="clientListTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-sort-change="clientSort" @on-selection-change="onSelect" ></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange"></Page>
     </div>
@@ -111,15 +111,7 @@ export default {
         {
           title: '来电时间',
           key: 'lastRecordDate',
-          sortable: true, // 开启排序
-          sortMethod: (a, b, type) => {
-            this.scType = type
-            if (type === 'desc') {
-              return (b + '').localeCompare(a + '')
-            } else {
-              return (a + '').localeCompare(b + '')
-            }
-          },
+          sortable: 'custom', // 开启排序
           ellipsis: true
         },
         {
@@ -177,20 +169,7 @@ export default {
       clientListData: [] //  客户信息
     }
   },
-  watch: {
-    scType() {
-      console.log(this.scType)
-      this.sorted()
-    },
-    tmType() {
-      console.log(this.tmType)
-      this.sorted()
-    }
-  },
   methods: {
-    sorted() {
-      this.showClientList()
-    },
     hideModal() {
       this.modal1.show = false
       this.modal2.show = false
@@ -339,6 +318,17 @@ export default {
       this.$refs.clientListTable.selectAll(false)
       this.selection = []
       this.id = ''
+    },
+    clientSort(val) {
+      if (val.key === 'lastRecordDate') {
+        if (val.order === 'desc') {
+          this.scType = 'desc'
+        } else if (val.order === 'asc') {
+          this.scType = 'asc'
+        } else {
+          this.scType = 'desc'
+        }
+      }
     }
   },
   mounted() {

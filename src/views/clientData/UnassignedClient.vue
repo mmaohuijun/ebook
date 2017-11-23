@@ -25,7 +25,7 @@
       @onDeleteClient="deleteClient(id)">
       </ebook-header>
     <div class="layout__body">
-      <Table ref="unAssignedTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-selection-change="onSelect"></Table>
+      <Table ref="unAssignedTable" class="custom__table" :columns="clientListTitle" :data="clientListData" @on-sort-change="clientSort" @on-selection-change="onSelect"></Table>
       <Spin size="large" fix v-if="false"></Spin>
       <Page style="margin-top: 14px;" class="custom__page" :current="pageNo" :total="total" :page-size="pageSize" @on-change="pageChange" ></Page>
     </div>
@@ -156,15 +156,6 @@ export default {
           title: '生成时间',
           key: 'createTime',
           sortable: true,
-          sortMethod: (a, b, type) => {
-            console.log('a,b', a, b)
-            this.scType = type
-            if (type === 'desc') {
-              return (b + '').localeCompare(a + '')
-            } else {
-              return (a + '').localeCompare(b + '')
-            }
-          },
           ellipsis: true
         },
         {
@@ -230,9 +221,6 @@ export default {
     }
   },
   methods: {
-    sorted() {
-      this.showClientList()
-    },
     startDateOk(data) {
       if (this.endDate) {
         this.dateSearch()
@@ -448,6 +436,17 @@ export default {
       this.selection = []
       this.id = ''
       this.caseId = ''
+    },
+    clientSort(val) {
+      if (val.key === 'lastRecordDate') {
+        if (val.order === 'desc') {
+          this.scType = 'desc'
+        } else if (val.order === 'asc') {
+          this.scType = 'asc'
+        } else {
+          this.scType = 'desc'
+        }
+      }
     }
   },
   computed: {
@@ -465,14 +464,6 @@ export default {
       if (!val) {
         this.resetFields()
       }
-    },
-    scType() {
-      console.log(this.scType)
-      this.sorted()
-    },
-    tmType() {
-      console.log(this.tmType)
-      this.sorted()
     }
   },
   components: {
