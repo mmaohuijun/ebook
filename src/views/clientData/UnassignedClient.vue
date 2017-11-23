@@ -438,7 +438,7 @@ export default {
       this.caseId = ''
     },
     clientSort(val) {
-      if (val.key === 'createTime') {
+      if (val.key === 'lastRecordDate') {
         if (val.order === 'desc') {
           this.scType = 'desc'
         } else if (val.order === 'asc') {
