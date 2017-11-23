@@ -351,13 +351,18 @@ export default {
       this.selection = []
       this.id = ''
     },
+     // 排序
     clientSort(val) {
+      console.log(val)
       if (val.key === 'visits') {
         this.scType = ''
-        if (val.order === 'desc' || val.order === 'normal') {
+        if (val.order === 'desc') {
           this.tmType = 'desc'
         } else if (val.order === 'asc') {
           this.tmType = 'asc'
+        } else {
+          this.tmType = ''
+          this.scType = 'desc'
         }
       } else {
         this.tmType = ''
