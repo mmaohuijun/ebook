@@ -364,15 +364,18 @@ export default {
       this.selection = []
       this.id = ''
     },
-    // 排序
+     // 排序
     customSort(val) {
       console.log(val)
       if (val.key === 'visits') {
         this.dateOrder = ''
-        if (val.order === 'desc' || val.order === 'normal') {
+        if (val.order === 'desc') {
           this.timeOrder = 'desc'
         } else if (val.order === 'asc') {
           this.timeOrder = 'asc'
+        } else {
+          this.timeOrder = ''
+          this.dateOrder = 'desc'
         }
       } else if (val.key === 'lastRecordDate') {
         this.timeOrder = ''

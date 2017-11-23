@@ -29,12 +29,14 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+const Base64 = require('js-base64').Base64
 
 export default {
   data() {
     return {
       loginName: '', // 账号
       password: '', // 密码
+      b64Password: '', // 加密后密码
       ifRemember: false,
       loading: false,
       modalForgetPWD: false
@@ -63,10 +65,14 @@ export default {
         this.password = ''
         return false
       }
+      // base64 加密
+      this.b64Password = Base64.encode(this.password)
       const data = {
         loginName: this.loginName,
+        // password: this.b64Password
         password: this.password
       }
+      console.log('data', data)
       return data
     },
     goLogin() {
