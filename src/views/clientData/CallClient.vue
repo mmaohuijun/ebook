@@ -329,6 +329,7 @@ export default {
           this.scType = 'desc'
         }
       }
+      this.showClientList()
     }
   },
   mounted() {
