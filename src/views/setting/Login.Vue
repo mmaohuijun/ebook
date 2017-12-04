@@ -66,11 +66,10 @@ export default {
         return false
       }
       // base64 加密
-      // this.b64Password = Base64.encode(this.password)
       const data = {
         loginName: this.loginName,
-        // password: this.b64Password
-        password: this.password
+        password: this.b64Password
+        // password: this.password
       }
       console.log('data', data)
       return data
