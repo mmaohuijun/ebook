@@ -17,8 +17,11 @@
       :dateSearch="true"
       :textSearch="true"
       :disBtn="true"
-      :delBtn="true" 
+      :delBtn="true"
+      :caseSearch="isCaseSearch"
+      :caseList="caseList"
       placeholder="姓名/手机号"
+      @onCaseChange="selectCase"
       @onDateSearch="dateSearch"
       @onTextSearch="textSearch"
       @onDistributeClient="distributeClient(caseId)"
@@ -70,6 +73,9 @@ export default {
   name: 'UnassignedClient',
   data() {
     return {
+      caseName: '',
+      isCaseSearch: true,
+      caseList: [],
       id: '',  // 被选中客户的id
       consultant: '',  // 被选中置业顾问id
       caseId: '', // 被选中案场id
@@ -221,6 +227,12 @@ export default {
     }
   },
   methods: {
+    selectCase(value) {
+      console.log('selectCase', value)
+      this.caseName = value
+      this.pageNo = 1
+      this.showClientList()
+    },
     startDateOk(data) {
       if (this.endDate) {
         this.dateSearch()
@@ -264,6 +276,7 @@ export default {
       const data = {
         status: this.status,
         name: this.name || '',
+        caseName: this.caseName || '',
         startDate: this.startDate || '',
         endDate: this.endDate || '',
         pageNo: this.pageNo || 1,
@@ -397,9 +410,11 @@ export default {
       if (this.getLoginInfo === 'case-worker') {
         this.isEUser = true
         console.log('外部用户')
+        this.isCaseSearch = false
       } else {
         this.isEUser = false
         console.log('内部用户')
+        this.isCaseSearch = true
       }
     },
     // 删除操作
@@ -448,6 +463,13 @@ export default {
         }
       }
       this.showClientList()
+    },
+    getCaseList() {
+      this.$axios.post('case/shortlist').then(response => {
+        if (response === null) return
+        console.log('案场列表（供外部用户、内部用户操作客户模块数据时的案场选择）', response)
+        this.caseList = response.data
+      })
     }
   },
   computed: {
@@ -457,6 +479,7 @@ export default {
   },
   mounted() {
     this.showClientList()
+    this.getCaseList()
     this.justifyIdentity()
     console.log(this.getLoginInfo)
   },

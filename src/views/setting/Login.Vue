@@ -29,7 +29,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-const Base64 = require('js-base64').Base64
+// const Base64 = require('js-base64').Base64
 
 export default {
   data() {
@@ -66,7 +66,7 @@ export default {
         return false
       }
       // base64 加密
-      this.b64Password = Base64.encode(this.password)
+      // this.b64Password = Base64.encode(this.password)
       const data = {
         loginName: this.loginName,
         // password: this.b64Password

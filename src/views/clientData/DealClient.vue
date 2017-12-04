@@ -18,7 +18,10 @@
       :textSearch="true"
       :cutBtn="true"
       :delBtn="true"
+      :caseSearch="isCaseSearch"
+      :caseList="caseList"
       placeholder="姓名/手机号"
+      @onCaseChange="selectCase"
       @onDateSearch="dateSearch"
       @onTextSearch="textSearch"
       @onCutRelation="cutRelation(id)"
@@ -45,6 +48,9 @@ export default {
   name: 'DealClient',
   data() {
     return {
+      caseName: '',
+      isCaseSearch: true,
+      caseList: [],
       id: '', // 被选中客户的id号
       startDate: '',
       endDate: '',
@@ -205,7 +211,18 @@ export default {
       ]
     }
   },
+  computed: {
+    ifCaseWorker() {
+      return this.$store.getters.ifCaseWorker
+    }
+  },
   methods: {
+    selectCase(value) {
+      console.log('selectCase', value)
+      this.caseName = value
+      this.pageNo = 1
+      this.showClientList()
+    },
     startDateOk(data) {
       if (this.endDate) {
         this.dateSearch()
@@ -247,6 +264,7 @@ export default {
     showClientList() {
       const data = {
         name: this.name || '',
+        caseName: this.caseName || '',
         startDate: this.startDate || '',
         endDate: this.endDate || '',
         pageNo: this.pageNo || 1,
@@ -340,10 +358,28 @@ export default {
         }
       }
       this.showClientList()
+    },
+    justifyUser() {
+      if (this.ifCaseWorker) {
+        console.log('外部用户')
+        this.isCaseSearch = false
+      } else {
+        console.log('内部用户')
+        this.isCaseSearch = true
+      }
+    },
+    getCaseList() {
+      this.$axios.post('case/shortlist').then(response => {
+        if (response === null) return
+        console.log('案场列表（供外部用户、内部用户操作客户模块数据时的案场选择）', response)
+        this.caseList = response.data
+      })
     }
   },
   mounted() {
     this.showClientList()
+    this.getCaseList()
+    this.justifyUser()
   },
   components: {
     EbookHeader
