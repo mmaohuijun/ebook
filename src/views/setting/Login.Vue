@@ -68,8 +68,8 @@ export default {
       // base64 加密
       const data = {
         loginName: this.loginName,
-        password: this.b64Password
-        // password: this.password
+        // password: this.b64Password
+        password: this.password
       }
       console.log('data', data)
       return data
